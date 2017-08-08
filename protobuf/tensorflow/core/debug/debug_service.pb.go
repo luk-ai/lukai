@@ -15,7 +15,7 @@ package tensorflow
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow6 "github.com/d4l3k/pok/tensorflow/core/util"
+import tensorflow6 "github.com/d4l3k/pok/protobuf/tensorflow/core/util"
 
 import strconv "strconv"
 

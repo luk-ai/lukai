@@ -15,7 +15,7 @@ package tensorflow
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow_error "github.com/d4l3k/pok/tensorflow/core/lib/core"
+import tensorflow_error "github.com/d4l3k/pok/protobuf/tensorflow/core/lib/core"
 
 import fmt "fmt"
 import strings "strings"

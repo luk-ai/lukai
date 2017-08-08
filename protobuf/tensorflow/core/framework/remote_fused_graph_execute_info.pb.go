@@ -15,9 +15,9 @@ package tensorflow
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow10 "github.com/d4l3k/pok/tensorflow/core/framework"
-import tensorflow2 "github.com/d4l3k/pok/tensorflow/core/framework"
-import tensorflow3 "github.com/d4l3k/pok/tensorflow/core/framework"
+import tensorflow10 "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
+import tensorflow2 "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
+import tensorflow3 "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
 
 import strconv "strconv"
 

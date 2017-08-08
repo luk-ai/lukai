@@ -22,12 +22,12 @@ package tensorflow
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow3 "github.com/d4l3k/pok/tensorflow/core/framework"
-import tensorflow11 "github.com/d4l3k/pok/tensorflow/core/framework"
-import tensorflow14 "github.com/d4l3k/pok/tensorflow/core/framework"
-import tensorflow15 "github.com/d4l3k/pok/tensorflow/core/protobuf"
-import tensorflow16 "github.com/d4l3k/pok/tensorflow/core/protobuf"
-import tensorflow17 "github.com/d4l3k/pok/tensorflow/core/protobuf"
+import tensorflow3 "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
+import tensorflow11 "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
+import tensorflow14 "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
+import tensorflow15 "github.com/d4l3k/pok/protobuf/tensorflow/core/protobuf"
+import tensorflow16 "github.com/d4l3k/pok/protobuf/tensorflow/core/protobuf"
+import tensorflow17 "github.com/d4l3k/pok/protobuf/tensorflow/core/protobuf"
 
 import strconv "strconv"
 

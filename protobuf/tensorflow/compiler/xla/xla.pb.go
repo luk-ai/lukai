@@ -67,8 +67,8 @@ package xla
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import xla1 "github.com/d4l3k/pok/tensorflow/compiler/xla"
-import xla2 "github.com/d4l3k/pok/tensorflow/compiler/xla/service"
+import xla1 "github.com/d4l3k/pok/protobuf/tensorflow/compiler/xla"
+import xla2 "github.com/d4l3k/pok/protobuf/tensorflow/compiler/xla/service"
 
 import strconv "strconv"
 

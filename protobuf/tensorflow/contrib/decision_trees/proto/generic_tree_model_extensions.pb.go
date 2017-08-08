@@ -15,7 +15,7 @@ package tensorflow_decision_trees
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow_decision_trees1 "github.com/d4l3k/pok/tensorflow/contrib/decision_trees/proto"
+import tensorflow_decision_trees1 "github.com/d4l3k/pok/protobuf/tensorflow/contrib/decision_trees/proto"
 
 import fmt "fmt"
 import strings "strings"

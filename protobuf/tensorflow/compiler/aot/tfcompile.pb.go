@@ -18,8 +18,8 @@ package tensorflow_tfcompile
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow "github.com/d4l3k/pok/tensorflow/core/framework"
-import tensorflow1 "github.com/d4l3k/pok/tensorflow/core/framework"
+import tensorflow "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
+import tensorflow1 "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
 
 import fmt "fmt"
 import strings "strings"

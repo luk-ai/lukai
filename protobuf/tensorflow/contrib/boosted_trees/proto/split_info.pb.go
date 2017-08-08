@@ -15,7 +15,7 @@ package tensorflow_boosted_trees_learner
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow_boosted_trees_trees "github.com/d4l3k/pok/tensorflow/contrib/boosted_trees/proto"
+import tensorflow_boosted_trees_trees "github.com/d4l3k/pok/protobuf/tensorflow/contrib/boosted_trees/proto"
 
 import fmt "fmt"
 import strings "strings"

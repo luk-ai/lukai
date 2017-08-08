@@ -18,7 +18,7 @@ package tensorflow
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow4 "github.com/d4l3k/pok/tensorflow/core/framework"
+import tensorflow4 "github.com/d4l3k/pok/protobuf/tensorflow/core/framework"
 
 import bytes "bytes"
 

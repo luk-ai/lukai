@@ -15,7 +15,7 @@ package tensorflow
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import tensorflow22 "github.com/d4l3k/pok/tensorflow/core/protobuf"
+import tensorflow22 "github.com/d4l3k/pok/protobuf/tensorflow/core/protobuf"
 
 import fmt "fmt"
 import strings "strings"

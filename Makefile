@@ -1,14 +1,14 @@
 PROTO_FILES = $(shell find protobuf/ -type f -name '*.proto')
 PROTO_GO_FILES = $(patsubst protobuf/%.proto, protobuf/%.pb.go, $(PROTO_FILES))
 
-IMPORT_PREFIX := github.com/d4l3k/pok/
+IMPORT_PREFIX := github.com/d4l3k/pok/protobuf/
 
 # To edit in-place without creating a backup file, GNU sed requires a bare -i,
 # while BSD sed requires an empty string as the following argument.
 SED_INPLACE = sed $(shell sed --version 2>&1 | grep -q GNU && echo -i || echo "-i ''")
 $(call make-lazy,SED_INPLACE)
 
-.PHONY:
+.PHONY: build
 build: protobuf
 
 .PHONY: protobuf
@@ -28,3 +28,6 @@ protobuf/tensorflow:
 	$(SED_INPLACE) -E 's!$(IMPORT_PREFIX)(strings|reflect|math|strconv|bytes|errors|fmt|io|github\.com|golang\.org|google\.golang\.org)!\1!g' $@
 	touch $@
 
+.PHONY: clean
+clean:
+	find . -type f -name '*.pb.go' -delete
