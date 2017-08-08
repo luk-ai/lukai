@@ -12,18 +12,18 @@ $(call make-lazy,SED_INPLACE)
 build: protobuf
 
 .PHONY: protobuf
-protobuf: protobuf/tensorflow $(PROTO_GO_FILES)
+protobuf: $(PROTO_GO_FILES)
 
 current_dir = $(shell pwd)
 tensorflow_dir = "$(current_dir)/../../tensorflow/tensorflow/"
 
 .PHONY: protobuf/tensorflow
 protobuf/tensorflow:
-	cd $(tensorflow_dir) && cp -u --parents `find -name \*.proto | sed '/tensorflow\/python/d'` $(current_dir)/protobuf/
+	cd $(tensorflow_dir) && cp -u --parents `find -name \*.proto | sed '/tensorflow\/python/d' | sed '/_service.proto/d'` $(current_dir)/protobuf/
 
 
 %.pb.go: %.proto
-	protoc --proto_path=${GOPATH}/src/github.com/d4l3k/pok/protobuf:. -I protobuf/ $< --gogoslick_out=plugins=grpc,import_prefix=$(IMPORT_PREFIX):.
+	protoc --proto_path=${GOPATH}/src:. -I protobuf/ $< --gogoslick_out=plugins=grpc,import_prefix=$(IMPORT_PREFIX):.
 	# Fixup standard packages wrongly imported by gogo because of import_prefix.
 	$(SED_INPLACE) -E 's!$(IMPORT_PREFIX)(strings|reflect|math|strconv|bytes|errors|fmt|io|github\.com|golang\.org|google\.golang\.org)!\1!g' $@
 	touch $@
