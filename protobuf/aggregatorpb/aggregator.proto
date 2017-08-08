@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package aggregatorpb;
+
+import "tensorflow/core/protobuf/saved_model.proto";
+
+message HyperParams {
+  double proportion_clients = 1;
+  int64 batch_size = 2;
+  int64 num_rounds = 3;
+  double learning_rate = 4;
+}
+
+message Work {
+  int64 num_examples = 1;
+  int64 num_clients = 2;
+  int64 epoch = 3;
+  tensorflow.SavedModel model = 4;
+  string model_name = 5;
+  bool prod = 6;
+  HyperParams hyper_params = 7;
+}
+
+message GetWorkRequest {
+  repeated string model_names = 2;
+}
+
+message GetWorkReply {
+  repeated Work work = 1;
+}
+
+message ReportWorkRequest {
+  repeated Work work = 1;
+}
+
+message ReportWorkReply {}
+
+service Aggregator {
+  rpc GetWork (GetWorkRequest) returns (GetWorkReply) {}
+  rpc ReportWork(ReportWorkRequest) returns (ReportWorkReply) {}
+}
