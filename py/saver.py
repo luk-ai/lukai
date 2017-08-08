@@ -15,10 +15,10 @@ SavedModelName = "saved_model"
 def save(sess, target="model.tar.gz"):
     dir = tempfile.mkdtemp("pok_model_save_py")
 
-    saver = tf.train.Saver()
+    saver = tf.train.Saver(max_to_keep=1)
 
     tf.train.write_graph(sess.graph_def, dir, GraphDefName, as_text=False)
-    saver.save(sess, path.join(dir, SavedModelName), global_step=0)
+    saver.save(sess, path.join(dir, SavedModelName))
     saver_def = saver.as_saver_def().SerializeToString()
 
     with open(path.join(dir, SaverDefName), "wb") as file:

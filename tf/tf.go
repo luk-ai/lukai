@@ -4,7 +4,6 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
-	"errors"
 	"io"
 	"io/ioutil"
 	"os"
@@ -13,8 +12,10 @@ import (
 	"strings"
 
 	tensorflowpb "github.com/d4l3k/pok/protobuf/tensorflow"
-	"github.com/gogo/protobuf/proto"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
+
+	"github.com/gogo/protobuf/proto"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -120,12 +121,12 @@ func LoadModel(reader io.Reader) (*Model, error) {
 
 	if _, err := session.Run(
 		map[tensorflow.Output]*tensorflow.Tensor{
-			graph.Operation(saverDef.FilenameTensorName).Output(0): filenameTensor,
-		},
-		[]tensorflow.Output{
-			graph.Operation(ExtractNodeName(saverDef.RestoreOpName)).Output(0),
+			graph.Operation(ExtractNodeName(saverDef.FilenameTensorName)).Output(0): filenameTensor,
 		},
 		nil,
+		[]*tensorflow.Operation{
+			graph.Operation(saverDef.RestoreOpName),
+		},
 	); err != nil {
 		return nil, err
 	}
@@ -145,9 +146,10 @@ func ExtractNodeName(path string) string {
 // Save saves the model to the writer. See LoadModel.
 func (model *Model) Save(writer io.Writer) error {
 	gw := gzip.NewWriter(writer)
+	defer gw.Close()
 
 	tw := tar.NewWriter(gw)
-	defer tw.Flush()
+	defer tw.Close()
 
 	{
 		buf, err := proto.Marshal(&model.SaverDef)
@@ -172,6 +174,7 @@ func (model *Model) Save(writer io.Writer) error {
 		}
 		if err := tw.WriteHeader(&tar.Header{
 			Name: GraphDefName,
+			Mode: 0755,
 			Size: int64(buf.Len()),
 		}); err != nil {
 			return err
@@ -196,18 +199,22 @@ func (model *Model) Save(writer io.Writer) error {
 	// Run the saver.
 	if _, err := model.Session.Run(
 		map[tensorflow.Output]*tensorflow.Tensor{
-			model.Graph.Operation(model.SaverDef.FilenameTensorName).Output(0): filenameTensor,
-		},
-		[]tensorflow.Output{
-			model.Graph.Operation(ExtractNodeName(model.SaverDef.SaveTensorName)).Output(0),
+			model.Graph.Operation(ExtractNodeName(model.SaverDef.FilenameTensorName)).Output(0): filenameTensor,
 		},
 		nil,
+		[]*tensorflow.Operation{
+			model.Graph.Operation(ExtractNodeName(model.SaverDef.SaveTensorName)),
+		},
 	); err != nil {
 		return err
 	}
 
 	// Walk all outputted files from the Saver and store them into the tar.
 	if err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+
 		header, err := tar.FileInfoHeader(info, "")
 		if err != nil {
 			return err
@@ -217,11 +224,11 @@ func (model *Model) Save(writer io.Writer) error {
 		}
 		file, err := os.OpenFile(path, os.O_RDONLY, 0755)
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "failed to open file %q/%q", dir, path)
 		}
 		defer file.Close()
 		if _, err := io.Copy(tw, file); err != nil {
-			return err
+			return errors.Wrapf(err, "failed to copy file %q/%q", dir, path)
 		}
 		return nil
 	}); err != nil {
