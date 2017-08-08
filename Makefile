@@ -31,3 +31,7 @@ protobuf/tensorflow:
 .PHONY: clean
 clean:
 	find . -type f -name '*.pb.go' -delete
+
+.PHONY: loc
+cloc:
+	cloc py tf protobuf/**/*.proto
