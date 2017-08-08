@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package aggregatorpb;
 
-import "tensorflow/core/protobuf/saved_model.proto";
-
 message HyperParams {
   double proportion_clients = 1;
   int64 batch_size = 2;
@@ -12,17 +10,22 @@ message HyperParams {
 }
 
 message Work {
-  int64 num_examples = 1;
-  int64 num_clients = 2;
-  int64 epoch = 3;
-  tensorflow.SavedModel model = 4;
-  string model_name = 5;
+  ModelID id = 1;
+  int64 num_examples = 2;
+  int64 num_clients = 3;
+  int64 epoch = 4;
+  bytes model = 5;
   bool prod = 6;
   HyperParams hyper_params = 7;
 }
 
+message ModelID {
+  string domain = 1;
+  string name = 2;
+}
+
 message GetWorkRequest {
-  repeated string model_names = 2;
+  repeated ModelID ids = 2;
 }
 
 message GetWorkReply {
