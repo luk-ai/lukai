@@ -1,53 +1,24 @@
 package tf
 
-import (
-	"bytes"
-	"log"
-	"math"
-	"os"
-	"testing"
-)
+import "testing"
 
-func TestExtractNodeName(t *testing.T) {
+func TestParseNodeOutput(t *testing.T) {
 	cases := []struct {
 		in, want string
+		wantn    int
 	}{
-		{"", ""},
-		{"asdf", "asdf"},
-		{"test/foo/bar:10", "test/foo/bar"},
+		{"", "", -1},
+		{"asdf", "asdf", -1},
+		{"test/foo/bar:10", "test/foo/bar", 10},
 	}
 
 	for i, c := range cases {
-		out := ExtractNodeName(c.in)
-		if out != c.want {
-			t.Errorf("%d. ExtractNodeName(%q) = %q; not %q", i, c.in, out, c.want)
+		out, n, err := ParseNodeOutput(c.in)
+		if err != nil {
+			t.Error(err)
 		}
-	}
-}
-
-func TestLoadSaveModel(t *testing.T) {
-	file, err := os.OpenFile("../testdata/model.tar.gz", os.O_RDONLY, 0755)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer file.Close()
-
-	model, err := LoadModel(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var buf bytes.Buffer
-	if err := model.Save(&buf); err != nil {
-		t.Fatalf("%+v", err)
-	}
-	fi, err := file.Stat()
-	if err != nil {
-		t.Fatal(err)
-	}
-	a := float64(buf.Len())
-	b := float64(fi.Size())
-	if math.Abs(a-b) > math.Max(a, b)*0.2 {
-		log.Fatalf("model sizes differ! model.Save() size = %d; original size = %d", buf.Len(), fi.Size())
+		if out != c.want || n != c.wantn {
+			t.Errorf("%d. ExtractNodeName(%q) = %q, %d; not %q, %d", i, c.in, out, n, c.want, c.wantn)
+		}
 	}
 }
