@@ -32,19 +32,23 @@ const (
 // - checkpoint
 // - saved_model-<iteration>.{index,meta,data-*}
 func LoadModel(reader io.Reader) (*Model, error) {
+	model := Model{}
+	if err := model.Load(reader); err != nil {
+		return nil, err
+	}
+	return &model, nil
+}
+
+func (model *Model) Load(reader io.Reader) error {
 	dir, err := ioutil.TempDir("", "pok_model_load")
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer os.RemoveAll(dir)
 
 	gr, err := gzip.NewReader(reader)
 	if err != nil {
-		return nil, err
-	}
-
-	model := Model{
-		Graph: tensorflow.NewGraph(),
+		return err
 	}
 
 	var foundSaverDef, foundModel bool
@@ -55,90 +59,93 @@ func LoadModel(reader io.Reader) (*Model, error) {
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			return nil, err
+			return err
 		}
 
 		if header.Name == GraphDefName {
 			var buf bytes.Buffer
 			if _, err := buf.ReadFrom(tr); err != nil {
-				return nil, err
+				return err
+			}
+			if model.Graph == nil {
+				model.Graph = tensorflow.NewGraph()
 			}
 			// Construct an in-memory graph from the serialized form.
-			if err := model.Graph.Import(buf.Bytes(), ""); err != nil {
-				return nil, err
+			if err := model.Graph.Import(buf.Bytes(), model.Prefix); err != nil {
+				return err
 			}
 			foundModel = true
 		} else if header.Name == SaverDefName {
 			var buf bytes.Buffer
 			if _, err := buf.ReadFrom(tr); err != nil {
-				return nil, err
+				return err
 			}
 			if err := proto.Unmarshal(buf.Bytes(), &model.SaverDef); err != nil {
-				return nil, err
+				return err
 			}
 			foundSaverDef = true
 		} else if header.Name == TrainableVariablesName {
 			if err := json.NewDecoder(tr).Decode(&model.TrainableVariables); err != nil {
-				return nil, err
+				return err
 			}
 		} else {
 			file := path.Join(dir, header.Name)
 			f, err := os.OpenFile(file, os.O_CREATE|os.O_WRONLY, 0755)
 			if err != nil {
-				return nil, err
+				return err
 			}
 			_, err = io.Copy(f, tr)
 			if err := f.Close(); err != nil {
-				return nil, err
+				return err
 			}
 			if err != nil {
-				return nil, err
+				return err
 			}
 		}
 	}
 
 	// Make sure we have all the information required.
 	if !foundSaverDef {
-		return nil, errors.New("missing " + SaverDefName)
+		return errors.New("missing " + SaverDefName)
 	}
 	if !foundModel {
-		return nil, errors.New("missing " + GraphDefName)
+		return errors.New("missing " + GraphDefName)
 	}
 
 	// Create a session for inference over graph.
 	model.Session, err = tensorflow.NewSession(model.Graph, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	filenameTensor, err := tensorflow.NewTensor(path.Join(dir, SavedModelName))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	filenameOp, filenameOpI, err := ParseNodeOutput(model.SaverDef.FilenameTensorName)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	restoreOp, _, err := ParseNodeOutput(model.SaverDef.RestoreOpName)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if _, err := model.Session.Run(
 		map[tensorflow.Output]*tensorflow.Tensor{
-			model.Graph.Operation(filenameOp).Output(filenameOpI): filenameTensor,
+			model.Graph.Operation(model.ApplyPrefix(filenameOp)).Output(filenameOpI): filenameTensor,
 		},
 		nil,
 		[]*tensorflow.Operation{
-			model.Graph.Operation(restoreOp),
+			model.Graph.Operation(model.ApplyPrefix(restoreOp)),
 		},
 	); err != nil {
-		return nil, err
+		return err
 	}
 
-	return &model, nil
+	return nil
 }
 
 // Save saves the model to the writer. See LoadModel.
@@ -224,11 +231,11 @@ func (model *Model) Save(writer io.Writer) error {
 	// Run the saver.
 	if _, err := model.Session.Run(
 		map[tensorflow.Output]*tensorflow.Tensor{
-			model.Graph.Operation(filenameOp).Output(filenameOpI): filenameTensor,
+			model.Graph.Operation(model.ApplyPrefix(filenameOp)).Output(filenameOpI): filenameTensor,
 		},
 		nil,
 		[]*tensorflow.Operation{
-			model.Graph.Operation(saveOp),
+			model.Graph.Operation(model.ApplyPrefix(saveOp)),
 		},
 	); err != nil {
 		return err

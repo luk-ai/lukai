@@ -14,6 +14,14 @@ type Model struct {
 	Session            *tensorflow.Session
 	SaverDef           tensorflowpb.SaverDef
 	TrainableVariables []string
+	Prefix             string
+}
+
+func (model Model) ApplyPrefix(op string) string {
+	if len(model.Prefix) > 0 {
+		return model.Prefix + "/" + op
+	}
+	return op
 }
 
 // ParseNodeOutput returns the node name when given a "<name>:<output #>" pair.

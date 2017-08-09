@@ -62,3 +62,35 @@ func TestLoadSaveModel(t *testing.T) {
 		t.Fatalf("LoadModel(%+v.Save()) != %+v", model2, model)
 	}
 }
+
+func TestModelLoadPrefix(t *testing.T) {
+	file, err := os.OpenFile("../testdata/model.tar.gz", os.O_RDONLY, 0755)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer file.Close()
+
+	model := Model{Prefix: "asdf"}
+	if err := model.Load(file); err != nil {
+		t.Fatal(err)
+	}
+	outputs, err := model.TrainableVariablesOutputs()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, output := range outputs {
+		if output.Op == nil {
+			t.Errorf("%+v.Load(...), model.TrainableVariablesName() has nil op. = %+v", model, outputs)
+		}
+	}
+
+	prePrefixOpName, _, err := ParseNodeOutput(model.TrainableVariables[0])
+	if err != nil {
+		t.Fatal(err)
+	}
+	opName := "asdf/" + prePrefixOpName
+	op := model.Graph.Operation(opName)
+	if op == nil {
+		t.Errorf("%+v.Graph.Operation(%+q) is nil", model, opName)
+	}
+}
