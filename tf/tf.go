@@ -1,6 +1,7 @@
 package tf
 
 import (
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -38,4 +39,23 @@ func ParseNodeOutput(path string) (string, int, error) {
 		return parts[0], n, nil
 	}
 	return parts[0], -1, nil
+}
+
+// GetModel fetches a model from a URL and loads it.
+func GetModel(url string) (*Model, error) {
+	req, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer req.Body.Close()
+	model, err := LoadModel(req.Body)
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}
+
+// Close closes the model.
+func (model *Model) Close() error {
+	return model.Session.Close()
 }

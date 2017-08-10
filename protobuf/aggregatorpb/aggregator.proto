@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
 package aggregatorpb;
 
 message HyperParams {
@@ -10,13 +12,13 @@ message HyperParams {
 }
 
 message Work {
-  ModelID id = 1;
+  ModelID id = 1 [(gogoproto.nullable) = false];
   int64 num_examples = 2;
   int64 num_clients = 3;
   int64 epoch = 4;
   bytes model = 5;
   bool prod = 6;
-  HyperParams hyper_params = 7;
+  HyperParams hyper_params = 7 [(gogoproto.nullable) = false];
 }
 
 message ModelID {
