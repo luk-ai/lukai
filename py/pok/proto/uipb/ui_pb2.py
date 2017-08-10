@@ -14,15 +14,16 @@ _sym_db = _symbol_database.Default()
 
 
 from github.com.gogo.protobuf.gogoproto import gogo_pb2 as github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2
+from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='uipb/ui.proto',
   package='uipb',
   syntax='proto3',
-  serialized_pb=_b('\n\ruipb/ui.proto\x12\x04uipb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\"D\n\x0cLoginRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\x08\"U\n\x0fRegisterRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\x08\x12\x0c\n\x04name\x18\x04 \x01(\t\"\x18\n\x16\x41uthenticationResponse2\x84\x01\n\x02UI\x12;\n\x05Login\x12\x12.uipb.LoginRequest\x1a\x1c.uipb.AuthenticationResponse\"\x00\x12\x41\n\x08Register\x12\x15.uipb.RegisterRequest\x1a\x1c.uipb.AuthenticationResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\ruipb/ui.proto\x12\x04uipb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1cgoogle/api/annotations.proto\"D\n\x0cLoginRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\x08\"U\n\x0fRegisterRequest\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\x08\x12\x0c\n\x04name\x18\x04 \x01(\t\"\x18\n\x16\x41uthenticationResponse2\xb4\x01\n\x02UI\x12S\n\x05Login\x12\x12.uipb.LoginRequest\x1a\x1c.uipb.AuthenticationResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/api/v1/login:\x01*\x12Y\n\x08Register\x12\x15.uipb.RegisterRequest\x1a\x1c.uipb.AuthenticationResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/api/v1/login:\x01*b\x06proto3')
   ,
-  dependencies=[github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,])
+  dependencies=[github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,])
 
 
 
@@ -67,8 +68,8 @@ _LOGINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=70,
-  serialized_end=138,
+  serialized_start=100,
+  serialized_end=168,
 )
 
 
@@ -119,8 +120,8 @@ _REGISTERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=140,
-  serialized_end=225,
+  serialized_start=170,
+  serialized_end=255,
 )
 
 
@@ -143,8 +144,8 @@ _AUTHENTICATIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=227,
-  serialized_end=251,
+  serialized_start=257,
+  serialized_end=281,
 )
 
 DESCRIPTOR.message_types_by_name['LoginRequest'] = _LOGINREQUEST

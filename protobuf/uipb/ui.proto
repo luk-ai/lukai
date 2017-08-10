@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/api/annotations.proto";
 
 package uipb;
 
@@ -22,6 +23,16 @@ message RegisterRequest {
 message AuthenticationResponse {}
 
 service UI {
-  rpc Login (LoginRequest) returns (AuthenticationResponse) {}
-  rpc Register (RegisterRequest) returns (AuthenticationResponse) {}
+  rpc Login (LoginRequest) returns (AuthenticationResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/login"
+      body: "*"
+    };
+  }
+  rpc Register (RegisterRequest) returns (AuthenticationResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/login"
+      body: "*"
+    };
+  }
 }

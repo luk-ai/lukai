@@ -25,10 +25,11 @@ protobuf/tensorflow:
 	cd $(tensorflow_dir) && cp -u tensorflow/core/framework/types.proto $(tensorflow_protobuf_dir)
 	#cd $(tensorflow_dir) && cp -u --parents `find -name \*.proto | sed '/tensorflow\/python/d' | sed '/_service.proto/d'` $(current_dir)/protobuf/
 
+proto_import_paths=-I ${GOPATH}/src -I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I protobuf/
 
 %.pb.go: %.proto
-	protoc --proto_path=${GOPATH}/src:. -I protobuf/ $< --gogoslick_out=plugins=grpc:.
-	python -m grpc_tools.protoc -I protobuf/ -I ../../../ --python_out=py/pok/proto --grpc_python_out=py/pok/proto $<
+	protoc --proto_path=${GOPATH}/src:. ${proto_import_paths} $< --gogoslick_out=plugins=grpc:. --grpc-gateway_out=logtostderr=true:.
+	python -m grpc_tools.protoc ${proto_import_paths} --python_out=py/pok/proto --grpc_python_out=py/pok/proto $<
 
 
 .PHONY: clean
