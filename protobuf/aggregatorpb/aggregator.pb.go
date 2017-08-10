@@ -12,7 +12,6 @@
 		Work
 		ModelID
 		GetWorkRequest
-		GetWorkReply
 		ReportWorkRequest
 		ReportWorkReply
 */
@@ -22,6 +21,8 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 import _ "github.com/gogo/protobuf/gogoproto"
+
+import strconv "strconv"
 
 import bytes "bytes"
 
@@ -46,11 +47,36 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
+type TrainingStatus int32
+
+const (
+	SCHEDULED TrainingStatus = 0
+	TRAINING  TrainingStatus = 1
+	SUCCEEDED TrainingStatus = 2
+	FAILED    TrainingStatus = 3
+)
+
+var TrainingStatus_name = map[int32]string{
+	0: "SCHEDULED",
+	1: "TRAINING",
+	2: "SUCCEEDED",
+	3: "FAILED",
+}
+var TrainingStatus_value = map[string]int32{
+	"SCHEDULED": 0,
+	"TRAINING":  1,
+	"SUCCEEDED": 2,
+	"FAILED":    3,
+}
+
+func (TrainingStatus) EnumDescriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{0} }
+
 type HyperParams struct {
 	ProportionClients float64 `protobuf:"fixed64,1,opt,name=proportion_clients,json=proportionClients,proto3" json:"proportion_clients,omitempty"`
 	BatchSize         int64   `protobuf:"varint,2,opt,name=batch_size,json=batchSize,proto3" json:"batch_size,omitempty"`
 	NumRounds         int64   `protobuf:"varint,3,opt,name=num_rounds,json=numRounds,proto3" json:"num_rounds,omitempty"`
 	LearningRate      float64 `protobuf:"fixed64,4,opt,name=learning_rate,json=learningRate,proto3" json:"learning_rate,omitempty"`
+	NumLocalRounds    int64   `protobuf:"varint,5,opt,name=num_local_rounds,json=numLocalRounds,proto3" json:"num_local_rounds,omitempty"`
 }
 
 func (m *HyperParams) Reset()                    { *m = HyperParams{} }
@@ -85,13 +111,19 @@ func (m *HyperParams) GetLearningRate() float64 {
 	return 0
 }
 
+func (m *HyperParams) GetNumLocalRounds() int64 {
+	if m != nil {
+		return m.NumLocalRounds
+	}
+	return 0
+}
+
 type Work struct {
 	Id          ModelID     `protobuf:"bytes,1,opt,name=id" json:"id"`
 	NumExamples int64       `protobuf:"varint,2,opt,name=num_examples,json=numExamples,proto3" json:"num_examples,omitempty"`
 	NumClients  int64       `protobuf:"varint,3,opt,name=num_clients,json=numClients,proto3" json:"num_clients,omitempty"`
 	Epoch       int64       `protobuf:"varint,4,opt,name=epoch,proto3" json:"epoch,omitempty"`
 	Model       []byte      `protobuf:"bytes,5,opt,name=model,proto3" json:"model,omitempty"`
-	Prod        bool        `protobuf:"varint,6,opt,name=prod,proto3" json:"prod,omitempty"`
 	HyperParams HyperParams `protobuf:"bytes,7,opt,name=hyper_params,json=hyperParams" json:"hyper_params"`
 }
 
@@ -134,13 +166,6 @@ func (m *Work) GetModel() []byte {
 	return nil
 }
 
-func (m *Work) GetProd() bool {
-	if m != nil {
-		return m.Prod
-	}
-	return false
-}
-
 func (m *Work) GetHyperParams() HyperParams {
 	if m != nil {
 		return m.HyperParams
@@ -151,6 +176,7 @@ func (m *Work) GetHyperParams() HyperParams {
 type ModelID struct {
 	Domain string `protobuf:"bytes,1,opt,name=domain,proto3" json:"domain,omitempty"`
 	Name   string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Id     int64  `protobuf:"varint,3,opt,name=id,proto3" json:"id,omitempty"`
 }
 
 func (m *ModelID) Reset()                    { *m = ModelID{} }
@@ -171,45 +197,37 @@ func (m *ModelID) GetName() string {
 	return ""
 }
 
+func (m *ModelID) GetId() int64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
 type GetWorkRequest struct {
-	Ids []*ModelID `protobuf:"bytes,2,rep,name=ids" json:"ids,omitempty"`
+	Id []ModelID `protobuf:"bytes,2,rep,name=id" json:"id"`
 }
 
 func (m *GetWorkRequest) Reset()                    { *m = GetWorkRequest{} }
 func (*GetWorkRequest) ProtoMessage()               {}
 func (*GetWorkRequest) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{3} }
 
-func (m *GetWorkRequest) GetIds() []*ModelID {
+func (m *GetWorkRequest) GetId() []ModelID {
 	if m != nil {
-		return m.Ids
-	}
-	return nil
-}
-
-type GetWorkReply struct {
-	Work []*Work `protobuf:"bytes,1,rep,name=work" json:"work,omitempty"`
-}
-
-func (m *GetWorkReply) Reset()                    { *m = GetWorkReply{} }
-func (*GetWorkReply) ProtoMessage()               {}
-func (*GetWorkReply) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{4} }
-
-func (m *GetWorkReply) GetWork() []*Work {
-	if m != nil {
-		return m.Work
+		return m.Id
 	}
 	return nil
 }
 
 type ReportWorkRequest struct {
-	Work []*Work `protobuf:"bytes,1,rep,name=work" json:"work,omitempty"`
+	Work []Work `protobuf:"bytes,1,rep,name=work" json:"work"`
 }
 
 func (m *ReportWorkRequest) Reset()                    { *m = ReportWorkRequest{} }
 func (*ReportWorkRequest) ProtoMessage()               {}
-func (*ReportWorkRequest) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{5} }
+func (*ReportWorkRequest) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{4} }
 
-func (m *ReportWorkRequest) GetWork() []*Work {
+func (m *ReportWorkRequest) GetWork() []Work {
 	if m != nil {
 		return m.Work
 	}
@@ -221,16 +239,23 @@ type ReportWorkReply struct {
 
 func (m *ReportWorkReply) Reset()                    { *m = ReportWorkReply{} }
 func (*ReportWorkReply) ProtoMessage()               {}
-func (*ReportWorkReply) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{6} }
+func (*ReportWorkReply) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{5} }
 
 func init() {
 	proto.RegisterType((*HyperParams)(nil), "aggregatorpb.HyperParams")
 	proto.RegisterType((*Work)(nil), "aggregatorpb.Work")
 	proto.RegisterType((*ModelID)(nil), "aggregatorpb.ModelID")
 	proto.RegisterType((*GetWorkRequest)(nil), "aggregatorpb.GetWorkRequest")
-	proto.RegisterType((*GetWorkReply)(nil), "aggregatorpb.GetWorkReply")
 	proto.RegisterType((*ReportWorkRequest)(nil), "aggregatorpb.ReportWorkRequest")
 	proto.RegisterType((*ReportWorkReply)(nil), "aggregatorpb.ReportWorkReply")
+	proto.RegisterEnum("aggregatorpb.TrainingStatus", TrainingStatus_name, TrainingStatus_value)
+}
+func (x TrainingStatus) String() string {
+	s, ok := TrainingStatus_name[int32(x)]
+	if ok {
+		return s
+	}
+	return strconv.Itoa(int(x))
 }
 func (this *HyperParams) Equal(that interface{}) bool {
 	if that == nil {
@@ -267,6 +292,9 @@ func (this *HyperParams) Equal(that interface{}) bool {
 		return false
 	}
 	if this.LearningRate != that1.LearningRate {
+		return false
+	}
+	if this.NumLocalRounds != that1.NumLocalRounds {
 		return false
 	}
 	return true
@@ -311,9 +339,6 @@ func (this *Work) Equal(that interface{}) bool {
 	if !bytes.Equal(this.Model, that1.Model) {
 		return false
 	}
-	if this.Prod != that1.Prod {
-		return false
-	}
 	if !this.HyperParams.Equal(&that1.HyperParams) {
 		return false
 	}
@@ -350,6 +375,9 @@ func (this *ModelID) Equal(that interface{}) bool {
 	if this.Name != that1.Name {
 		return false
 	}
+	if this.Id != that1.Id {
+		return false
+	}
 	return true
 }
 func (this *GetWorkRequest) Equal(that interface{}) bool {
@@ -377,46 +405,11 @@ func (this *GetWorkRequest) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if len(this.Ids) != len(that1.Ids) {
+	if len(this.Id) != len(that1.Id) {
 		return false
 	}
-	for i := range this.Ids {
-		if !this.Ids[i].Equal(that1.Ids[i]) {
-			return false
-		}
-	}
-	return true
-}
-func (this *GetWorkReply) Equal(that interface{}) bool {
-	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
-	}
-
-	that1, ok := that.(*GetWorkReply)
-	if !ok {
-		that2, ok := that.(GetWorkReply)
-		if ok {
-			that1 = &that2
-		} else {
-			return false
-		}
-	}
-	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
-	} else if this == nil {
-		return false
-	}
-	if len(this.Work) != len(that1.Work) {
-		return false
-	}
-	for i := range this.Work {
-		if !this.Work[i].Equal(that1.Work[i]) {
+	for i := range this.Id {
+		if !this.Id[i].Equal(&that1.Id[i]) {
 			return false
 		}
 	}
@@ -451,7 +444,7 @@ func (this *ReportWorkRequest) Equal(that interface{}) bool {
 		return false
 	}
 	for i := range this.Work {
-		if !this.Work[i].Equal(that1.Work[i]) {
+		if !this.Work[i].Equal(&that1.Work[i]) {
 			return false
 		}
 	}
@@ -488,12 +481,13 @@ func (this *HyperParams) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := make([]string, 0, 8)
+	s := make([]string, 0, 9)
 	s = append(s, "&aggregatorpb.HyperParams{")
 	s = append(s, "ProportionClients: "+fmt.Sprintf("%#v", this.ProportionClients)+",\n")
 	s = append(s, "BatchSize: "+fmt.Sprintf("%#v", this.BatchSize)+",\n")
 	s = append(s, "NumRounds: "+fmt.Sprintf("%#v", this.NumRounds)+",\n")
 	s = append(s, "LearningRate: "+fmt.Sprintf("%#v", this.LearningRate)+",\n")
+	s = append(s, "NumLocalRounds: "+fmt.Sprintf("%#v", this.NumLocalRounds)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -501,14 +495,13 @@ func (this *Work) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := make([]string, 0, 11)
+	s := make([]string, 0, 10)
 	s = append(s, "&aggregatorpb.Work{")
 	s = append(s, "Id: "+strings.Replace(this.Id.GoString(), `&`, ``, 1)+",\n")
 	s = append(s, "NumExamples: "+fmt.Sprintf("%#v", this.NumExamples)+",\n")
 	s = append(s, "NumClients: "+fmt.Sprintf("%#v", this.NumClients)+",\n")
 	s = append(s, "Epoch: "+fmt.Sprintf("%#v", this.Epoch)+",\n")
 	s = append(s, "Model: "+fmt.Sprintf("%#v", this.Model)+",\n")
-	s = append(s, "Prod: "+fmt.Sprintf("%#v", this.Prod)+",\n")
 	s = append(s, "HyperParams: "+strings.Replace(this.HyperParams.GoString(), `&`, ``, 1)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
@@ -517,10 +510,11 @@ func (this *ModelID) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := make([]string, 0, 6)
+	s := make([]string, 0, 7)
 	s = append(s, "&aggregatorpb.ModelID{")
 	s = append(s, "Domain: "+fmt.Sprintf("%#v", this.Domain)+",\n")
 	s = append(s, "Name: "+fmt.Sprintf("%#v", this.Name)+",\n")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -530,20 +524,12 @@ func (this *GetWorkRequest) GoString() string {
 	}
 	s := make([]string, 0, 5)
 	s = append(s, "&aggregatorpb.GetWorkRequest{")
-	if this.Ids != nil {
-		s = append(s, "Ids: "+fmt.Sprintf("%#v", this.Ids)+",\n")
-	}
-	s = append(s, "}")
-	return strings.Join(s, "")
-}
-func (this *GetWorkReply) GoString() string {
-	if this == nil {
-		return "nil"
-	}
-	s := make([]string, 0, 5)
-	s = append(s, "&aggregatorpb.GetWorkReply{")
-	if this.Work != nil {
-		s = append(s, "Work: "+fmt.Sprintf("%#v", this.Work)+",\n")
+	if this.Id != nil {
+		vs := make([]*ModelID, len(this.Id))
+		for i := range vs {
+			vs[i] = &this.Id[i]
+		}
+		s = append(s, "Id: "+fmt.Sprintf("%#v", vs)+",\n")
 	}
 	s = append(s, "}")
 	return strings.Join(s, "")
@@ -555,7 +541,11 @@ func (this *ReportWorkRequest) GoString() string {
 	s := make([]string, 0, 5)
 	s = append(s, "&aggregatorpb.ReportWorkRequest{")
 	if this.Work != nil {
-		s = append(s, "Work: "+fmt.Sprintf("%#v", this.Work)+",\n")
+		vs := make([]*Work, len(this.Work))
+		for i := range vs {
+			vs[i] = &this.Work[i]
+		}
+		s = append(s, "Work: "+fmt.Sprintf("%#v", vs)+",\n")
 	}
 	s = append(s, "}")
 	return strings.Join(s, "")
@@ -589,7 +579,7 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for Aggregator service
 
 type AggregatorClient interface {
-	GetWork(ctx context.Context, in *GetWorkRequest, opts ...grpc.CallOption) (*GetWorkReply, error)
+	GetWork(ctx context.Context, in *GetWorkRequest, opts ...grpc.CallOption) (Aggregator_GetWorkClient, error)
 	ReportWork(ctx context.Context, in *ReportWorkRequest, opts ...grpc.CallOption) (*ReportWorkReply, error)
 }
 
@@ -601,13 +591,36 @@ func NewAggregatorClient(cc *grpc.ClientConn) AggregatorClient {
 	return &aggregatorClient{cc}
 }
 
-func (c *aggregatorClient) GetWork(ctx context.Context, in *GetWorkRequest, opts ...grpc.CallOption) (*GetWorkReply, error) {
-	out := new(GetWorkReply)
-	err := grpc.Invoke(ctx, "/aggregatorpb.Aggregator/GetWork", in, out, c.cc, opts...)
+func (c *aggregatorClient) GetWork(ctx context.Context, in *GetWorkRequest, opts ...grpc.CallOption) (Aggregator_GetWorkClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_Aggregator_serviceDesc.Streams[0], c.cc, "/aggregatorpb.Aggregator/GetWork", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &aggregatorGetWorkClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Aggregator_GetWorkClient interface {
+	Recv() (*Work, error)
+	grpc.ClientStream
+}
+
+type aggregatorGetWorkClient struct {
+	grpc.ClientStream
+}
+
+func (x *aggregatorGetWorkClient) Recv() (*Work, error) {
+	m := new(Work)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func (c *aggregatorClient) ReportWork(ctx context.Context, in *ReportWorkRequest, opts ...grpc.CallOption) (*ReportWorkReply, error) {
@@ -622,7 +635,7 @@ func (c *aggregatorClient) ReportWork(ctx context.Context, in *ReportWorkRequest
 // Server API for Aggregator service
 
 type AggregatorServer interface {
-	GetWork(context.Context, *GetWorkRequest) (*GetWorkReply, error)
+	GetWork(*GetWorkRequest, Aggregator_GetWorkServer) error
 	ReportWork(context.Context, *ReportWorkRequest) (*ReportWorkReply, error)
 }
 
@@ -630,22 +643,25 @@ func RegisterAggregatorServer(s *grpc.Server, srv AggregatorServer) {
 	s.RegisterService(&_Aggregator_serviceDesc, srv)
 }
 
-func _Aggregator_GetWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetWorkRequest)
-	if err := dec(in); err != nil {
-		return nil, err
+func _Aggregator_GetWork_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetWorkRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(AggregatorServer).GetWork(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/aggregatorpb.Aggregator/GetWork",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AggregatorServer).GetWork(ctx, req.(*GetWorkRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(AggregatorServer).GetWork(m, &aggregatorGetWorkServer{stream})
+}
+
+type Aggregator_GetWorkServer interface {
+	Send(*Work) error
+	grpc.ServerStream
+}
+
+type aggregatorGetWorkServer struct {
+	grpc.ServerStream
+}
+
+func (x *aggregatorGetWorkServer) Send(m *Work) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _Aggregator_ReportWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -671,15 +687,17 @@ var _Aggregator_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*AggregatorServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetWork",
-			Handler:    _Aggregator_GetWork_Handler,
-		},
-		{
 			MethodName: "ReportWork",
 			Handler:    _Aggregator_ReportWork_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetWork",
+			Handler:       _Aggregator_GetWork_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "protobuf/aggregatorpb/aggregator.proto",
 }
 
@@ -717,6 +735,11 @@ func (m *HyperParams) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x21
 		i++
 		i = encodeFixed64Aggregator(dAtA, i, uint64(math.Float64bits(float64(m.LearningRate))))
+	}
+	if m.NumLocalRounds != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintAggregator(dAtA, i, uint64(m.NumLocalRounds))
 	}
 	return i, nil
 }
@@ -765,16 +788,6 @@ func (m *Work) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintAggregator(dAtA, i, uint64(len(m.Model)))
 		i += copy(dAtA[i:], m.Model)
 	}
-	if m.Prod {
-		dAtA[i] = 0x30
-		i++
-		if m.Prod {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i++
-	}
 	dAtA[i] = 0x3a
 	i++
 	i = encodeVarintAggregator(dAtA, i, uint64(m.HyperParams.Size()))
@@ -813,6 +826,11 @@ func (m *ModelID) MarshalTo(dAtA []byte) (int, error) {
 		i = encodeVarintAggregator(dAtA, i, uint64(len(m.Name)))
 		i += copy(dAtA[i:], m.Name)
 	}
+	if m.Id != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintAggregator(dAtA, i, uint64(m.Id))
+	}
 	return i, nil
 }
 
@@ -831,39 +849,9 @@ func (m *GetWorkRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Ids) > 0 {
-		for _, msg := range m.Ids {
+	if len(m.Id) > 0 {
+		for _, msg := range m.Id {
 			dAtA[i] = 0x12
-			i++
-			i = encodeVarintAggregator(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
-	}
-	return i, nil
-}
-
-func (m *GetWorkReply) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *GetWorkReply) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if len(m.Work) > 0 {
-		for _, msg := range m.Work {
-			dAtA[i] = 0xa
 			i++
 			i = encodeVarintAggregator(dAtA, i, uint64(msg.Size()))
 			n, err := msg.MarshalTo(dAtA[i:])
@@ -966,6 +954,9 @@ func (m *HyperParams) Size() (n int) {
 	if m.LearningRate != 0 {
 		n += 9
 	}
+	if m.NumLocalRounds != 0 {
+		n += 1 + sovAggregator(uint64(m.NumLocalRounds))
+	}
 	return n
 }
 
@@ -987,9 +978,6 @@ func (m *Work) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovAggregator(uint64(l))
 	}
-	if m.Prod {
-		n += 2
-	}
 	l = m.HyperParams.Size()
 	n += 1 + l + sovAggregator(uint64(l))
 	return n
@@ -1006,26 +994,17 @@ func (m *ModelID) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovAggregator(uint64(l))
 	}
+	if m.Id != 0 {
+		n += 1 + sovAggregator(uint64(m.Id))
+	}
 	return n
 }
 
 func (m *GetWorkRequest) Size() (n int) {
 	var l int
 	_ = l
-	if len(m.Ids) > 0 {
-		for _, e := range m.Ids {
-			l = e.Size()
-			n += 1 + l + sovAggregator(uint64(l))
-		}
-	}
-	return n
-}
-
-func (m *GetWorkReply) Size() (n int) {
-	var l int
-	_ = l
-	if len(m.Work) > 0 {
-		for _, e := range m.Work {
+	if len(m.Id) > 0 {
+		for _, e := range m.Id {
 			l = e.Size()
 			n += 1 + l + sovAggregator(uint64(l))
 		}
@@ -1073,6 +1052,7 @@ func (this *HyperParams) String() string {
 		`BatchSize:` + fmt.Sprintf("%v", this.BatchSize) + `,`,
 		`NumRounds:` + fmt.Sprintf("%v", this.NumRounds) + `,`,
 		`LearningRate:` + fmt.Sprintf("%v", this.LearningRate) + `,`,
+		`NumLocalRounds:` + fmt.Sprintf("%v", this.NumLocalRounds) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1087,7 +1067,6 @@ func (this *Work) String() string {
 		`NumClients:` + fmt.Sprintf("%v", this.NumClients) + `,`,
 		`Epoch:` + fmt.Sprintf("%v", this.Epoch) + `,`,
 		`Model:` + fmt.Sprintf("%v", this.Model) + `,`,
-		`Prod:` + fmt.Sprintf("%v", this.Prod) + `,`,
 		`HyperParams:` + strings.Replace(strings.Replace(this.HyperParams.String(), "HyperParams", "HyperParams", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
@@ -1100,6 +1079,7 @@ func (this *ModelID) String() string {
 	s := strings.Join([]string{`&ModelID{`,
 		`Domain:` + fmt.Sprintf("%v", this.Domain) + `,`,
 		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1109,17 +1089,7 @@ func (this *GetWorkRequest) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&GetWorkRequest{`,
-		`Ids:` + strings.Replace(fmt.Sprintf("%v", this.Ids), "ModelID", "ModelID", 1) + `,`,
-		`}`,
-	}, "")
-	return s
-}
-func (this *GetWorkReply) String() string {
-	if this == nil {
-		return "nil"
-	}
-	s := strings.Join([]string{`&GetWorkReply{`,
-		`Work:` + strings.Replace(fmt.Sprintf("%v", this.Work), "Work", "Work", 1) + `,`,
+		`Id:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Id), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1129,7 +1099,7 @@ func (this *ReportWorkRequest) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&ReportWorkRequest{`,
-		`Work:` + strings.Replace(fmt.Sprintf("%v", this.Work), "Work", "Work", 1) + `,`,
+		`Work:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Work), "Work", "Work", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1254,6 +1224,25 @@ func (m *HyperParams) Unmarshal(dAtA []byte) error {
 			v |= uint64(dAtA[iNdEx-2]) << 48
 			v |= uint64(dAtA[iNdEx-1]) << 56
 			m.LearningRate = float64(math.Float64frombits(v))
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NumLocalRounds", wireType)
+			}
+			m.NumLocalRounds = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAggregator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.NumLocalRounds |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAggregator(dAtA[iNdEx:])
@@ -1422,26 +1411,6 @@ func (m *Work) Unmarshal(dAtA []byte) error {
 				m.Model = []byte{}
 			}
 			iNdEx = postIndex
-		case 6:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Prod", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAggregator
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Prod = bool(v != 0)
 		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field HyperParams", wireType)
@@ -1580,6 +1549,25 @@ func (m *ModelID) Unmarshal(dAtA []byte) error {
 			}
 			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAggregator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipAggregator(dAtA[iNdEx:])
@@ -1632,7 +1620,7 @@ func (m *GetWorkRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Ids", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1656,89 +1644,8 @@ func (m *GetWorkRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Ids = append(m.Ids, &ModelID{})
-			if err := m.Ids[len(m.Ids)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipAggregator(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthAggregator
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *GetWorkReply) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowAggregator
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: GetWorkReply: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: GetWorkReply: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Work", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAggregator
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthAggregator
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Work = append(m.Work, &Work{})
-			if err := m.Work[len(m.Work)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Id = append(m.Id, ModelID{})
+			if err := m.Id[len(m.Id)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1818,7 +1725,7 @@ func (m *ReportWorkRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Work = append(m.Work, &Work{})
+			m.Work = append(m.Work, Work{})
 			if err := m.Work[len(m.Work)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -2002,39 +1909,43 @@ var (
 func init() { proto.RegisterFile("protobuf/aggregatorpb/aggregator.proto", fileDescriptorAggregator) }
 
 var fileDescriptorAggregator = []byte{
-	// 544 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x53, 0x31, 0x6f, 0xd3, 0x40,
-	0x14, 0xf6, 0x35, 0x69, 0x43, 0x5e, 0x0c, 0x28, 0x27, 0x40, 0x26, 0xa2, 0x97, 0x60, 0xa4, 0x12,
-	0x09, 0x9a, 0x48, 0x45, 0x20, 0x21, 0x26, 0x02, 0x15, 0x30, 0x80, 0xd0, 0x31, 0x30, 0x46, 0x97,
-	0xf8, 0x70, 0xac, 0xda, 0xbe, 0xe3, 0x6c, 0x0b, 0xd2, 0x89, 0x9f, 0xc0, 0x3f, 0x60, 0x60, 0xe1,
-	0xa7, 0x74, 0xec, 0xc8, 0x84, 0x88, 0x59, 0x18, 0xbb, 0xb3, 0xa0, 0x3b, 0xbb, 0x89, 0x23, 0x14,
-	0x89, 0xed, 0xbe, 0xf7, 0xbd, 0xf7, 0xbe, 0xef, 0x7d, 0xb2, 0x61, 0x4f, 0x2a, 0x91, 0x8a, 0x49,
-	0xf6, 0x6e, 0xc8, 0x7c, 0x5f, 0x71, 0x9f, 0xa5, 0x42, 0xc9, 0x49, 0x05, 0x0c, 0x4c, 0x03, 0xb6,
-	0xab, 0x74, 0x67, 0xdf, 0x0f, 0xd2, 0x59, 0x36, 0x19, 0x4c, 0x45, 0x34, 0xf4, 0x85, 0x2f, 0x86,
-	0xcb, 0x2d, 0x1a, 0x19, 0x60, 0x5e, 0xc5, 0xb0, 0xfb, 0x05, 0x41, 0xeb, 0xf9, 0x5c, 0x72, 0xf5,
-	0x9a, 0x29, 0x16, 0x25, 0x78, 0x1f, 0xb0, 0x54, 0x42, 0x0a, 0x95, 0x06, 0x22, 0x1e, 0x4f, 0xc3,
-	0x80, 0xc7, 0x69, 0xe2, 0xa0, 0x1e, 0xea, 0x23, 0xda, 0x5e, 0x31, 0x4f, 0x0a, 0x02, 0xef, 0x02,
-	0x4c, 0x58, 0x3a, 0x9d, 0x8d, 0x93, 0xe0, 0x98, 0x3b, 0x5b, 0x3d, 0xd4, 0xaf, 0xd1, 0xa6, 0xa9,
-	0xbc, 0x09, 0x8e, 0xb9, 0xa6, 0xe3, 0x2c, 0x1a, 0x2b, 0x91, 0xc5, 0x5e, 0xe2, 0xd4, 0x0a, 0x3a,
-	0xce, 0x22, 0x6a, 0x0a, 0xf8, 0x16, 0x5c, 0x0c, 0x39, 0x53, 0x71, 0x10, 0xfb, 0x63, 0xc5, 0x52,
-	0xee, 0xd4, 0x8d, 0x8e, 0x7d, 0x5e, 0xa4, 0x2c, 0xe5, 0xee, 0x1f, 0x04, 0xf5, 0xb7, 0x42, 0x1d,
-	0xe1, 0x3b, 0xb0, 0x15, 0x78, 0xc6, 0x4a, 0xeb, 0xe0, 0xea, 0xa0, 0x7a, 0xf4, 0xe0, 0xa5, 0xf0,
-	0x78, 0xf8, 0xe2, 0xe9, 0xa8, 0x7e, 0xf2, 0xa3, 0x6b, 0xd1, 0xad, 0xc0, 0xc3, 0x37, 0xc1, 0xd6,
-	0xca, 0xfc, 0x23, 0x8b, 0x64, 0xc8, 0x93, 0xd2, 0x5a, 0x2b, 0xce, 0xa2, 0xc3, 0xb2, 0x84, 0xbb,
-	0xa0, 0xe1, 0xf2, 0xc6, 0xc2, 0x9d, 0xf6, 0x7b, 0x7e, 0xdc, 0x15, 0xd8, 0xe6, 0x52, 0x4c, 0x67,
-	0xc6, 0x56, 0x8d, 0x16, 0x40, 0x57, 0x23, 0x2d, 0xe7, 0x6c, 0xf7, 0x50, 0xdf, 0xa6, 0x05, 0xc0,
-	0x18, 0xea, 0x52, 0x09, 0xcf, 0xd9, 0xe9, 0xa1, 0xfe, 0x05, 0x6a, 0xde, 0x78, 0x04, 0xf6, 0x4c,
-	0x47, 0x3b, 0x96, 0x26, 0x5b, 0xa7, 0x61, 0xac, 0x5f, 0x5f, 0xb7, 0x5e, 0x09, 0xbf, 0xb4, 0xdf,
-	0x9a, 0xad, 0x4a, 0xee, 0x7d, 0x68, 0x94, 0xc7, 0xe1, 0x6b, 0xb0, 0xe3, 0x89, 0x88, 0x05, 0xb1,
-	0xc9, 0xa0, 0x49, 0x4b, 0xa4, 0xa5, 0x63, 0x16, 0x15, 0xe9, 0x37, 0xa9, 0x79, 0xbb, 0x0f, 0xe1,
-	0xd2, 0x33, 0x9e, 0xea, 0xd8, 0x28, 0x7f, 0x9f, 0xf1, 0x24, 0xc5, 0xb7, 0xa1, 0x16, 0x78, 0x3a,
-	0x87, 0xda, 0xc6, 0xf8, 0xa8, 0xee, 0x70, 0x1f, 0x80, 0xbd, 0x1c, 0x95, 0xe1, 0x1c, 0xef, 0x41,
-	0xfd, 0x83, 0x50, 0x47, 0x0e, 0x32, 0x93, 0x78, 0x7d, 0xd2, 0xb4, 0x19, 0xde, 0x7d, 0x04, 0x6d,
-	0xca, 0xf5, 0xe7, 0x51, 0x55, 0xfd, 0xdf, 0xe1, 0x36, 0x5c, 0xae, 0x0e, 0xcb, 0x70, 0x7e, 0xf0,
-	0x15, 0x01, 0x3c, 0x5e, 0xb6, 0xe3, 0x43, 0x68, 0x94, 0xb6, 0xf0, 0x8d, 0xf5, 0x35, 0xeb, 0x87,
-	0x76, 0x3a, 0x1b, 0x58, 0x19, 0xce, 0x5d, 0x0b, 0xbf, 0x02, 0x58, 0x09, 0xe1, 0xee, 0x7a, 0xef,
-	0x3f, 0xfe, 0x3b, 0xbb, 0x9b, 0x1b, 0xcc, 0xbe, 0xd1, 0xdd, 0xd3, 0x05, 0xb1, 0xbe, 0x2f, 0x88,
-	0x75, 0xb6, 0x20, 0xe8, 0x53, 0x4e, 0xd0, 0xb7, 0x9c, 0xa0, 0x93, 0x9c, 0xa0, 0xd3, 0x9c, 0xa0,
-	0x9f, 0x39, 0x41, 0xbf, 0x73, 0x62, 0x9d, 0xe5, 0x04, 0x7d, 0xfe, 0x45, 0xac, 0xc9, 0x8e, 0xf9,
-	0xe9, 0xee, 0xfd, 0x0d, 0x00, 0x00, 0xff, 0xff, 0xd5, 0x79, 0x4e, 0x8c, 0xdb, 0x03, 0x00, 0x00,
+	// 606 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x53, 0x41, 0x4f, 0x13, 0x41,
+	0x18, 0xdd, 0x69, 0x0b, 0xd8, 0xaf, 0xa5, 0x96, 0x89, 0x9a, 0x95, 0xc8, 0x82, 0x6b, 0x62, 0x88,
+	0x42, 0x31, 0x78, 0x36, 0xa6, 0xb4, 0x2b, 0x34, 0x41, 0x62, 0x06, 0x88, 0xc7, 0x66, 0xda, 0x1d,
+	0xb7, 0x1b, 0x76, 0x77, 0xd6, 0xd9, 0xd9, 0x28, 0x9c, 0xfc, 0x09, 0xfe, 0x01, 0xef, 0xfe, 0x14,
+	0xbc, 0x71, 0xf4, 0x64, 0x64, 0x3d, 0xe8, 0x91, 0x9f, 0x60, 0x66, 0x76, 0x81, 0x6d, 0xd4, 0xc4,
+	0xdb, 0xbc, 0xf7, 0x7d, 0x7d, 0xf3, 0xde, 0x9b, 0x2e, 0x3c, 0x8c, 0x05, 0x97, 0x7c, 0x94, 0xbe,
+	0xd9, 0xa0, 0x9e, 0x27, 0x98, 0x47, 0x25, 0x17, 0xf1, 0xa8, 0x04, 0x3a, 0x7a, 0x01, 0x37, 0xcb,
+	0xe3, 0xc5, 0x75, 0xcf, 0x97, 0x93, 0x74, 0xd4, 0x19, 0xf3, 0x70, 0xc3, 0xe3, 0x1e, 0xdf, 0xb8,
+	0x52, 0x51, 0x48, 0x03, 0x7d, 0xca, 0x7f, 0x6c, 0x7f, 0x41, 0xd0, 0xd8, 0x39, 0x8e, 0x99, 0x78,
+	0x45, 0x05, 0x0d, 0x13, 0xbc, 0x0e, 0x38, 0x16, 0x3c, 0xe6, 0x42, 0xfa, 0x3c, 0x1a, 0x8e, 0x03,
+	0x9f, 0x45, 0x32, 0x31, 0xd1, 0x0a, 0x5a, 0x45, 0x64, 0xe1, 0x7a, 0xd2, 0xcb, 0x07, 0x78, 0x09,
+	0x60, 0x44, 0xe5, 0x78, 0x32, 0x4c, 0xfc, 0x13, 0x66, 0x56, 0x56, 0xd0, 0x6a, 0x95, 0xd4, 0x35,
+	0xb3, 0xef, 0x9f, 0x30, 0x35, 0x8e, 0xd2, 0x70, 0x28, 0x78, 0x1a, 0xb9, 0x89, 0x59, 0xcd, 0xc7,
+	0x51, 0x1a, 0x12, 0x4d, 0xe0, 0x07, 0x30, 0x1f, 0x30, 0x2a, 0x22, 0x3f, 0xf2, 0x86, 0x82, 0x4a,
+	0x66, 0xd6, 0xf4, 0x3d, 0xcd, 0x4b, 0x92, 0x50, 0xc9, 0xf0, 0x2a, 0xb4, 0x95, 0x46, 0xc0, 0xc7,
+	0x34, 0xb8, 0x54, 0x9a, 0xd1, 0x4a, 0xad, 0x28, 0x0d, 0x77, 0x15, 0x9d, 0xcb, 0xd9, 0x3f, 0x11,
+	0xd4, 0x5e, 0x73, 0x71, 0x84, 0x1f, 0x43, 0xc5, 0x77, 0xb5, 0xe9, 0xc6, 0xe6, 0xed, 0x4e, 0xb9,
+	0x9e, 0xce, 0x4b, 0xee, 0xb2, 0x60, 0xd0, 0xdf, 0xaa, 0x9d, 0x7e, 0x5b, 0x36, 0x48, 0xc5, 0x77,
+	0xf1, 0x7d, 0x68, 0x2a, 0x7d, 0xf6, 0x9e, 0x86, 0x71, 0xc0, 0x92, 0x22, 0x44, 0x23, 0x4a, 0x43,
+	0xa7, 0xa0, 0xf0, 0x32, 0x28, 0x78, 0xd5, 0x46, 0x9e, 0x43, 0x25, 0xbb, 0xac, 0xe1, 0x16, 0xcc,
+	0xb0, 0x98, 0x8f, 0x27, 0x3a, 0x40, 0x95, 0xe4, 0x40, 0xb1, 0xa1, 0xba, 0x4e, 0xdb, 0x6d, 0x92,
+	0x1c, 0xe0, 0x2d, 0x68, 0x4e, 0x54, 0xe1, 0xc3, 0x58, 0x37, 0x6e, 0xce, 0x69, 0x9b, 0x77, 0xa7,
+	0x6d, 0x96, 0x9e, 0xa4, 0xb0, 0xda, 0x98, 0x5c, 0x53, 0xb6, 0x03, 0x73, 0x45, 0x10, 0x7c, 0x07,
+	0x66, 0x5d, 0x1e, 0x52, 0x3f, 0xd2, 0x79, 0xeb, 0xa4, 0x40, 0x18, 0x43, 0x2d, 0xa2, 0x61, 0xfe,
+	0x26, 0x75, 0xa2, 0xcf, 0xb8, 0xa5, 0x7b, 0xc9, 0xed, 0x57, 0x7c, 0xd7, 0x7e, 0x06, 0xad, 0x6d,
+	0x26, 0x55, 0x65, 0x84, 0xbd, 0x4d, 0x59, 0x22, 0x8b, 0xe6, 0x2a, 0x2b, 0xd5, 0xff, 0x68, 0xce,
+	0xee, 0xc2, 0x02, 0x61, 0xea, 0x0f, 0x51, 0x56, 0x58, 0x83, 0xda, 0x3b, 0x2e, 0x8e, 0x4c, 0xa4,
+	0x35, 0xf0, 0xb4, 0x86, 0x5a, 0x2c, 0x04, 0xf4, 0x96, 0xbd, 0x00, 0x37, 0xcb, 0x12, 0x71, 0x70,
+	0xfc, 0x68, 0x07, 0x5a, 0x07, 0x82, 0xfa, 0xea, 0xfd, 0xf7, 0x25, 0x95, 0x69, 0x82, 0xe7, 0xa1,
+	0xbe, 0xdf, 0xdb, 0x71, 0xfa, 0x87, 0xbb, 0x4e, 0xbf, 0x6d, 0xe0, 0x26, 0xdc, 0x38, 0x20, 0xdd,
+	0xc1, 0xde, 0x60, 0x6f, 0xbb, 0x8d, 0xf4, 0xf0, 0xb0, 0xd7, 0x73, 0x9c, 0xbe, 0xd3, 0x6f, 0x57,
+	0x30, 0xc0, 0xec, 0x8b, 0xee, 0x40, 0x2d, 0x56, 0x37, 0x3f, 0x21, 0x80, 0xee, 0xd5, 0xf5, 0xf8,
+	0x39, 0xcc, 0x15, 0x69, 0xf1, 0xbd, 0x69, 0x5b, 0xd3, 0x25, 0x2c, 0xfe, 0xc5, 0xb4, 0x6d, 0x3c,
+	0x41, 0x78, 0x0f, 0xe0, 0xda, 0x2c, 0x5e, 0x9e, 0xde, 0xfa, 0xa3, 0x89, 0xc5, 0xa5, 0x7f, 0x2f,
+	0xc4, 0xc1, 0xb1, 0x6d, 0x6c, 0xad, 0x9d, 0x9d, 0x5b, 0xc6, 0xd7, 0x73, 0xcb, 0xb8, 0x38, 0xb7,
+	0xd0, 0x87, 0xcc, 0x42, 0x9f, 0x33, 0x0b, 0x9d, 0x66, 0x16, 0x3a, 0xcb, 0x2c, 0xf4, 0x3d, 0xb3,
+	0xd0, 0xaf, 0xcc, 0x32, 0x2e, 0x32, 0x0b, 0x7d, 0xfc, 0x61, 0x19, 0xa3, 0x59, 0xfd, 0xc1, 0x3e,
+	0xfd, 0x1d, 0x00, 0x00, 0xff, 0xff, 0x55, 0x54, 0xee, 0x24, 0x17, 0x04, 0x00, 0x00,
 }

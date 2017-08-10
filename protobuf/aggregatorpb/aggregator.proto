@@ -4,11 +4,19 @@ import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
 package aggregatorpb;
 
+enum TrainingStatus {
+  SCHEDULED = 0;
+  TRAINING = 1;
+  SUCCEEDED = 2;
+  FAILED = 3;
+}
+
 message HyperParams {
   double proportion_clients = 1;
   int64 batch_size = 2;
   int64 num_rounds = 3;
   double learning_rate = 4;
+  int64 num_local_rounds = 5;
 }
 
 message Work {
@@ -17,30 +25,26 @@ message Work {
   int64 num_clients = 3;
   int64 epoch = 4;
   bytes model = 5;
-  bool prod = 6;
   HyperParams hyper_params = 7 [(gogoproto.nullable) = false];
 }
 
 message ModelID {
   string domain = 1;
   string name = 2;
+  int64 id = 3;
 }
 
 message GetWorkRequest {
-  repeated ModelID ids = 2;
-}
-
-message GetWorkReply {
-  repeated Work work = 1;
+  repeated ModelID id = 2 [(gogoproto.nullable) = false];
 }
 
 message ReportWorkRequest {
-  repeated Work work = 1;
+  repeated Work work = 1 [(gogoproto.nullable) = false];
 }
 
 message ReportWorkReply {}
 
 service Aggregator {
-  rpc GetWork (GetWorkRequest) returns (GetWorkReply) {}
+  rpc GetWork (GetWorkRequest) returns (stream Work) {}
   rpc ReportWork(ReportWorkRequest) returns (ReportWorkReply) {}
 }
