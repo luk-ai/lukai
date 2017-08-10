@@ -22,6 +22,7 @@ tensorflow_protobuf_dir = "$(current_dir)/protobuf/tensorflow/"
 protobuf/tensorflow:
 	mkdir -p $(tensorflow_protobuf_dir)
 	cd $(tensorflow_dir) && cp -u tensorflow/core/protobuf/saver.proto $(tensorflow_protobuf_dir)
+	cd $(tensorflow_dir) && cp -u tensorflow/core/framework/types.proto $(tensorflow_protobuf_dir)
 	#cd $(tensorflow_dir) && cp -u --parents `find -name \*.proto | sed '/tensorflow\/python/d' | sed '/_service.proto/d'` $(current_dir)/protobuf/
 
 
