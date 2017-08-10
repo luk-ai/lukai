@@ -28,6 +28,8 @@ protobuf/tensorflow:
 
 %.pb.go: %.proto
 	protoc --proto_path=${GOPATH}/src:. -I protobuf/ $< --gogoslick_out=plugins=grpc:.
+	python -m grpc_tools.protoc -I protobuf/ -I ../../../ --python_out=py/pok/proto --grpc_python_out=py/pok/proto $<
+
 
 .PHONY: clean
 clean:
