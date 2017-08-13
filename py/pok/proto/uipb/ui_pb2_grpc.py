@@ -24,6 +24,51 @@ class UIStub(object):
         request_serializer=uipb_dot_ui__pb2.RegisterRequest.SerializeToString,
         response_deserializer=uipb_dot_ui__pb2.AuthenticationResponse.FromString,
         )
+    self.ResendEmail = channel.unary_unary(
+        '/uipb.UI/ResendEmail',
+        request_serializer=uipb_dot_ui__pb2.ResendEmailRequest.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.ResendEmailResponse.FromString,
+        )
+    self.GetUser = channel.unary_unary(
+        '/uipb.UI/GetUser',
+        request_serializer=uipb_dot_ui__pb2.GetUserRequest.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.GetUserResponse.FromString,
+        )
+    self.GetDomain = channel.unary_unary(
+        '/uipb.UI/GetDomain',
+        request_serializer=uipb_dot_ui__pb2.GetDomainRequest.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.Domain.FromString,
+        )
+    self.GetDomains = channel.unary_unary(
+        '/uipb.UI/GetDomains',
+        request_serializer=uipb_dot_ui__pb2.GetDomainsRequest.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.GetDomainsResponse.FromString,
+        )
+    self.NewDomain = channel.unary_unary(
+        '/uipb.UI/NewDomain',
+        request_serializer=uipb_dot_ui__pb2.NewDomainRequest.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.NewDomainResponse.FromString,
+        )
+    self.NewModelType = channel.unary_unary(
+        '/uipb.UI/NewModelType',
+        request_serializer=uipb_dot_ui__pb2.ModelType.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.ModelType.FromString,
+        )
+    self.GetModelType = channel.unary_unary(
+        '/uipb.UI/GetModelType',
+        request_serializer=uipb_dot_ui__pb2.ModelType.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.ModelType.FromString,
+        )
+    self.GetModels = channel.unary_unary(
+        '/uipb.UI/GetModels',
+        request_serializer=uipb_dot_ui__pb2.GetModelsRequest.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.GetModelsResponse.FromString,
+        )
+    self.GetModel = channel.unary_unary(
+        '/uipb.UI/GetModel',
+        request_serializer=uipb_dot_ui__pb2.GetModelRequest.SerializeToString,
+        response_deserializer=uipb_dot_ui__pb2.Model.FromString,
+        )
 
 
 class UIServicer(object):
@@ -44,6 +89,69 @@ class UIServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def ResendEmail(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetUser(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetDomain(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetDomains(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def NewDomain(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def NewModelType(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetModelType(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetModels(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetModel(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_UIServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -56,6 +164,51 @@ def add_UIServicer_to_server(servicer, server):
           servicer.Register,
           request_deserializer=uipb_dot_ui__pb2.RegisterRequest.FromString,
           response_serializer=uipb_dot_ui__pb2.AuthenticationResponse.SerializeToString,
+      ),
+      'ResendEmail': grpc.unary_unary_rpc_method_handler(
+          servicer.ResendEmail,
+          request_deserializer=uipb_dot_ui__pb2.ResendEmailRequest.FromString,
+          response_serializer=uipb_dot_ui__pb2.ResendEmailResponse.SerializeToString,
+      ),
+      'GetUser': grpc.unary_unary_rpc_method_handler(
+          servicer.GetUser,
+          request_deserializer=uipb_dot_ui__pb2.GetUserRequest.FromString,
+          response_serializer=uipb_dot_ui__pb2.GetUserResponse.SerializeToString,
+      ),
+      'GetDomain': grpc.unary_unary_rpc_method_handler(
+          servicer.GetDomain,
+          request_deserializer=uipb_dot_ui__pb2.GetDomainRequest.FromString,
+          response_serializer=uipb_dot_ui__pb2.Domain.SerializeToString,
+      ),
+      'GetDomains': grpc.unary_unary_rpc_method_handler(
+          servicer.GetDomains,
+          request_deserializer=uipb_dot_ui__pb2.GetDomainsRequest.FromString,
+          response_serializer=uipb_dot_ui__pb2.GetDomainsResponse.SerializeToString,
+      ),
+      'NewDomain': grpc.unary_unary_rpc_method_handler(
+          servicer.NewDomain,
+          request_deserializer=uipb_dot_ui__pb2.NewDomainRequest.FromString,
+          response_serializer=uipb_dot_ui__pb2.NewDomainResponse.SerializeToString,
+      ),
+      'NewModelType': grpc.unary_unary_rpc_method_handler(
+          servicer.NewModelType,
+          request_deserializer=uipb_dot_ui__pb2.ModelType.FromString,
+          response_serializer=uipb_dot_ui__pb2.ModelType.SerializeToString,
+      ),
+      'GetModelType': grpc.unary_unary_rpc_method_handler(
+          servicer.GetModelType,
+          request_deserializer=uipb_dot_ui__pb2.ModelType.FromString,
+          response_serializer=uipb_dot_ui__pb2.ModelType.SerializeToString,
+      ),
+      'GetModels': grpc.unary_unary_rpc_method_handler(
+          servicer.GetModels,
+          request_deserializer=uipb_dot_ui__pb2.GetModelsRequest.FromString,
+          response_serializer=uipb_dot_ui__pb2.GetModelsResponse.SerializeToString,
+      ),
+      'GetModel': grpc.unary_unary_rpc_method_handler(
+          servicer.GetModel,
+          request_deserializer=uipb_dot_ui__pb2.GetModelRequest.FromString,
+          response_serializer=uipb_dot_ui__pb2.Model.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
