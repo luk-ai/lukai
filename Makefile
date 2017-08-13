@@ -44,5 +44,5 @@ clean:
 	find . -type f -name '*.pb.go' -delete
 
 .PHONY: loc
-cloc:
-	cloc py tf protobuf/**/*.proto
+loc:
+	cloc $(shell find . -type f | sed '/_pb2/d' | sed '/.pb.go/d' | sed '/proto\/tensorflow/d' | sed '/.git/d' | sed '/__pycache__/d' | sed '/.egg-info/d' | sed '/testdata/d')
