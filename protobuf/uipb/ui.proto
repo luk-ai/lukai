@@ -54,13 +54,15 @@ message ModelType {
 }
 
 message Model {
-  int64 id = 1;
+  uint64 id = 1;
   string domain = 2;
   string model_type = 3;
   string name = 4;
   string description = 5;
   aggregatorpb.TrainingStatus status = 6;
   string owner_email = 7;
+  aggregatorpb.HyperParams hyper_params = 8 [(gogoproto.nullable) = false];
+  string model_url = 9;
 }
 
 message NewDomainRequest {
@@ -95,7 +97,7 @@ message GetModelsResponse {
 }
 
 message GetModelRequest {
-  int64 id = 1;
+  uint64 id = 1;
 }
 
 service UI {

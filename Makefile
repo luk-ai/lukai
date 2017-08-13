@@ -17,6 +17,7 @@ protobuf: protobuf/tensorflow $(PROTO_GO_FILES)
 current_dir = $(shell pwd)
 tensorflow_dir = "$(current_dir)/../../tensorflow/tensorflow/"
 tensorflow_protobuf_dir = "$(current_dir)/protobuf/tensorflow/"
+python_proto_dir =py/libpok/proto/
 
 .PHONY: protobuf/tensorflow
 protobuf/tensorflow:
@@ -29,7 +30,13 @@ proto_import_paths=-I ${GOPATH}/src -I ${GOPATH}/src/github.com/grpc-ecosystem/g
 
 %.pb.go: %.proto
 	protoc --proto_path=${GOPATH}/src:. ${proto_import_paths} $< --gogoslick_out=plugins=grpc:. --grpc-gateway_out=logtostderr=true:.
-	python -m grpc_tools.protoc ${proto_import_paths} --python_out=py/pok/proto --grpc_python_out=py/pok/proto $<
+	python -m grpc_tools.protoc ${proto_import_paths} --python_out=${python_proto_dir} --grpc_python_out=${python_proto_dir} $<
+	$(SED_INPLACE) '/import gogo_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
+	$(SED_INPLACE) 's/github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
+	$(SED_INPLACE) '/import annotations_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
+	$(SED_INPLACE) 's/google_dot_api_dot_annotations__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
+	$(SED_INPLACE) 's/github.com.d4l3k.pok.protobuf/libpok.proto/g' $(shell find ${python_proto_dir} -type f -name '*.py')
+	$(SED_INPLACE) 's/^from /from libpok.proto./g' $(shell find ${python_proto_dir} -type f -name '*_pb2_grpc.py')
 
 
 .PHONY: clean

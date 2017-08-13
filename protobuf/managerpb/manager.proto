@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "github.com/d4l3k/pok/protobuf/uipb/ui.proto";
+
+package managerpb;
+
+// UploadModelRequest is a request to upload a model and start training it.
+// Currently the only meta fields that are used are:
+// - domain, model_type, name, description, hyper_params
+message UploadModelRequest {
+  uipb.Model meta = 1 [(gogoproto.nullable) = false];
+  bytes model = 2;
+}
+
+message UploadModelResponse {
+  uint64 model_id = 1;
+  string model_url = 2;
+}
+
+service Manager {
+  rpc UploadModel (UploadModelRequest) returns (UploadModelResponse) {}
+}
