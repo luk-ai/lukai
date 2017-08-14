@@ -25,17 +25,18 @@ message Work {
   int64 num_clients = 3;
   int64 epoch = 4;
   bytes model = 5;
+  // TODO(d4l3k): consider sending a link to GCS instead of the raw model.
   HyperParams hyper_params = 7 [(gogoproto.nullable) = false];
 }
 
 message ModelID {
   string domain = 1;
-  string name = 2;
+  string model_type = 2;
   int64 id = 3;
 }
 
 message GetWorkRequest {
-  repeated ModelID id = 2 [(gogoproto.nullable) = false];
+  repeated ModelID ids = 1 [(gogoproto.nullable) = false];
 }
 
 message ReportWorkRequest {
@@ -44,7 +45,16 @@ message ReportWorkRequest {
 
 message ReportWorkReply {}
 
+message ProdModelRequest {
+  repeated ModelID ids = 1 [(gogoproto.nullable) = false];
+}
+
+message ProdModelResponse {
+  repeated string model_urls = 2;
+}
+
 service Aggregator {
   rpc GetWork (GetWorkRequest) returns (stream Work) {}
   rpc ReportWork(ReportWorkRequest) returns (ReportWorkReply) {}
+  rpc ProdModel(ProdModelRequest) returns (ProdModelResponse) {}
 }

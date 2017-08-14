@@ -14,6 +14,8 @@
 		GetWorkRequest
 		ReportWorkRequest
 		ReportWorkReply
+		ProdModelRequest
+		ProdModelResponse
 */
 package aggregatorpb
 
@@ -119,11 +121,12 @@ func (m *HyperParams) GetNumLocalRounds() int64 {
 }
 
 type Work struct {
-	Id          ModelID     `protobuf:"bytes,1,opt,name=id" json:"id"`
-	NumExamples int64       `protobuf:"varint,2,opt,name=num_examples,json=numExamples,proto3" json:"num_examples,omitempty"`
-	NumClients  int64       `protobuf:"varint,3,opt,name=num_clients,json=numClients,proto3" json:"num_clients,omitempty"`
-	Epoch       int64       `protobuf:"varint,4,opt,name=epoch,proto3" json:"epoch,omitempty"`
-	Model       []byte      `protobuf:"bytes,5,opt,name=model,proto3" json:"model,omitempty"`
+	Id          ModelID `protobuf:"bytes,1,opt,name=id" json:"id"`
+	NumExamples int64   `protobuf:"varint,2,opt,name=num_examples,json=numExamples,proto3" json:"num_examples,omitempty"`
+	NumClients  int64   `protobuf:"varint,3,opt,name=num_clients,json=numClients,proto3" json:"num_clients,omitempty"`
+	Epoch       int64   `protobuf:"varint,4,opt,name=epoch,proto3" json:"epoch,omitempty"`
+	Model       []byte  `protobuf:"bytes,5,opt,name=model,proto3" json:"model,omitempty"`
+	// TODO(d4l3k): consider sending a link to GCS instead of the raw model.
 	HyperParams HyperParams `protobuf:"bytes,7,opt,name=hyper_params,json=hyperParams" json:"hyper_params"`
 }
 
@@ -205,16 +208,16 @@ func (m *ModelID) GetId() int64 {
 }
 
 type GetWorkRequest struct {
-	Id []ModelID `protobuf:"bytes,2,rep,name=id" json:"id"`
+	Ids []ModelID `protobuf:"bytes,1,rep,name=ids" json:"ids"`
 }
 
 func (m *GetWorkRequest) Reset()                    { *m = GetWorkRequest{} }
 func (*GetWorkRequest) ProtoMessage()               {}
 func (*GetWorkRequest) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{3} }
 
-func (m *GetWorkRequest) GetId() []ModelID {
+func (m *GetWorkRequest) GetIds() []ModelID {
 	if m != nil {
-		return m.Id
+		return m.Ids
 	}
 	return nil
 }
@@ -241,6 +244,36 @@ func (m *ReportWorkReply) Reset()                    { *m = ReportWorkReply{} }
 func (*ReportWorkReply) ProtoMessage()               {}
 func (*ReportWorkReply) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{5} }
 
+type ProdModelRequest struct {
+	Ids []ModelID `protobuf:"bytes,1,rep,name=ids" json:"ids"`
+}
+
+func (m *ProdModelRequest) Reset()                    { *m = ProdModelRequest{} }
+func (*ProdModelRequest) ProtoMessage()               {}
+func (*ProdModelRequest) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{6} }
+
+func (m *ProdModelRequest) GetIds() []ModelID {
+	if m != nil {
+		return m.Ids
+	}
+	return nil
+}
+
+type ProdModelResponse struct {
+	ModelUrls []string `protobuf:"bytes,2,rep,name=model_urls,json=modelUrls" json:"model_urls,omitempty"`
+}
+
+func (m *ProdModelResponse) Reset()                    { *m = ProdModelResponse{} }
+func (*ProdModelResponse) ProtoMessage()               {}
+func (*ProdModelResponse) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{7} }
+
+func (m *ProdModelResponse) GetModelUrls() []string {
+	if m != nil {
+		return m.ModelUrls
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*HyperParams)(nil), "aggregatorpb.HyperParams")
 	proto.RegisterType((*Work)(nil), "aggregatorpb.Work")
@@ -248,6 +281,8 @@ func init() {
 	proto.RegisterType((*GetWorkRequest)(nil), "aggregatorpb.GetWorkRequest")
 	proto.RegisterType((*ReportWorkRequest)(nil), "aggregatorpb.ReportWorkRequest")
 	proto.RegisterType((*ReportWorkReply)(nil), "aggregatorpb.ReportWorkReply")
+	proto.RegisterType((*ProdModelRequest)(nil), "aggregatorpb.ProdModelRequest")
+	proto.RegisterType((*ProdModelResponse)(nil), "aggregatorpb.ProdModelResponse")
 	proto.RegisterEnum("aggregatorpb.TrainingStatus", TrainingStatus_name, TrainingStatus_value)
 }
 func (x TrainingStatus) String() string {
@@ -405,11 +440,11 @@ func (this *GetWorkRequest) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if len(this.Id) != len(that1.Id) {
+	if len(this.Ids) != len(that1.Ids) {
 		return false
 	}
-	for i := range this.Id {
-		if !this.Id[i].Equal(&that1.Id[i]) {
+	for i := range this.Ids {
+		if !this.Ids[i].Equal(&that1.Ids[i]) {
 			return false
 		}
 	}
@@ -477,6 +512,76 @@ func (this *ReportWorkReply) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *ProdModelRequest) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*ProdModelRequest)
+	if !ok {
+		that2, ok := that.(ProdModelRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if len(this.Ids) != len(that1.Ids) {
+		return false
+	}
+	for i := range this.Ids {
+		if !this.Ids[i].Equal(&that1.Ids[i]) {
+			return false
+		}
+	}
+	return true
+}
+func (this *ProdModelResponse) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*ProdModelResponse)
+	if !ok {
+		that2, ok := that.(ProdModelResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if len(this.ModelUrls) != len(that1.ModelUrls) {
+		return false
+	}
+	for i := range this.ModelUrls {
+		if this.ModelUrls[i] != that1.ModelUrls[i] {
+			return false
+		}
+	}
+	return true
+}
 func (this *HyperParams) GoString() string {
 	if this == nil {
 		return "nil"
@@ -524,12 +629,12 @@ func (this *GetWorkRequest) GoString() string {
 	}
 	s := make([]string, 0, 5)
 	s = append(s, "&aggregatorpb.GetWorkRequest{")
-	if this.Id != nil {
-		vs := make([]*ModelID, len(this.Id))
+	if this.Ids != nil {
+		vs := make([]*ModelID, len(this.Ids))
 		for i := range vs {
-			vs[i] = &this.Id[i]
+			vs[i] = &this.Ids[i]
 		}
-		s = append(s, "Id: "+fmt.Sprintf("%#v", vs)+",\n")
+		s = append(s, "Ids: "+fmt.Sprintf("%#v", vs)+",\n")
 	}
 	s = append(s, "}")
 	return strings.Join(s, "")
@@ -559,6 +664,32 @@ func (this *ReportWorkReply) GoString() string {
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
+func (this *ProdModelRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&aggregatorpb.ProdModelRequest{")
+	if this.Ids != nil {
+		vs := make([]*ModelID, len(this.Ids))
+		for i := range vs {
+			vs[i] = &this.Ids[i]
+		}
+		s = append(s, "Ids: "+fmt.Sprintf("%#v", vs)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *ProdModelResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&aggregatorpb.ProdModelResponse{")
+	s = append(s, "ModelUrls: "+fmt.Sprintf("%#v", this.ModelUrls)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
 func valueToGoStringAggregator(v interface{}, typ string) string {
 	rv := reflect.ValueOf(v)
 	if rv.IsNil() {
@@ -581,6 +712,7 @@ const _ = grpc.SupportPackageIsVersion4
 type AggregatorClient interface {
 	GetWork(ctx context.Context, in *GetWorkRequest, opts ...grpc.CallOption) (Aggregator_GetWorkClient, error)
 	ReportWork(ctx context.Context, in *ReportWorkRequest, opts ...grpc.CallOption) (*ReportWorkReply, error)
+	ProdModel(ctx context.Context, in *ProdModelRequest, opts ...grpc.CallOption) (*ProdModelResponse, error)
 }
 
 type aggregatorClient struct {
@@ -632,11 +764,21 @@ func (c *aggregatorClient) ReportWork(ctx context.Context, in *ReportWorkRequest
 	return out, nil
 }
 
+func (c *aggregatorClient) ProdModel(ctx context.Context, in *ProdModelRequest, opts ...grpc.CallOption) (*ProdModelResponse, error) {
+	out := new(ProdModelResponse)
+	err := grpc.Invoke(ctx, "/aggregatorpb.Aggregator/ProdModel", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Aggregator service
 
 type AggregatorServer interface {
 	GetWork(*GetWorkRequest, Aggregator_GetWorkServer) error
 	ReportWork(context.Context, *ReportWorkRequest) (*ReportWorkReply, error)
+	ProdModel(context.Context, *ProdModelRequest) (*ProdModelResponse, error)
 }
 
 func RegisterAggregatorServer(s *grpc.Server, srv AggregatorServer) {
@@ -682,6 +824,24 @@ func _Aggregator_ReportWork_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Aggregator_ProdModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProdModelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AggregatorServer).ProdModel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/aggregatorpb.Aggregator/ProdModel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AggregatorServer).ProdModel(ctx, req.(*ProdModelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Aggregator_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "aggregatorpb.Aggregator",
 	HandlerType: (*AggregatorServer)(nil),
@@ -689,6 +849,10 @@ var _Aggregator_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReportWork",
 			Handler:    _Aggregator_ReportWork_Handler,
+		},
+		{
+			MethodName: "ProdModel",
+			Handler:    _Aggregator_ProdModel_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -849,9 +1013,9 @@ func (m *GetWorkRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Id) > 0 {
-		for _, msg := range m.Id {
-			dAtA[i] = 0x12
+	if len(m.Ids) > 0 {
+		for _, msg := range m.Ids {
+			dAtA[i] = 0xa
 			i++
 			i = encodeVarintAggregator(dAtA, i, uint64(msg.Size()))
 			n, err := msg.MarshalTo(dAtA[i:])
@@ -909,6 +1073,69 @@ func (m *ReportWorkReply) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	return i, nil
+}
+
+func (m *ProdModelRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ProdModelRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Ids) > 0 {
+		for _, msg := range m.Ids {
+			dAtA[i] = 0xa
+			i++
+			i = encodeVarintAggregator(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	return i, nil
+}
+
+func (m *ProdModelResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ProdModelResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.ModelUrls) > 0 {
+		for _, s := range m.ModelUrls {
+			dAtA[i] = 0x12
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				dAtA[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			dAtA[i] = uint8(l)
+			i++
+			i += copy(dAtA[i:], s)
+		}
+	}
 	return i, nil
 }
 
@@ -1003,8 +1230,8 @@ func (m *ModelID) Size() (n int) {
 func (m *GetWorkRequest) Size() (n int) {
 	var l int
 	_ = l
-	if len(m.Id) > 0 {
-		for _, e := range m.Id {
+	if len(m.Ids) > 0 {
+		for _, e := range m.Ids {
 			l = e.Size()
 			n += 1 + l + sovAggregator(uint64(l))
 		}
@@ -1027,6 +1254,30 @@ func (m *ReportWorkRequest) Size() (n int) {
 func (m *ReportWorkReply) Size() (n int) {
 	var l int
 	_ = l
+	return n
+}
+
+func (m *ProdModelRequest) Size() (n int) {
+	var l int
+	_ = l
+	if len(m.Ids) > 0 {
+		for _, e := range m.Ids {
+			l = e.Size()
+			n += 1 + l + sovAggregator(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *ProdModelResponse) Size() (n int) {
+	var l int
+	_ = l
+	if len(m.ModelUrls) > 0 {
+		for _, s := range m.ModelUrls {
+			l = len(s)
+			n += 1 + l + sovAggregator(uint64(l))
+		}
+	}
 	return n
 }
 
@@ -1089,7 +1340,7 @@ func (this *GetWorkRequest) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&GetWorkRequest{`,
-		`Id:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Id), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
+		`Ids:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Ids), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1109,6 +1360,26 @@ func (this *ReportWorkReply) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&ReportWorkReply{`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ProdModelRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ProdModelRequest{`,
+		`Ids:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Ids), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ProdModelResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ProdModelResponse{`,
+		`ModelUrls:` + fmt.Sprintf("%v", this.ModelUrls) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1618,9 +1889,9 @@ func (m *GetWorkRequest) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: GetWorkRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 2:
+		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Ids", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1644,8 +1915,8 @@ func (m *GetWorkRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Id = append(m.Id, ModelID{})
-			if err := m.Id[len(m.Id)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Ids = append(m.Ids, ModelID{})
+			if err := m.Ids[len(m.Ids)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1801,6 +2072,166 @@ func (m *ReportWorkReply) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *ProdModelRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowAggregator
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ProdModelRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ProdModelRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Ids", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAggregator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthAggregator
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Ids = append(m.Ids, ModelID{})
+			if err := m.Ids[len(m.Ids)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipAggregator(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthAggregator
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ProdModelResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowAggregator
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ProdModelResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ProdModelResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ModelUrls", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAggregator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAggregator
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ModelUrls = append(m.ModelUrls, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipAggregator(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthAggregator
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func skipAggregator(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1909,43 +2340,47 @@ var (
 func init() { proto.RegisterFile("protobuf/aggregatorpb/aggregator.proto", fileDescriptorAggregator) }
 
 var fileDescriptorAggregator = []byte{
-	// 606 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x53, 0x41, 0x4f, 0x13, 0x41,
-	0x18, 0xdd, 0x69, 0x0b, 0xd8, 0xaf, 0xa5, 0x96, 0x89, 0x9a, 0x95, 0xc8, 0x82, 0x6b, 0x62, 0x88,
-	0x42, 0x31, 0x78, 0x36, 0xa6, 0xb4, 0x2b, 0x34, 0x41, 0x62, 0x06, 0x88, 0xc7, 0x66, 0xda, 0x1d,
-	0xb7, 0x1b, 0x76, 0x77, 0xd6, 0xd9, 0xd9, 0x28, 0x9c, 0xfc, 0x09, 0xfe, 0x01, 0xef, 0xfe, 0x14,
-	0xbc, 0x71, 0xf4, 0x64, 0x64, 0x3d, 0xe8, 0x91, 0x9f, 0x60, 0x66, 0x76, 0x81, 0x6d, 0xd4, 0xc4,
-	0xdb, 0xbc, 0xf7, 0x7d, 0x7d, 0xf3, 0xde, 0x9b, 0x2e, 0x3c, 0x8c, 0x05, 0x97, 0x7c, 0x94, 0xbe,
-	0xd9, 0xa0, 0x9e, 0x27, 0x98, 0x47, 0x25, 0x17, 0xf1, 0xa8, 0x04, 0x3a, 0x7a, 0x01, 0x37, 0xcb,
-	0xe3, 0xc5, 0x75, 0xcf, 0x97, 0x93, 0x74, 0xd4, 0x19, 0xf3, 0x70, 0xc3, 0xe3, 0x1e, 0xdf, 0xb8,
-	0x52, 0x51, 0x48, 0x03, 0x7d, 0xca, 0x7f, 0x6c, 0x7f, 0x41, 0xd0, 0xd8, 0x39, 0x8e, 0x99, 0x78,
-	0x45, 0x05, 0x0d, 0x13, 0xbc, 0x0e, 0x38, 0x16, 0x3c, 0xe6, 0x42, 0xfa, 0x3c, 0x1a, 0x8e, 0x03,
-	0x9f, 0x45, 0x32, 0x31, 0xd1, 0x0a, 0x5a, 0x45, 0x64, 0xe1, 0x7a, 0xd2, 0xcb, 0x07, 0x78, 0x09,
-	0x60, 0x44, 0xe5, 0x78, 0x32, 0x4c, 0xfc, 0x13, 0x66, 0x56, 0x56, 0xd0, 0x6a, 0x95, 0xd4, 0x35,
-	0xb3, 0xef, 0x9f, 0x30, 0x35, 0x8e, 0xd2, 0x70, 0x28, 0x78, 0x1a, 0xb9, 0x89, 0x59, 0xcd, 0xc7,
-	0x51, 0x1a, 0x12, 0x4d, 0xe0, 0x07, 0x30, 0x1f, 0x30, 0x2a, 0x22, 0x3f, 0xf2, 0x86, 0x82, 0x4a,
-	0x66, 0xd6, 0xf4, 0x3d, 0xcd, 0x4b, 0x92, 0x50, 0xc9, 0xf0, 0x2a, 0xb4, 0x95, 0x46, 0xc0, 0xc7,
-	0x34, 0xb8, 0x54, 0x9a, 0xd1, 0x4a, 0xad, 0x28, 0x0d, 0x77, 0x15, 0x9d, 0xcb, 0xd9, 0x3f, 0x11,
-	0xd4, 0x5e, 0x73, 0x71, 0x84, 0x1f, 0x43, 0xc5, 0x77, 0xb5, 0xe9, 0xc6, 0xe6, 0xed, 0x4e, 0xb9,
-	0x9e, 0xce, 0x4b, 0xee, 0xb2, 0x60, 0xd0, 0xdf, 0xaa, 0x9d, 0x7e, 0x5b, 0x36, 0x48, 0xc5, 0x77,
-	0xf1, 0x7d, 0x68, 0x2a, 0x7d, 0xf6, 0x9e, 0x86, 0x71, 0xc0, 0x92, 0x22, 0x44, 0x23, 0x4a, 0x43,
-	0xa7, 0xa0, 0xf0, 0x32, 0x28, 0x78, 0xd5, 0x46, 0x9e, 0x43, 0x25, 0xbb, 0xac, 0xe1, 0x16, 0xcc,
-	0xb0, 0x98, 0x8f, 0x27, 0x3a, 0x40, 0x95, 0xe4, 0x40, 0xb1, 0xa1, 0xba, 0x4e, 0xdb, 0x6d, 0x92,
-	0x1c, 0xe0, 0x2d, 0x68, 0x4e, 0x54, 0xe1, 0xc3, 0x58, 0x37, 0x6e, 0xce, 0x69, 0x9b, 0x77, 0xa7,
-	0x6d, 0x96, 0x9e, 0xa4, 0xb0, 0xda, 0x98, 0x5c, 0x53, 0xb6, 0x03, 0x73, 0x45, 0x10, 0x7c, 0x07,
-	0x66, 0x5d, 0x1e, 0x52, 0x3f, 0xd2, 0x79, 0xeb, 0xa4, 0x40, 0x18, 0x43, 0x2d, 0xa2, 0x61, 0xfe,
-	0x26, 0x75, 0xa2, 0xcf, 0xb8, 0xa5, 0x7b, 0xc9, 0xed, 0x57, 0x7c, 0xd7, 0x7e, 0x06, 0xad, 0x6d,
-	0x26, 0x55, 0x65, 0x84, 0xbd, 0x4d, 0x59, 0x22, 0x8b, 0xe6, 0x2a, 0x2b, 0xd5, 0xff, 0x68, 0xce,
-	0xee, 0xc2, 0x02, 0x61, 0xea, 0x0f, 0x51, 0x56, 0x58, 0x83, 0xda, 0x3b, 0x2e, 0x8e, 0x4c, 0xa4,
-	0x35, 0xf0, 0xb4, 0x86, 0x5a, 0x2c, 0x04, 0xf4, 0x96, 0xbd, 0x00, 0x37, 0xcb, 0x12, 0x71, 0x70,
-	0xfc, 0x68, 0x07, 0x5a, 0x07, 0x82, 0xfa, 0xea, 0xfd, 0xf7, 0x25, 0x95, 0x69, 0x82, 0xe7, 0xa1,
-	0xbe, 0xdf, 0xdb, 0x71, 0xfa, 0x87, 0xbb, 0x4e, 0xbf, 0x6d, 0xe0, 0x26, 0xdc, 0x38, 0x20, 0xdd,
-	0xc1, 0xde, 0x60, 0x6f, 0xbb, 0x8d, 0xf4, 0xf0, 0xb0, 0xd7, 0x73, 0x9c, 0xbe, 0xd3, 0x6f, 0x57,
-	0x30, 0xc0, 0xec, 0x8b, 0xee, 0x40, 0x2d, 0x56, 0x37, 0x3f, 0x21, 0x80, 0xee, 0xd5, 0xf5, 0xf8,
-	0x39, 0xcc, 0x15, 0x69, 0xf1, 0xbd, 0x69, 0x5b, 0xd3, 0x25, 0x2c, 0xfe, 0xc5, 0xb4, 0x6d, 0x3c,
-	0x41, 0x78, 0x0f, 0xe0, 0xda, 0x2c, 0x5e, 0x9e, 0xde, 0xfa, 0xa3, 0x89, 0xc5, 0xa5, 0x7f, 0x2f,
-	0xc4, 0xc1, 0xb1, 0x6d, 0x6c, 0xad, 0x9d, 0x9d, 0x5b, 0xc6, 0xd7, 0x73, 0xcb, 0xb8, 0x38, 0xb7,
-	0xd0, 0x87, 0xcc, 0x42, 0x9f, 0x33, 0x0b, 0x9d, 0x66, 0x16, 0x3a, 0xcb, 0x2c, 0xf4, 0x3d, 0xb3,
-	0xd0, 0xaf, 0xcc, 0x32, 0x2e, 0x32, 0x0b, 0x7d, 0xfc, 0x61, 0x19, 0xa3, 0x59, 0xfd, 0xc1, 0x3e,
-	0xfd, 0x1d, 0x00, 0x00, 0xff, 0xff, 0x55, 0x54, 0xee, 0x24, 0x17, 0x04, 0x00, 0x00,
+	// 665 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x94, 0x4f, 0x6e, 0xd3, 0x40,
+	0x14, 0xc6, 0x3d, 0x49, 0xda, 0xe2, 0x97, 0x34, 0x24, 0x23, 0x40, 0x21, 0xa2, 0x4e, 0x31, 0x12,
+	0x8a, 0xa0, 0x4d, 0x51, 0x39, 0x40, 0x95, 0x26, 0xa6, 0x8d, 0x54, 0xa2, 0xca, 0x6d, 0xc5, 0x32,
+	0x9a, 0xc4, 0x83, 0x63, 0xd5, 0xf6, 0x98, 0xb1, 0x2d, 0x68, 0x57, 0x1c, 0x81, 0x63, 0x70, 0x94,
+	0xb2, 0xeb, 0x92, 0x15, 0xa2, 0x66, 0x01, 0x1b, 0xa4, 0x1e, 0x01, 0xcd, 0xd8, 0x4d, 0x1d, 0xa0,
+	0x42, 0x62, 0x37, 0xef, 0x8f, 0xbf, 0xf9, 0xde, 0xef, 0x8d, 0x0c, 0x8f, 0x03, 0xce, 0x22, 0x36,
+	0x8e, 0x5f, 0x6f, 0x10, 0xdb, 0xe6, 0xd4, 0x26, 0x11, 0xe3, 0xc1, 0x38, 0x17, 0x74, 0x64, 0x03,
+	0xae, 0xe4, 0xcb, 0xcd, 0x75, 0xdb, 0x89, 0xa6, 0xf1, 0xb8, 0x33, 0x61, 0xde, 0x86, 0xcd, 0x6c,
+	0xb6, 0x31, 0x53, 0x11, 0x91, 0x0c, 0xe4, 0x29, 0xfd, 0x58, 0xff, 0x84, 0xa0, 0xbc, 0x7b, 0x12,
+	0x50, 0xbe, 0x4f, 0x38, 0xf1, 0x42, 0xbc, 0x0e, 0x38, 0xe0, 0x2c, 0x60, 0x3c, 0x72, 0x98, 0x3f,
+	0x9a, 0xb8, 0x0e, 0xf5, 0xa3, 0xb0, 0x81, 0x56, 0x51, 0x1b, 0x99, 0xf5, 0xeb, 0x4a, 0x2f, 0x2d,
+	0xe0, 0x15, 0x80, 0x31, 0x89, 0x26, 0xd3, 0x51, 0xe8, 0x9c, 0xd2, 0x46, 0x61, 0x15, 0xb5, 0x8b,
+	0xa6, 0x2a, 0x33, 0x07, 0xce, 0x29, 0x15, 0x65, 0x3f, 0xf6, 0x46, 0x9c, 0xc5, 0xbe, 0x15, 0x36,
+	0x8a, 0x69, 0xd9, 0x8f, 0x3d, 0x53, 0x26, 0xf0, 0x23, 0x58, 0x76, 0x29, 0xe1, 0xbe, 0xe3, 0xdb,
+	0x23, 0x4e, 0x22, 0xda, 0x28, 0xc9, 0x7b, 0x2a, 0x57, 0x49, 0x93, 0x44, 0x14, 0xb7, 0xa1, 0x26,
+	0x34, 0x5c, 0x36, 0x21, 0xee, 0x95, 0xd2, 0x82, 0x54, 0xaa, 0xfa, 0xb1, 0xb7, 0x27, 0xd2, 0xa9,
+	0x9c, 0xfe, 0x1d, 0x41, 0xe9, 0x15, 0xe3, 0xc7, 0xf8, 0x29, 0x14, 0x1c, 0x4b, 0x9a, 0x2e, 0x6f,
+	0xde, 0xed, 0xe4, 0xf1, 0x74, 0x5e, 0x32, 0x8b, 0xba, 0x83, 0xfe, 0x76, 0xe9, 0xec, 0x4b, 0x4b,
+	0x31, 0x0b, 0x8e, 0x85, 0x1f, 0x42, 0x45, 0xe8, 0xd3, 0x77, 0xc4, 0x0b, 0x5c, 0x1a, 0x66, 0x43,
+	0x94, 0xfd, 0xd8, 0x33, 0xb2, 0x14, 0x6e, 0x81, 0x08, 0x67, 0x34, 0xd2, 0x39, 0xc4, 0x64, 0x57,
+	0x18, 0xee, 0xc0, 0x02, 0x0d, 0xd8, 0x64, 0x2a, 0x07, 0x28, 0x9a, 0x69, 0x20, 0xb2, 0x9e, 0xb8,
+	0x4e, 0xda, 0xad, 0x98, 0x69, 0x80, 0xb7, 0xa1, 0x32, 0x15, 0xc0, 0x47, 0x81, 0x24, 0xde, 0x58,
+	0x92, 0x36, 0xef, 0xcf, 0xdb, 0xcc, 0xad, 0x24, 0xb3, 0x5a, 0x9e, 0x5e, 0xa7, 0x74, 0x03, 0x96,
+	0xb2, 0x41, 0xf0, 0x3d, 0x58, 0xb4, 0x98, 0x47, 0x1c, 0x5f, 0xce, 0xab, 0x9a, 0x59, 0x84, 0x31,
+	0x94, 0x7c, 0xe2, 0xa5, 0x3b, 0x51, 0x4d, 0x79, 0xc6, 0x55, 0xc9, 0x25, 0xb5, 0x5f, 0x70, 0x2c,
+	0x7d, 0x0b, 0xaa, 0x3b, 0x34, 0x12, 0xc8, 0x4c, 0xfa, 0x26, 0xa6, 0x61, 0x84, 0xd7, 0xa1, 0xe8,
+	0x58, 0x62, 0xdf, 0xc5, 0x7f, 0xa1, 0x13, 0x7d, 0x7a, 0x17, 0xea, 0x26, 0x15, 0x4f, 0x22, 0xaf,
+	0xb1, 0x06, 0xa5, 0xb7, 0x8c, 0x1f, 0x67, 0x22, 0x78, 0x5e, 0x44, 0x34, 0x66, 0x0a, 0xb2, 0x4b,
+	0xaf, 0xc3, 0xed, 0xbc, 0x44, 0xe0, 0x9e, 0xe8, 0x5d, 0xa8, 0xed, 0x73, 0x66, 0xc9, 0xfb, 0xfe,
+	0xd3, 0xd8, 0x26, 0xd4, 0x73, 0x12, 0x61, 0xc0, 0xfc, 0x50, 0xbe, 0x46, 0xb9, 0x82, 0x51, 0xcc,
+	0x5d, 0xb1, 0xe7, 0x62, 0x5b, 0x35, 0x55, 0x99, 0x39, 0xe2, 0x6e, 0xf8, 0x64, 0x17, 0xaa, 0x87,
+	0x9c, 0x38, 0xe2, 0xe1, 0x1d, 0x44, 0x24, 0x8a, 0x43, 0xbc, 0x0c, 0xea, 0x41, 0x6f, 0xd7, 0xe8,
+	0x1f, 0xed, 0x19, 0xfd, 0x9a, 0x82, 0x2b, 0x70, 0xeb, 0xd0, 0xec, 0x0e, 0x86, 0x83, 0xe1, 0x4e,
+	0x0d, 0xc9, 0xe2, 0x51, 0xaf, 0x67, 0x18, 0x7d, 0xa3, 0x5f, 0x2b, 0x60, 0x80, 0xc5, 0x17, 0xdd,
+	0x81, 0x68, 0x2c, 0x6e, 0xfe, 0x44, 0x00, 0xdd, 0x99, 0x43, 0xbc, 0x05, 0x4b, 0x19, 0x66, 0xfc,
+	0x60, 0xde, 0xf9, 0x3c, 0xfd, 0xe6, 0x5f, 0x58, 0xe9, 0xca, 0x33, 0x84, 0x87, 0x00, 0xd7, 0x8c,
+	0x70, 0x6b, 0xbe, 0xeb, 0x8f, 0x05, 0x34, 0x57, 0x6e, 0x6e, 0x10, 0x78, 0x15, 0x3c, 0x04, 0x75,
+	0x46, 0x07, 0x6b, 0xf3, 0xdd, 0xbf, 0x93, 0x6f, 0xb6, 0x6e, 0xac, 0xa7, 0x58, 0x75, 0x65, 0x7b,
+	0xed, 0xfc, 0x42, 0x53, 0x3e, 0x5f, 0x68, 0xca, 0xe5, 0x85, 0x86, 0xde, 0x27, 0x1a, 0xfa, 0x98,
+	0x68, 0xe8, 0x2c, 0xd1, 0xd0, 0x79, 0xa2, 0xa1, 0xaf, 0x89, 0x86, 0x7e, 0x24, 0x9a, 0x72, 0x99,
+	0x68, 0xe8, 0xc3, 0x37, 0x4d, 0x19, 0x2f, 0xca, 0x3f, 0xcf, 0xf3, 0x5f, 0x01, 0x00, 0x00, 0xff,
+	0xff, 0x1e, 0x8e, 0xa2, 0xdc, 0xe0, 0x04, 0x00, 0x00,
 }

@@ -41,6 +41,30 @@ func ParseNodeOutput(path string) (string, int, error) {
 	return parts[0], -1, nil
 }
 
+func (m *Model) Operation(path string) (*tensorflow.Operation, error) {
+	name, _, err := ParseNodeOutput(path)
+	if err != nil {
+		return nil, err
+	}
+	op := m.Graph.Operation(name)
+	if op == nil {
+		return nil, errors.Errorf("invalid operation %q", name)
+	}
+	return op, nil
+}
+
+func (m *Model) Output(path string) (tensorflow.Output, error) {
+	name, n, err := ParseNodeOutput(path)
+	if err != nil {
+		return tensorflow.Output{}, err
+	}
+	op := m.Graph.Operation(name)
+	if op == nil {
+		return tensorflow.Output{}, errors.Errorf("invalid operation %q", name)
+	}
+	return op.Output(n), nil
+}
+
 // GetModel fetches a model from a URL and loads it.
 func GetModel(url string) (*Model, error) {
 	req, err := http.Get(url)
