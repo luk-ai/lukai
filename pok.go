@@ -31,18 +31,25 @@ type ModelType struct {
 		sync.Mutex
 
 		running bool
+		stop    chan struct{}
 	}
-	stopTraining chan struct{}
+
+	examplesMeta struct {
+		sync.RWMutex
+
+		index exampleIndex
+	}
 }
 
 func MakeModelType(domain, modelType, dataDir string) *ModelType {
-	return &ModelType{
+	mt := ModelType{
 		Domain:    domain,
 		ModelType: modelType,
 		DataDir:   dataDir,
-
-		stopTraining: make(chan struct{}, 1),
 	}
+	mt.training.stop = make(chan struct{}, 1)
+
+	return &mt
 }
 
 type tfOpCache struct {

@@ -43,7 +43,7 @@ func (mt *ModelType) StopTraining() error {
 		return nil
 	}
 
-	mt.stopTraining <- struct{}{}
+	mt.training.stop <- struct{}{}
 
 	return nil
 }
@@ -59,7 +59,7 @@ func (mt *ModelType) trainerWorker() error {
 
 	c := aggregatorpb.NewAggregatorClient(conn)
 	stream, err := c.GetWork(ctx, &aggregatorpb.GetWorkRequest{
-		Id: []aggregatorpb.ModelID{
+		Ids: []aggregatorpb.ModelID{
 			{
 				Domain: mt.Domain,
 				Name:   mt.ModelType,
@@ -72,7 +72,7 @@ func (mt *ModelType) trainerWorker() error {
 
 	for {
 		select {
-		case <-mt.stopTraining:
+		case <-mt.training.stop:
 			return nil
 		default:
 		}

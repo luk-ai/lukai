@@ -70,10 +70,18 @@ func (mt *ModelType) loadProdModelRLocked() error {
 	mt.prod.lastUpdate = time.Now()
 	mt.prod.cache = makeTFOpCache()
 
+	// TODO(d4l3k): Quantize model weights.
+	// TODO(d4l3k): Train with local examples.
+
 	return nil
 }
 
-func (mt *ModelType) Run(feeds map[string]*tensorflow.Tensor, fetches []string, targets []string) ([]*tensorflow.Tensor, error) {
+// Run runs the model with the provided tensorflow feeds, fetches and targets.
+// The key for feeds, and fetches should be in the form "name:#", and the
+// targets in the form "name".
+func (mt *ModelType) Run(
+	feeds map[string]*tensorflow.Tensor, fetches []string, targets []string,
+) ([]*tensorflow.Tensor, error) {
 	mt.prod.RLock()
 	defer mt.prod.RUnlock()
 
