@@ -1,15 +1,26 @@
 matrix:
   include:
     - language: go
-      go:
-        - 1.5
-        - 1.6
-        - 1.7.x
-        - 1.8.x
-        - tip
-
+      go: 1.7.x
       install:
         - make godeps
-
+      script:
+        - make gotest
+    - language: go
+      go: 1.8.x
+      install:
+        - make godeps
+      script:
+        - make gotest
+    - language: go
+      go: 1.9.x
+      install:
+        - make godeps
+      script:
+        - make gotest
+    - language: go
+      go: tip
+      install:
+        - make godeps
       script:
         - make gotest
