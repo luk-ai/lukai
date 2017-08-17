@@ -122,27 +122,25 @@ func TestExamplesSerialization(t *testing.T) {
 				}),
 			},
 		},
-		/*
-			{
-				feeds: map[string]*tensorflow.Tensor{
-					"[]string": newTensor([]string{"a", "b", "c"}),
-					"[][]string": newTensor([][]string{
+		{
+			feeds: map[string]*tensorflow.Tensor{
+				"[]string": newTensor([]string{"a", "b", "c"}),
+				"[][]string": newTensor([][]string{
+					{"a", "b", "c"},
+					{"d", "e", "f"},
+				}),
+				"[][][]string": newTensor([][][]string{
+					{
 						{"a", "b", "c"},
 						{"d", "e", "f"},
-					}),
-					"[][][]string": newTensor([][][]string{
-						{
-							{"a", "b", "c"},
-							{"d", "e", "f"},
-						},
-						{
-							{"a", "b", "c"},
-							{"d", "e", "f"},
-						},
-					}),
-				},
+					},
+					{
+						{"a", "b", "c"},
+						{"d", "e", "f"},
+					},
+				}),
 			},
-		*/
+		},
 	}
 
 	var buf bytes.Buffer

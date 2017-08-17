@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"os"
 	"path"
+	"reflect"
 	"sort"
 	"time"
 
@@ -95,6 +96,13 @@ func (ex example) writeTo(w io.Writer) (int, error) {
 	return c.n, nil
 }
 
+func nDimensionalTensor(t reflect.Type, n int) interface{} {
+	for i := 0; i < n; i++ {
+		t = reflect.SliceOf(t)
+	}
+	return reflect.New(t).Interface()
+}
+
 type readCounter struct {
 	n      int
 	target io.Reader
@@ -139,11 +147,12 @@ func (ex *example) readFrom(r io.Reader) (int, error) {
 		var val *tensorflow.Tensor
 		var err error
 		if dataType == tensorflow.String {
-			var str string
-			if err := decoder.Decode(&str); err != nil {
+			valPtr := nDimensionalTensor(reflect.TypeOf(""), len(shape))
+			if err := decoder.Decode(valPtr); err != nil {
 				return 0, errors.Wrap(err, "str")
 			}
-			val, err = tensorflow.NewTensor(str)
+			goTensor := reflect.Indirect(reflect.ValueOf(valPtr)).Interface()
+			val, err = tensorflow.NewTensor(goTensor)
 			if err != nil {
 				return 0, err
 			}
