@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
+	"github.com/d4l3k/pok/protobuf/clientpb"
 	"github.com/d4l3k/pok/tf"
 )
 
@@ -37,7 +38,7 @@ type ModelType struct {
 	examplesMeta struct {
 		sync.RWMutex
 
-		index exampleIndex
+		index clientpb.ExampleIndex
 	}
 }
 

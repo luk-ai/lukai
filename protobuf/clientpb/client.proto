@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+package clientpb;
+
+message ExampleFile {
+  string name = 1;
+  google.protobuf.Timestamp created = 2 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  int64 total_size = 3;
+  repeated int32 positions = 4 [(gogoproto.nullable) = false];
+}
+
+message ExampleIndex {
+  int64 total_examples  = 1;
+  int64 total_size = 2;
+  repeated ExampleFile files = 3 [(gogoproto.nullable) = false];
+}

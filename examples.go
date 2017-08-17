@@ -3,6 +3,7 @@ package pok
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"io"
 	"math/rand"
 	"os"
@@ -14,16 +15,20 @@ import (
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
+	"github.com/d4l3k/pok/protobuf/clientpb"
 	"github.com/d4l3k/pok/units"
 )
 
 var (
-	// FileSize is the target size an example file will be.
-	FileSize = 1 * units.MB
+	// MaxFileSize is the target size an example file will be.
+	MaxFileSize = 1 * units.MB
 	// MaxFileRetention is the number of days worth of examples kept.
 	MaxFileRetention = 14 * units.Day
-	// MaxFileSize is the number of bytes that will used for examples.
-	MaxFileSize = 50 * units.MB
+	// MaxDiskUsage is the number of bytes that will used for examples.
+	MaxDiskUsage = 50 * units.MB
+	// MaxDaysInFile is the number of days worth of examples that will be stored
+	// in one day.
+	MaxDaysInFile = 1 * units.Day
 )
 
 type example struct {
@@ -179,23 +184,64 @@ func (ex *example) readFrom(r io.Reader) (int, error) {
 	return c.n, nil
 }
 
-type exampleFile struct {
-	name             string
-	modified         time.Time
-	examplePositions []int32
-}
-
-type exampleIndex struct {
-	totalExamples int64
-	files         []exampleFile
-}
-
 // Log records model input->output pairs for later use in training. This data is
 // saved locally only.
 // - feeds key is the tensorflow output and should be in the form "name:output#".
 // - targets is the name of the tensorflow target and should be in the form "name".
 func (mt *ModelType) Log(feeds map[string]*tensorflow.Tensor, targets []string) error {
-	return ErrNotImplemented
+	mt.examplesMeta.Lock()
+	defer mt.examplesMeta.Unlock()
+
+	mt.ensureFilePresentLocked()
+	mt.examplesMeta.index.TotalExamples += 1
+
+	file := &mt.examplesMeta.index.Files[len(mt.examplesMeta.index.Files)-1]
+
+	filePath := path.Join(mt.DataDir, file.Name)
+	f, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0700)
+	if err != nil {
+		return err
+	}
+
+	offset := file.TotalSize
+	if _, err := f.Seek(offset, 0); err != nil {
+		return err
+	}
+
+	ex := example{
+		feeds:   feeds,
+		targets: targets,
+	}
+	n, err := ex.writeTo(f)
+	if err != nil {
+		return err
+	}
+	file.Positions = append(file.Positions, int32(offset))
+	file.TotalSize += int64(n)
+	mt.examplesMeta.index.TotalSize += int64(n)
+
+	return nil
+}
+
+// ensureFilePresentLocked checks if there is a valid index entry, and if not,
+// creates one.
+func (mt *ModelType) ensureFilePresentLocked() {
+	lastFile := &mt.examplesMeta.index.Files[len(mt.examplesMeta.index.Files)-1]
+
+	// Create a new file if the file is too old.
+	outdatedFile := lastFile.Created.Before(time.Now().Add(-MaxDaysInFile))
+	// Create a new file if the last one is over the maximum file size.
+	largeFile := lastFile.TotalSize >= int64(MaxFileSize)
+	if !outdatedFile && !largeFile {
+		return
+	}
+
+	now := time.Now()
+	file := clientpb.ExampleFile{
+		Name:    fmt.Sprintf("examples-%s", now.Format(time.RFC3339Nano)),
+		Created: now,
+	}
+	mt.examplesMeta.index.Files = append(mt.examplesMeta.index.Files, file)
 }
 
 func (mt *ModelType) getNExamples(n int64) ([]example, error) {
@@ -205,17 +251,17 @@ func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 	fileReads := map[string][]int64{}
 
 	for i := int64(0); i < n; i++ {
-		exampleIndex := rand.Int63n(mt.examplesMeta.index.totalExamples)
+		exampleIndex := rand.Int63n(mt.examplesMeta.index.TotalExamples)
 		seenCount := int64(0)
-		for _, file := range mt.examplesMeta.index.files {
-			seenSoFar := seenCount + int64(len(file.examplePositions))
+		for _, file := range mt.examplesMeta.index.Files {
+			seenSoFar := seenCount + int64(len(file.Positions))
 			if exampleIndex < seenSoFar {
-				fileReads[file.name] = append(fileReads[file.name], exampleIndex-seenCount)
+				fileReads[file.Name] = append(fileReads[file.Name], exampleIndex-seenCount)
 				break
 			}
 			seenCount = seenSoFar
 		}
-		if seenCount == mt.examplesMeta.index.totalExamples {
+		if seenCount == mt.examplesMeta.index.TotalExamples {
 			return nil, errors.Errorf("failed to find file for example index %d", exampleIndex)
 		}
 	}

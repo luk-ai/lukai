@@ -45,8 +45,8 @@ func (mt *ModelType) loadProdModelRLocked() error {
 	resp, err := c.ProdModel(context.TODO(), &aggregatorpb.ProdModelRequest{
 		Ids: []aggregatorpb.ModelID{
 			{
-				Domain: mt.Domain,
-				Name:   mt.ModelType,
+				Domain:    mt.Domain,
+				ModelType: mt.ModelType,
 			},
 		},
 	})

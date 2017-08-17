@@ -61,8 +61,8 @@ func (mt *ModelType) trainerWorker() error {
 	stream, err := c.GetWork(ctx, &aggregatorpb.GetWorkRequest{
 		Ids: []aggregatorpb.ModelID{
 			{
-				Domain: mt.Domain,
-				Name:   mt.ModelType,
+				Domain:    mt.Domain,
+				ModelType: mt.ModelType,
 			},
 		},
 	})
