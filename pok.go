@@ -1,6 +1,7 @@
 package pok
 
 import (
+	"log"
 	"sync"
 	"time"
 
@@ -45,19 +46,29 @@ type ModelType struct {
 	}
 }
 
-func MakeModelType(domain, modelType, dataDir string) *ModelType {
+func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 	mt := ModelType{
 		Domain:    domain,
 		ModelType: modelType,
 		DataDir:   dataDir,
 	}
+
 	mt.training.stop = make(chan struct{}, 1)
 	mt.examplesMeta.saveIndex, mt.examplesMeta.stop = debounce.Debounce(
 		300*time.Second,
-		mt.saveExamplesMeta,
+		func() {
+			if err := mt.saveExamplesMeta; err != nil {
+				// TODO(d4l3k): Better error handling.
+				log.Println(err)
+			}
+		},
 	)
 
-	return &mt
+	if err := mt.loadExamplesMeta(); err != nil {
+		return nil, err
+	}
+
+	return &mt, nil
 }
 
 type tfOpCache struct {

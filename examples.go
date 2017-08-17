@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"math/rand"
 	"os"
 	"path"
@@ -251,19 +250,38 @@ func (mt *ModelType) ensureFilePresentLocked() {
 	mt.examplesMeta.index.Files = append(mt.examplesMeta.index.Files, file)
 }
 
-func (mt *ModelType) saveExamplesMeta() {
+// saveExamplesMeta saves the examples index.
+func (mt *ModelType) saveExamplesMeta() error {
 	mt.examplesMeta.RLock()
 	defer mt.examplesMeta.RUnlock()
 
 	bytes, err := proto.Marshal(&mt.examplesMeta.index)
 	if err != nil {
-		// TODO(d4l3k): Better error handling.
-		log.Println(err)
+		return err
 	}
 	if err := ioutil.WriteFile(mt.filePath(IndexFileName), bytes, FilePerm); err != nil {
-		// TODO(d4l3k): Better error handling.
-		log.Println(err)
+		return err
 	}
+
+	return nil
+}
+
+// loadExamplesMeta loads the examples index.
+func (mt *ModelType) loadExamplesMeta() error {
+	mt.examplesMeta.Lock()
+	defer mt.examplesMeta.Unlock()
+
+	bytes, err := ioutil.ReadFile(mt.filePath(IndexFileName))
+	if err == os.ErrNotExist {
+		return nil
+	} else if err != nil {
+		return err
+	}
+	if err := proto.Unmarshal(bytes, &mt.examplesMeta.index); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (mt *ModelType) filePath(file string) string {
