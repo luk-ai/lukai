@@ -12,8 +12,15 @@ $(call make-lazy,SED_INPLACE)
 build: protobuf
 
 .PHONY: test
-test: protobuf
+test: gotest
+
+.PHONY: gotest
+gotest: protobuf
 	go test -v -race ./...
+
+.PHONY: godeps
+godeps:
+	go get -t -v ./...
 
 .PHONY: protobuf
 protobuf: protobuf/tensorflow $(PROTO_GO_FILES)
