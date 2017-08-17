@@ -10,7 +10,7 @@ import (
 )
 
 func loadTestModel(t *testing.T) *Model {
-	file, err := os.OpenFile("../testdata/model.tar.gz", os.O_RDONLY, 0755)
+	file, err := os.OpenFile("../testdata/model.tar.gz", os.O_RDONLY, FilePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25,7 +25,7 @@ func loadTestModel(t *testing.T) *Model {
 }
 
 func TestLoadSaveModel(t *testing.T) {
-	file, err := os.OpenFile("../testdata/model.tar.gz", os.O_RDONLY, 0755)
+	file, err := os.OpenFile("../testdata/model.tar.gz", os.O_RDONLY, FilePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -64,7 +64,7 @@ func TestLoadSaveModel(t *testing.T) {
 }
 
 func TestModelLoadPrefix(t *testing.T) {
-	file, err := os.OpenFile("../testdata/model.tar.gz", os.O_RDONLY, 0755)
+	file, err := os.OpenFile("../testdata/model.tar.gz", os.O_RDONLY, FilePerm)
 	if err != nil {
 		t.Fatal(err)
 	}

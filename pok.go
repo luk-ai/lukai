@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
+	"github.com/d4l3k/pok/debounce"
 	"github.com/d4l3k/pok/protobuf/clientpb"
 	"github.com/d4l3k/pok/tf"
 )
@@ -38,7 +39,9 @@ type ModelType struct {
 	examplesMeta struct {
 		sync.RWMutex
 
-		index clientpb.ExampleIndex
+		index     clientpb.ExampleIndex
+		saveIndex func()
+		stop      func()
 	}
 }
 
@@ -49,6 +52,10 @@ func MakeModelType(domain, modelType, dataDir string) *ModelType {
 		DataDir:   dataDir,
 	}
 	mt.training.stop = make(chan struct{}, 1)
+	mt.examplesMeta.saveIndex, mt.examplesMeta.stop = debounce.Debounce(
+		300*time.Second,
+		mt.saveExamplesMeta,
+	)
 
 	return &mt
 }

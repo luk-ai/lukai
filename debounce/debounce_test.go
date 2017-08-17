@@ -19,7 +19,7 @@ func TestDebounce(t *testing.T) {
 	})
 	defer stop()
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 		call()
 	}
 	time.Sleep(4 * time.Millisecond)

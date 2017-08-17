@@ -11,6 +11,10 @@ $(call make-lazy,SED_INPLACE)
 .PHONY: build
 build: protobuf
 
+.PHONY: test
+test: protobuf
+	go test -v -race ./...
+
 .PHONY: protobuf
 protobuf: protobuf/tensorflow $(PROTO_GO_FILES)
 
@@ -46,3 +50,4 @@ clean:
 .PHONY: loc
 loc:
 	cloc $(shell find . -type f | sed '/_pb2/d' | sed '/.pb.go/d' | sed '/proto\/tensorflow/d' | sed '/.git/d' | sed '/__pycache__/d' | sed '/.egg-info/d' | sed '/testdata/d')
+

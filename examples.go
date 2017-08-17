@@ -5,6 +5,8 @@ import (
 	"encoding/gob"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
 	"math/rand"
 	"os"
 	"path"
@@ -12,6 +14,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/gogo/protobuf/proto"
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
@@ -29,6 +32,10 @@ var (
 	// MaxDaysInFile is the number of days worth of examples that will be stored
 	// in one day.
 	MaxDaysInFile = 1 * units.Day
+	// IndexFileName is the name of the examples index file.
+	IndexFileName = "index.pb"
+	// FilePerm is the file permission all the example files use.
+	FilePerm os.FileMode = 0600
 )
 
 type example struct {
@@ -197,8 +204,8 @@ func (mt *ModelType) Log(feeds map[string]*tensorflow.Tensor, targets []string) 
 
 	file := &mt.examplesMeta.index.Files[len(mt.examplesMeta.index.Files)-1]
 
-	filePath := path.Join(mt.DataDir, file.Name)
-	f, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0700)
+	filePath := mt.filePath(file.Name)
+	f, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, FilePerm)
 	if err != nil {
 		return err
 	}
@@ -244,6 +251,25 @@ func (mt *ModelType) ensureFilePresentLocked() {
 	mt.examplesMeta.index.Files = append(mt.examplesMeta.index.Files, file)
 }
 
+func (mt *ModelType) saveExamplesMeta() {
+	mt.examplesMeta.RLock()
+	defer mt.examplesMeta.RUnlock()
+
+	bytes, err := proto.Marshal(&mt.examplesMeta.index)
+	if err != nil {
+		// TODO(d4l3k): Better error handling.
+		log.Println(err)
+	}
+	if err := ioutil.WriteFile(mt.filePath(IndexFileName), bytes, FilePerm); err != nil {
+		// TODO(d4l3k): Better error handling.
+		log.Println(err)
+	}
+}
+
+func (mt *ModelType) filePath(file string) string {
+	return path.Join(mt.DataDir, file)
+}
+
 func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 	mt.examplesMeta.RLock()
 	defer mt.examplesMeta.RUnlock()
@@ -274,7 +300,7 @@ func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 			return offsets[i] < offsets[j]
 		})
 
-		f, err := os.OpenFile(path.Join(mt.DataDir, filename), os.O_RDONLY, 0700)
+		f, err := os.OpenFile(mt.filePath(filename), os.O_RDONLY, FilePerm)
 		if err != nil {
 			return nil, err
 		}

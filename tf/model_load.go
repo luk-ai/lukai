@@ -21,6 +21,8 @@ const (
 	GraphDefName           = "graph_def.pb"
 	SavedModelName         = "saved_model"
 	TrainableVariablesName = "trainable_variables.json"
+	// FilePerm is the file permission all the model files use.
+	FilePerm = 0600
 )
 
 // LoadModel loads a model from a provided .tar.gz io stream. The returned
@@ -90,7 +92,7 @@ func (model *Model) Load(reader io.Reader) error {
 			}
 		} else {
 			file := path.Join(dir, header.Name)
-			f, err := os.OpenFile(file, os.O_CREATE|os.O_WRONLY, 0755)
+			f, err := os.OpenFile(file, os.O_CREATE|os.O_WRONLY, FilePerm)
 			if err != nil {
 				return err
 			}
@@ -179,7 +181,7 @@ func (model *Model) Save(writer io.Writer) error {
 		}
 		if err := tw.WriteHeader(&tar.Header{
 			Name: GraphDefName,
-			Mode: 0755,
+			Mode: FilePerm,
 			Size: int64(buf.Len()),
 		}); err != nil {
 			return err
@@ -196,7 +198,7 @@ func (model *Model) Save(writer io.Writer) error {
 		}
 		if err := tw.WriteHeader(&tar.Header{
 			Name: TrainableVariablesName,
-			Mode: 0755,
+			Mode: FilePerm,
 			Size: int64(len(buf)),
 		}); err != nil {
 			return err
@@ -254,7 +256,7 @@ func (model *Model) Save(writer io.Writer) error {
 		if err := tw.WriteHeader(header); err != nil {
 			return err
 		}
-		file, err := os.OpenFile(path, os.O_RDONLY, 0755)
+		file, err := os.OpenFile(path, os.O_RDONLY, FilePerm)
 		if err != nil {
 			return errors.Wrapf(err, "failed to open file %q/%q", dir, path)
 		}
