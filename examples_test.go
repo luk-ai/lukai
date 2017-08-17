@@ -163,7 +163,7 @@ func TestExamplesSerialization(t *testing.T) {
 			}
 		}
 
-		bufBytes := buf.Bytes()
+		bufBytes := buf.String()
 		{
 			bufLen := buf.Len()
 			n, err := out.readFrom(&buf)
@@ -187,8 +187,12 @@ func TestExamplesSerialization(t *testing.T) {
 			if n != buf2.Len() {
 				t.Errorf("%d. writeTo returned wrong length; got %d; want %d", i, buf2.Len(), n)
 			}
-			if !reflect.DeepEqual(bufBytes, buf2.Bytes()) {
-				t.Errorf("%d. reserialized bytes don't equal original", i)
+			buf2Bytes := buf2.String()
+			if bufBytes != buf2Bytes {
+				t.Errorf(
+					"%d. reserialized bytes don't equal original, len(buf) = %d, len(buf2) = %d\n%q\n%q",
+					i, len(bufBytes), len(buf2Bytes), bufBytes, buf2Bytes,
+				)
 			}
 		}
 	}

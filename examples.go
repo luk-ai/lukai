@@ -52,7 +52,14 @@ func (ex example) writeTo(w io.Writer) (int, error) {
 		return 0, err
 	}
 
-	for key, val := range ex.feeds {
+	keys := make([]string, 0, len(ex.feeds))
+	for key := range ex.feeds {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		val := ex.feeds[key]
 		if err := encoder.Encode(key); err != nil {
 			return 0, err
 		}
