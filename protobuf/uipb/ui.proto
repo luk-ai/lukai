@@ -100,6 +100,10 @@ message GetModelRequest {
   uint64 id = 1;
 }
 
+message NewAPITokenRequest {
+  string duration = 1;
+}
+
 service UI {
   rpc Login (LoginRequest) returns (AuthenticationResponse) {
     option (google.api.http) = {
@@ -169,6 +173,13 @@ service UI {
   rpc GetModel (GetModelRequest) returns (Model) {
     option (google.api.http) = {
       get: "/api/v1/model/{id}"
+    };
+  }
+
+  rpc NewAPIToken (NewAPITokenRequest) returns(AuthenticationResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/api_token/new"
+      body: "*"
     };
   }
 }

@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='uipb/ui.proto',
   package='uipb',
   syntax='proto3',
-  serialized_pb=_b('\n\ruipb/ui.proto\x12\x04uipb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1cgoogle/api/annotations.proto\x1a;libpok.proto/aggregatorpb/aggregator.proto\"A\n\x0cLoginRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\"R\n\x0fRegisterRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\"\'\n\x16\x41uthenticationResponse\x12\r\n\x05token\x18\x01 \x01(\t\"\x14\n\x12ResendEmailRequest\"\x15\n\x13ResendEmailResponse\"\x10\n\x0eGetUserRequest\"F\n\x0fGetUserResponse\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0everified_email\x18\x03 \x01(\x08\"\x13\n\x11GetDomainsRequest\"9\n\x12GetDomainsResponse\x12#\n\x07\x64omains\x18\x01 \x03(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"B\n\x06\x44omain\x12\x0c\n\x04name\x18\x01 \x01(\t\x12*\n\x0bmodel_types\x18\x02 \x03(\x0b\x32\x0f.uipb.ModelTypeB\x04\xc8\xde\x1f\x00\")\n\tModelType\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\"\xe7\x01\n\x05Model\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12,\n\x06status\x18\x06 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x13\n\x0bowner_email\x18\x07 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x11\n\tmodel_url\x18\t \x01(\t\"\"\n\x10NewDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"7\n\x11NewDomainResponse\x12\"\n\x06\x64omain\x18\x01 \x01(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"\"\n\x10GetDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"\xbe\x01\n\x10GetModelsRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12,\n\x06status\x18\x04 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x0c\n\x04prod\x18\x05 \x01(\x08\x12\r\n\x05query\x18\x06 \x01(\t\x12\r\n\x05\x63ount\x18\x07 \x01(\x03\x12\x0e\n\x06offset\x18\x08 \x01(\x03\x12\r\n\x05order\x18\t \x01(\t\"j\n\x11GetModelsResponse\x12!\n\x06models\x18\x01 \x03(\x0b\x32\x0b.uipb.ModelB\x04\xc8\xde\x1f\x00\x12\x13\n\x0btotal_count\x18\x02 \x01(\x03\x12\r\n\x05\x63ount\x18\x03 \x01(\x03\x12\x0e\n\x06offset\x18\x04 \x01(\x03\"\x1d\n\x0fGetModelRequest\x12\n\n\x02id\x18\x01 \x01(\x04\x32\xea\x07\n\x02UI\x12S\n\x05Login\x12\x12.uipb.LoginRequest\x1a\x1c.uipb.AuthenticationResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/api/v1/login:\x01*\x12\\\n\x08Register\x12\x15.uipb.RegisterRequest\x1a\x1c.uipb.AuthenticationResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\"\x10/api/v1/register:\x01*\x12\x63\n\x0bResendEmail\x12\x18.uipb.ResendEmailRequest\x1a\x19.uipb.ResendEmailResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/api/v1/resend_email:\x01*\x12P\n\x07GetUser\x12\x14.uipb.GetUserRequest\x1a\x15.uipb.GetUserResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/get_user\x12R\n\tGetDomain\x12\x16.uipb.GetDomainRequest\x1a\x0c.uipb.Domain\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/v1/domain/{domain}\x12W\n\nGetDomains\x12\x17.uipb.GetDomainsRequest\x1a\x18.uipb.GetDomainsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/v1/domain\x12[\n\tNewDomain\x12\x16.uipb.NewDomainRequest\x1a\x17.uipb.NewDomainResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\"\x12/api/v1/domain/new:\x01*\x12\x63\n\x0cNewModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\"&/api/v1/domain/{domain}/model_type/new:\x01*\x12\x63\n\x0cGetModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/domain/{domain}/model_type/{name}\x12Z\n\tGetModels\x12\x16.uipb.GetModelsRequest\x1a\x17.uipb.GetModelsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/model_search\x12J\n\x08GetModel\x12\x15.uipb.GetModelRequest\x1a\x0b.uipb.Model\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/model/{id}b\x06proto3')
+  serialized_pb=_b('\n\ruipb/ui.proto\x12\x04uipb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1cgoogle/api/annotations.proto\x1a;libpok.proto/aggregatorpb/aggregator.proto\"A\n\x0cLoginRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\"R\n\x0fRegisterRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\"\'\n\x16\x41uthenticationResponse\x12\r\n\x05token\x18\x01 \x01(\t\"\x14\n\x12ResendEmailRequest\"\x15\n\x13ResendEmailResponse\"\x10\n\x0eGetUserRequest\"F\n\x0fGetUserResponse\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0everified_email\x18\x03 \x01(\x08\"\x13\n\x11GetDomainsRequest\"9\n\x12GetDomainsResponse\x12#\n\x07\x64omains\x18\x01 \x03(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"B\n\x06\x44omain\x12\x0c\n\x04name\x18\x01 \x01(\t\x12*\n\x0bmodel_types\x18\x02 \x03(\x0b\x32\x0f.uipb.ModelTypeB\x04\xc8\xde\x1f\x00\")\n\tModelType\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\"\xe7\x01\n\x05Model\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12,\n\x06status\x18\x06 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x13\n\x0bowner_email\x18\x07 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x11\n\tmodel_url\x18\t \x01(\t\"\"\n\x10NewDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"7\n\x11NewDomainResponse\x12\"\n\x06\x64omain\x18\x01 \x01(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"\"\n\x10GetDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"\xbe\x01\n\x10GetModelsRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12,\n\x06status\x18\x04 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x0c\n\x04prod\x18\x05 \x01(\x08\x12\r\n\x05query\x18\x06 \x01(\t\x12\r\n\x05\x63ount\x18\x07 \x01(\x03\x12\x0e\n\x06offset\x18\x08 \x01(\x03\x12\r\n\x05order\x18\t \x01(\t\"j\n\x11GetModelsResponse\x12!\n\x06models\x18\x01 \x03(\x0b\x32\x0b.uipb.ModelB\x04\xc8\xde\x1f\x00\x12\x13\n\x0btotal_count\x18\x02 \x01(\x03\x12\r\n\x05\x63ount\x18\x03 \x01(\x03\x12\x0e\n\x06offset\x18\x04 \x01(\x03\"\x1d\n\x0fGetModelRequest\x12\n\n\x02id\x18\x01 \x01(\x04\"&\n\x12NewAPITokenRequest\x12\x10\n\x08\x64uration\x18\x01 \x01(\t2\xd3\x08\n\x02UI\x12S\n\x05Login\x12\x12.uipb.LoginRequest\x1a\x1c.uipb.AuthenticationResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/api/v1/login:\x01*\x12\\\n\x08Register\x12\x15.uipb.RegisterRequest\x1a\x1c.uipb.AuthenticationResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\"\x10/api/v1/register:\x01*\x12\x63\n\x0bResendEmail\x12\x18.uipb.ResendEmailRequest\x1a\x19.uipb.ResendEmailResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/api/v1/resend_email:\x01*\x12P\n\x07GetUser\x12\x14.uipb.GetUserRequest\x1a\x15.uipb.GetUserResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/get_user\x12R\n\tGetDomain\x12\x16.uipb.GetDomainRequest\x1a\x0c.uipb.Domain\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/v1/domain/{domain}\x12W\n\nGetDomains\x12\x17.uipb.GetDomainsRequest\x1a\x18.uipb.GetDomainsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/v1/domain\x12[\n\tNewDomain\x12\x16.uipb.NewDomainRequest\x1a\x17.uipb.NewDomainResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\"\x12/api/v1/domain/new:\x01*\x12\x63\n\x0cNewModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\"&/api/v1/domain/{domain}/model_type/new:\x01*\x12\x63\n\x0cGetModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/domain/{domain}/model_type/{name}\x12Z\n\tGetModels\x12\x16.uipb.GetModelsRequest\x1a\x17.uipb.GetModelsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/model_search\x12J\n\x08GetModel\x12\x15.uipb.GetModelRequest\x1a\x0b.uipb.Model\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/model/{id}\x12g\n\x0bNewAPIToken\x12\x18.uipb.NewAPITokenRequest\x1a\x1c.uipb.AuthenticationResponse\" \x82\xd3\xe4\x93\x02\x1a\"\x15/api/v1/api_token/new:\x01*b\x06proto3')
   ,
   dependencies=[github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.DESCRIPTOR,])
 
@@ -752,6 +752,37 @@ _GETMODELREQUEST = _descriptor.Descriptor(
   serialized_end=1372,
 )
 
+
+_NEWAPITOKENREQUEST = _descriptor.Descriptor(
+  name='NewAPITokenRequest',
+  full_name='uipb.NewAPITokenRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='duration', full_name='uipb.NewAPITokenRequest.duration', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1374,
+  serialized_end=1412,
+)
+
 _GETDOMAINSRESPONSE.fields_by_name['domains'].message_type = _DOMAIN
 _DOMAIN.fields_by_name['model_types'].message_type = _MODELTYPE
 _MODEL.fields_by_name['status'].enum_type = github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2._TRAININGSTATUS
@@ -777,6 +808,7 @@ DESCRIPTOR.message_types_by_name['GetDomainRequest'] = _GETDOMAINREQUEST
 DESCRIPTOR.message_types_by_name['GetModelsRequest'] = _GETMODELSREQUEST
 DESCRIPTOR.message_types_by_name['GetModelsResponse'] = _GETMODELSRESPONSE
 DESCRIPTOR.message_types_by_name['GetModelRequest'] = _GETMODELREQUEST
+DESCRIPTOR.message_types_by_name['NewAPITokenRequest'] = _NEWAPITOKENREQUEST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 LoginRequest = _reflection.GeneratedProtocolMessageType('LoginRequest', (_message.Message,), dict(
@@ -905,6 +937,13 @@ GetModelRequest = _reflection.GeneratedProtocolMessageType('GetModelRequest', (_
   ))
 _sym_db.RegisterMessage(GetModelRequest)
 
+NewAPITokenRequest = _reflection.GeneratedProtocolMessageType('NewAPITokenRequest', (_message.Message,), dict(
+  DESCRIPTOR = _NEWAPITOKENREQUEST,
+  __module__ = 'uipb.ui_pb2'
+  # @@protoc_insertion_point(class_scope:uipb.NewAPITokenRequest)
+  ))
+_sym_db.RegisterMessage(NewAPITokenRequest)
+
 
 _GETDOMAINSRESPONSE.fields_by_name['domains'].has_options = True
 _GETDOMAINSRESPONSE.fields_by_name['domains']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
@@ -991,6 +1030,11 @@ try:
           request_serializer=GetModelRequest.SerializeToString,
           response_deserializer=Model.FromString,
           )
+      self.NewAPIToken = channel.unary_unary(
+          '/uipb.UI/NewAPIToken',
+          request_serializer=NewAPITokenRequest.SerializeToString,
+          response_deserializer=AuthenticationResponse.FromString,
+          )
 
 
   class UIServicer(object):
@@ -1074,6 +1118,13 @@ try:
       context.set_details('Method not implemented!')
       raise NotImplementedError('Method not implemented!')
 
+    def NewAPIToken(self, request, context):
+      # missing associated documentation comment in .proto file
+      pass
+      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+      context.set_details('Method not implemented!')
+      raise NotImplementedError('Method not implemented!')
+
 
   def add_UIServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1132,6 +1183,11 @@ try:
             request_deserializer=GetModelRequest.FromString,
             response_serializer=Model.SerializeToString,
         ),
+        'NewAPIToken': grpc.unary_unary_rpc_method_handler(
+            servicer.NewAPIToken,
+            request_deserializer=NewAPITokenRequest.FromString,
+            response_serializer=AuthenticationResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
         'uipb.UI', rpc_method_handlers)
@@ -1187,6 +1243,10 @@ try:
       pass
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
     def GetModel(self, request, context):
+      # missing associated documentation comment in .proto file
+      pass
+      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+    def NewAPIToken(self, request, context):
       # missing associated documentation comment in .proto file
       pass
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
@@ -1255,6 +1315,11 @@ try:
       pass
       raise NotImplementedError()
     GetModel.future = None
+    def NewAPIToken(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+      # missing associated documentation comment in .proto file
+      pass
+      raise NotImplementedError()
+    NewAPIToken.future = None
 
 
   def beta_create_UI_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
@@ -1271,6 +1336,7 @@ try:
       ('uipb.UI', 'GetModels'): GetModelsRequest.FromString,
       ('uipb.UI', 'GetUser'): GetUserRequest.FromString,
       ('uipb.UI', 'Login'): LoginRequest.FromString,
+      ('uipb.UI', 'NewAPIToken'): NewAPITokenRequest.FromString,
       ('uipb.UI', 'NewDomain'): NewDomainRequest.FromString,
       ('uipb.UI', 'NewModelType'): ModelType.FromString,
       ('uipb.UI', 'Register'): RegisterRequest.FromString,
@@ -1284,6 +1350,7 @@ try:
       ('uipb.UI', 'GetModels'): GetModelsResponse.SerializeToString,
       ('uipb.UI', 'GetUser'): GetUserResponse.SerializeToString,
       ('uipb.UI', 'Login'): AuthenticationResponse.SerializeToString,
+      ('uipb.UI', 'NewAPIToken'): AuthenticationResponse.SerializeToString,
       ('uipb.UI', 'NewDomain'): NewDomainResponse.SerializeToString,
       ('uipb.UI', 'NewModelType'): ModelType.SerializeToString,
       ('uipb.UI', 'Register'): AuthenticationResponse.SerializeToString,
@@ -1297,6 +1364,7 @@ try:
       ('uipb.UI', 'GetModels'): face_utilities.unary_unary_inline(servicer.GetModels),
       ('uipb.UI', 'GetUser'): face_utilities.unary_unary_inline(servicer.GetUser),
       ('uipb.UI', 'Login'): face_utilities.unary_unary_inline(servicer.Login),
+      ('uipb.UI', 'NewAPIToken'): face_utilities.unary_unary_inline(servicer.NewAPIToken),
       ('uipb.UI', 'NewDomain'): face_utilities.unary_unary_inline(servicer.NewDomain),
       ('uipb.UI', 'NewModelType'): face_utilities.unary_unary_inline(servicer.NewModelType),
       ('uipb.UI', 'Register'): face_utilities.unary_unary_inline(servicer.Register),
@@ -1320,6 +1388,7 @@ try:
       ('uipb.UI', 'GetModels'): GetModelsRequest.SerializeToString,
       ('uipb.UI', 'GetUser'): GetUserRequest.SerializeToString,
       ('uipb.UI', 'Login'): LoginRequest.SerializeToString,
+      ('uipb.UI', 'NewAPIToken'): NewAPITokenRequest.SerializeToString,
       ('uipb.UI', 'NewDomain'): NewDomainRequest.SerializeToString,
       ('uipb.UI', 'NewModelType'): ModelType.SerializeToString,
       ('uipb.UI', 'Register'): RegisterRequest.SerializeToString,
@@ -1333,6 +1402,7 @@ try:
       ('uipb.UI', 'GetModels'): GetModelsResponse.FromString,
       ('uipb.UI', 'GetUser'): GetUserResponse.FromString,
       ('uipb.UI', 'Login'): AuthenticationResponse.FromString,
+      ('uipb.UI', 'NewAPIToken'): AuthenticationResponse.FromString,
       ('uipb.UI', 'NewDomain'): NewDomainResponse.FromString,
       ('uipb.UI', 'NewModelType'): ModelType.FromString,
       ('uipb.UI', 'Register'): AuthenticationResponse.FromString,
@@ -1346,6 +1416,7 @@ try:
       'GetModels': cardinality.Cardinality.UNARY_UNARY,
       'GetUser': cardinality.Cardinality.UNARY_UNARY,
       'Login': cardinality.Cardinality.UNARY_UNARY,
+      'NewAPIToken': cardinality.Cardinality.UNARY_UNARY,
       'NewDomain': cardinality.Cardinality.UNARY_UNARY,
       'NewModelType': cardinality.Cardinality.UNARY_UNARY,
       'Register': cardinality.Cardinality.UNARY_UNARY,

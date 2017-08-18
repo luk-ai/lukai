@@ -54,7 +54,7 @@ proto_import_paths=-I ${GOPATH}/src -I ${GOPATH}/src/github.com/grpc-ecosystem/g
 	$(SED_INPLACE) '/import annotations_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
 	$(SED_INPLACE) 's/google_dot_api_dot_annotations__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
 	$(SED_INPLACE) 's/github.com.d4l3k.pok.protobuf/libpok.proto/g' $(shell find ${python_proto_dir} -type f -name '*.py')
-	$(SED_INPLACE) 's/^from /from libpok.proto./g' $(shell find ${python_proto_dir} -type f -name '*_pb2_grpc.py')
+	$(SED_INPLACE) -E 's/^from (libpok.proto.)*/from libpok.proto./g' $(shell find ${python_proto_dir} -type f -name '*_pb2_grpc.py')
 
 
 .PHONY: clean
