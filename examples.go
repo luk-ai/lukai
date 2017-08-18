@@ -288,6 +288,13 @@ func (mt *ModelType) filePath(file string) string {
 	return path.Join(mt.DataDir, file)
 }
 
+// int64Slice attaches the methods of Interface to []int64, sorting in increasing order.
+type int64Slice []int64
+
+func (p int64Slice) Len() int           { return len(p) }
+func (p int64Slice) Less(i, j int) bool { return p[i] < p[j] }
+func (p int64Slice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+
 func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 	mt.examplesMeta.RLock()
 	defer mt.examplesMeta.RUnlock()
@@ -314,9 +321,7 @@ func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 	i := 0
 	for filename, offsets := range fileReads {
 		// Sort the offsets to improve disk read performance.
-		sort.Slice(offsets, func(i, j int) bool {
-			return offsets[i] < offsets[j]
-		})
+		sort.Sort(int64Slice(offsets))
 
 		f, err := os.OpenFile(mt.filePath(filename), os.O_RDONLY, FilePerm)
 		if err != nil {

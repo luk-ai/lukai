@@ -24,6 +24,7 @@ godeps: .tensorflow
 
 .tensorflow:
 	curl -L "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-1.3.0.tar.gz" | sudo tar -C /usr/local -xz
+	ln -s /usr/local/lib/libtensorflow.so .
 	touch .tensorflow
 
 .PHONY: protobuf
