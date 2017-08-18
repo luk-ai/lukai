@@ -19,8 +19,12 @@ gotest: protobuf
 	go test -v -race ./...
 
 .PHONY: godeps
-godeps:
+godeps: tensorflowdeps
 	go get -t -v ./...
+
+.PHONY: tensorflowdeps
+tensorflowdeps:
+	pip3 install tensorflow
 
 .PHONY: protobuf
 protobuf: protobuf/tensorflow $(PROTO_GO_FILES)
