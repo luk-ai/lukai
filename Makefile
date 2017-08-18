@@ -15,16 +15,16 @@ build: protobuf
 test: gotest
 
 .PHONY: gotest
-gotest: protobuf
+gotest:
 	go test -v -race ./...
 
 .PHONY: godeps
-godeps: tensorflowdeps
+godeps: .tensorflow
 	go get -t -v ./...
 
-.PHONY: tensorflowdeps
-tensorflowdeps:
-	pip3 install tensorflow
+.tensorflow:
+	curl -L "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-1.3.0.tar.gz" | sudo tar -C /usr/local -xz
+	touch .tensorflow
 
 .PHONY: protobuf
 protobuf: protobuf/tensorflow $(PROTO_GO_FILES)
