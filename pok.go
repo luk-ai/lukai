@@ -13,11 +13,12 @@ import (
 	"github.com/d4l3k/pok/tf"
 )
 
-var ErrNotImplemented = errors.New("not implemented")
+var (
+	ErrNotImplemented = errors.New("not implemented")
+	PokEdgeAddress    = "localhost:5003"
 
-const PokAggregatorAddress = "localhost:5000"
-
-var outOfDateModelTimeout = 24 * time.Hour
+	outOfDateModelTimeout = 24 * time.Hour
+)
 
 type ModelType struct {
 	Domain, ModelType, DataDir string

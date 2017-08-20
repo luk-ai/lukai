@@ -5,7 +5,9 @@ import (
 	"context"
 	"io"
 	"log"
+	"time"
 
+	"github.com/cenkalti/backoff"
 	"github.com/d4l3k/pok/protobuf/aggregatorpb"
 	"github.com/d4l3k/pok/tf"
 	"google.golang.org/grpc"
@@ -22,9 +24,29 @@ func (mt *ModelType) StartTraining() error {
 
 	mt.training.running = true
 	go func() {
-		if err := mt.trainerWorker(); err != nil {
-			log.Println("Training error:", err)
-		}
+		backoffOptions := backoff.NewExponentialBackOff()
+		backoffOptions.InitialInterval = 1 * time.Second
+		backoffOptions.MaxInterval = 1 * time.Minute
+		backoffOptions.MaxElapsedTime = 0
+
+		retryCount := 0
+
+		backoff.Retry(func() error {
+			select {
+			case <-mt.training.stop:
+				return nil
+			default:
+			}
+
+			retryCount += 1
+
+			if err := mt.trainerWorker(); err != nil {
+				// TODO(d4l3k): Reconnect on network failure.
+				log.Printf("Training error (try #%d). Will retry: %s", retryCount, err)
+				return err
+			}
+			return nil
+		}, backoffOptions)
 
 		mt.training.Lock()
 		defer mt.training.Unlock()
@@ -51,19 +73,17 @@ func (mt *ModelType) StopTraining() error {
 func (mt *ModelType) trainerWorker() error {
 	ctx := context.Background()
 	// TODO(d4l3k): Secure request
-	conn, err := grpc.Dial(PokAggregatorAddress, grpc.WithInsecure())
+	conn, err := grpc.Dial(PokEdgeAddress, grpc.WithInsecure())
 	if err != nil {
 		return err
 	}
 	defer conn.Close()
 
-	c := aggregatorpb.NewAggregatorClient(conn)
+	c := aggregatorpb.NewEdgeClient(conn)
 	stream, err := c.GetWork(ctx, &aggregatorpb.GetWorkRequest{
-		Ids: []aggregatorpb.ModelID{
-			{
-				Domain:    mt.Domain,
-				ModelType: mt.ModelType,
-			},
+		Id: aggregatorpb.ModelID{
+			Domain:    mt.Domain,
+			ModelType: mt.ModelType,
 		},
 	})
 	if err != nil {
@@ -93,7 +113,7 @@ func (mt *ModelType) trainerWorker() error {
 }
 
 func (mt *ModelType) processWork(
-	ctx context.Context, c aggregatorpb.AggregatorClient, work *aggregatorpb.Work,
+	ctx context.Context, c aggregatorpb.EdgeClient, work *aggregatorpb.Work,
 ) error {
 	model, err := tf.LoadModel(bytes.NewReader(work.Model))
 	if err != nil {
@@ -129,15 +149,13 @@ func (mt *ModelType) processWork(
 	}
 
 	if _, err := c.ReportWork(ctx, &aggregatorpb.ReportWorkRequest{
-		Work: []aggregatorpb.Work{
-			{
-				Id:          work.Id,
-				NumExamples: int64(exampleCount),
-				NumClients:  1,
-				Epoch:       work.Epoch,
-				Model:       buf.Bytes(),
-				// HyperParams isn't needed here since the server already has that info.
-			},
+		Work: aggregatorpb.Work{
+			Id:          work.Id,
+			NumExamples: int64(exampleCount),
+			NumClients:  1,
+			Epoch:       work.Epoch,
+			Model:       buf.Bytes(),
+			// HyperParams isn't needed here since the server already has that info.
 		},
 	}); err != nil {
 		return err

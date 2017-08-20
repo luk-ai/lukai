@@ -272,7 +272,7 @@ func (mt *ModelType) loadExamplesMeta() error {
 	defer mt.examplesMeta.Unlock()
 
 	bytes, err := ioutil.ReadFile(mt.filePath(IndexFileName))
-	if err == os.ErrNotExist {
+	if os.IsNotExist(err) {
 		return nil
 	} else if err != nil {
 		return err

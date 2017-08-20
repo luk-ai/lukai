@@ -16,6 +16,7 @@
 		ReportWorkReply
 		ProdModelRequest
 		ProdModelResponse
+		ModelTypeAllocation
 */
 package aggregatorpb
 
@@ -208,33 +209,33 @@ func (m *ModelID) GetId() int64 {
 }
 
 type GetWorkRequest struct {
-	Ids []ModelID `protobuf:"bytes,1,rep,name=ids" json:"ids"`
+	Id ModelID `protobuf:"bytes,1,opt,name=id" json:"id"`
 }
 
 func (m *GetWorkRequest) Reset()                    { *m = GetWorkRequest{} }
 func (*GetWorkRequest) ProtoMessage()               {}
 func (*GetWorkRequest) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{3} }
 
-func (m *GetWorkRequest) GetIds() []ModelID {
+func (m *GetWorkRequest) GetId() ModelID {
 	if m != nil {
-		return m.Ids
+		return m.Id
 	}
-	return nil
+	return ModelID{}
 }
 
 type ReportWorkRequest struct {
-	Work []Work `protobuf:"bytes,1,rep,name=work" json:"work"`
+	Work Work `protobuf:"bytes,1,opt,name=work" json:"work"`
 }
 
 func (m *ReportWorkRequest) Reset()                    { *m = ReportWorkRequest{} }
 func (*ReportWorkRequest) ProtoMessage()               {}
 func (*ReportWorkRequest) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{4} }
 
-func (m *ReportWorkRequest) GetWork() []Work {
+func (m *ReportWorkRequest) GetWork() Work {
 	if m != nil {
 		return m.Work
 	}
-	return nil
+	return Work{}
 }
 
 type ReportWorkReply struct {
@@ -245,33 +246,56 @@ func (*ReportWorkReply) ProtoMessage()               {}
 func (*ReportWorkReply) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{5} }
 
 type ProdModelRequest struct {
-	Ids []ModelID `protobuf:"bytes,1,rep,name=ids" json:"ids"`
+	Id ModelID `protobuf:"bytes,1,opt,name=id" json:"id"`
 }
 
 func (m *ProdModelRequest) Reset()                    { *m = ProdModelRequest{} }
 func (*ProdModelRequest) ProtoMessage()               {}
 func (*ProdModelRequest) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{6} }
 
-func (m *ProdModelRequest) GetIds() []ModelID {
+func (m *ProdModelRequest) GetId() ModelID {
 	if m != nil {
-		return m.Ids
+		return m.Id
 	}
-	return nil
+	return ModelID{}
 }
 
 type ProdModelResponse struct {
-	ModelUrls []string `protobuf:"bytes,2,rep,name=model_urls,json=modelUrls" json:"model_urls,omitempty"`
+	ModelUrl string `protobuf:"bytes,2,opt,name=model_url,json=modelUrl,proto3" json:"model_url,omitempty"`
 }
 
 func (m *ProdModelResponse) Reset()                    { *m = ProdModelResponse{} }
 func (*ProdModelResponse) ProtoMessage()               {}
 func (*ProdModelResponse) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{7} }
 
-func (m *ProdModelResponse) GetModelUrls() []string {
+func (m *ProdModelResponse) GetModelUrl() string {
 	if m != nil {
-		return m.ModelUrls
+		return m.ModelUrl
 	}
-	return nil
+	return ""
+}
+
+type ModelTypeAllocation struct {
+	ModelType ModelID `protobuf:"bytes,1,opt,name=model_type,json=modelType" json:"model_type"`
+	Addr      string  `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
+}
+
+func (m *ModelTypeAllocation) Reset()                    { *m = ModelTypeAllocation{} }
+func (*ModelTypeAllocation) ProtoMessage()               {}
+func (*ModelTypeAllocation) Descriptor() ([]byte, []int) { return fileDescriptorAggregator, []int{8} }
+
+func (m *ModelTypeAllocation) GetModelType() ModelID {
+	if m != nil {
+		return m.ModelType
+	}
+	return ModelID{}
+}
+
+func (m *ModelTypeAllocation) GetAddr() string {
+	if m != nil {
+		return m.Addr
+	}
+	return ""
 }
 
 func init() {
@@ -283,6 +307,7 @@ func init() {
 	proto.RegisterType((*ReportWorkReply)(nil), "aggregatorpb.ReportWorkReply")
 	proto.RegisterType((*ProdModelRequest)(nil), "aggregatorpb.ProdModelRequest")
 	proto.RegisterType((*ProdModelResponse)(nil), "aggregatorpb.ProdModelResponse")
+	proto.RegisterType((*ModelTypeAllocation)(nil), "aggregatorpb.ModelTypeAllocation")
 	proto.RegisterEnum("aggregatorpb.TrainingStatus", TrainingStatus_name, TrainingStatus_value)
 }
 func (x TrainingStatus) String() string {
@@ -440,13 +465,8 @@ func (this *GetWorkRequest) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if len(this.Ids) != len(that1.Ids) {
+	if !this.Id.Equal(&that1.Id) {
 		return false
-	}
-	for i := range this.Ids {
-		if !this.Ids[i].Equal(&that1.Ids[i]) {
-			return false
-		}
 	}
 	return true
 }
@@ -475,13 +495,8 @@ func (this *ReportWorkRequest) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if len(this.Work) != len(that1.Work) {
+	if !this.Work.Equal(&that1.Work) {
 		return false
-	}
-	for i := range this.Work {
-		if !this.Work[i].Equal(&that1.Work[i]) {
-			return false
-		}
 	}
 	return true
 }
@@ -537,13 +552,8 @@ func (this *ProdModelRequest) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if len(this.Ids) != len(that1.Ids) {
+	if !this.Id.Equal(&that1.Id) {
 		return false
-	}
-	for i := range this.Ids {
-		if !this.Ids[i].Equal(&that1.Ids[i]) {
-			return false
-		}
 	}
 	return true
 }
@@ -572,13 +582,41 @@ func (this *ProdModelResponse) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if len(this.ModelUrls) != len(that1.ModelUrls) {
+	if this.ModelUrl != that1.ModelUrl {
 		return false
 	}
-	for i := range this.ModelUrls {
-		if this.ModelUrls[i] != that1.ModelUrls[i] {
+	return true
+}
+func (this *ModelTypeAllocation) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*ModelTypeAllocation)
+	if !ok {
+		that2, ok := that.(ModelTypeAllocation)
+		if ok {
+			that1 = &that2
+		} else {
 			return false
 		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if !this.ModelType.Equal(&that1.ModelType) {
+		return false
+	}
+	if this.Addr != that1.Addr {
+		return false
 	}
 	return true
 }
@@ -629,13 +667,7 @@ func (this *GetWorkRequest) GoString() string {
 	}
 	s := make([]string, 0, 5)
 	s = append(s, "&aggregatorpb.GetWorkRequest{")
-	if this.Ids != nil {
-		vs := make([]*ModelID, len(this.Ids))
-		for i := range vs {
-			vs[i] = &this.Ids[i]
-		}
-		s = append(s, "Ids: "+fmt.Sprintf("%#v", vs)+",\n")
-	}
+	s = append(s, "Id: "+strings.Replace(this.Id.GoString(), `&`, ``, 1)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -645,13 +677,7 @@ func (this *ReportWorkRequest) GoString() string {
 	}
 	s := make([]string, 0, 5)
 	s = append(s, "&aggregatorpb.ReportWorkRequest{")
-	if this.Work != nil {
-		vs := make([]*Work, len(this.Work))
-		for i := range vs {
-			vs[i] = &this.Work[i]
-		}
-		s = append(s, "Work: "+fmt.Sprintf("%#v", vs)+",\n")
-	}
+	s = append(s, "Work: "+strings.Replace(this.Work.GoString(), `&`, ``, 1)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -670,13 +696,7 @@ func (this *ProdModelRequest) GoString() string {
 	}
 	s := make([]string, 0, 5)
 	s = append(s, "&aggregatorpb.ProdModelRequest{")
-	if this.Ids != nil {
-		vs := make([]*ModelID, len(this.Ids))
-		for i := range vs {
-			vs[i] = &this.Ids[i]
-		}
-		s = append(s, "Ids: "+fmt.Sprintf("%#v", vs)+",\n")
-	}
+	s = append(s, "Id: "+strings.Replace(this.Id.GoString(), `&`, ``, 1)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -686,7 +706,18 @@ func (this *ProdModelResponse) GoString() string {
 	}
 	s := make([]string, 0, 5)
 	s = append(s, "&aggregatorpb.ProdModelResponse{")
-	s = append(s, "ModelUrls: "+fmt.Sprintf("%#v", this.ModelUrls)+",\n")
+	s = append(s, "ModelUrl: "+fmt.Sprintf("%#v", this.ModelUrl)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *ModelTypeAllocation) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&aggregatorpb.ModelTypeAllocation{")
+	s = append(s, "ModelType: "+strings.Replace(this.ModelType.GoString(), `&`, ``, 1)+",\n")
+	s = append(s, "Addr: "+fmt.Sprintf("%#v", this.Addr)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -712,7 +743,6 @@ const _ = grpc.SupportPackageIsVersion4
 type AggregatorClient interface {
 	GetWork(ctx context.Context, in *GetWorkRequest, opts ...grpc.CallOption) (Aggregator_GetWorkClient, error)
 	ReportWork(ctx context.Context, in *ReportWorkRequest, opts ...grpc.CallOption) (*ReportWorkReply, error)
-	ProdModel(ctx context.Context, in *ProdModelRequest, opts ...grpc.CallOption) (*ProdModelResponse, error)
 }
 
 type aggregatorClient struct {
@@ -764,21 +794,11 @@ func (c *aggregatorClient) ReportWork(ctx context.Context, in *ReportWorkRequest
 	return out, nil
 }
 
-func (c *aggregatorClient) ProdModel(ctx context.Context, in *ProdModelRequest, opts ...grpc.CallOption) (*ProdModelResponse, error) {
-	out := new(ProdModelResponse)
-	err := grpc.Invoke(ctx, "/aggregatorpb.Aggregator/ProdModel", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // Server API for Aggregator service
 
 type AggregatorServer interface {
 	GetWork(*GetWorkRequest, Aggregator_GetWorkServer) error
 	ReportWork(context.Context, *ReportWorkRequest) (*ReportWorkReply, error)
-	ProdModel(context.Context, *ProdModelRequest) (*ProdModelResponse, error)
 }
 
 func RegisterAggregatorServer(s *grpc.Server, srv AggregatorServer) {
@@ -824,24 +844,6 @@ func _Aggregator_ReportWork_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Aggregator_ProdModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProdModelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AggregatorServer).ProdModel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/aggregatorpb.Aggregator/ProdModel",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AggregatorServer).ProdModel(ctx, req.(*ProdModelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _Aggregator_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "aggregatorpb.Aggregator",
 	HandlerType: (*AggregatorServer)(nil),
@@ -850,15 +852,169 @@ var _Aggregator_serviceDesc = grpc.ServiceDesc{
 			MethodName: "ReportWork",
 			Handler:    _Aggregator_ReportWork_Handler,
 		},
-		{
-			MethodName: "ProdModel",
-			Handler:    _Aggregator_ProdModel_Handler,
-		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "GetWork",
 			Handler:       _Aggregator_GetWork_Handler,
+			ServerStreams: true,
+		},
+	},
+	Metadata: "protobuf/aggregatorpb/aggregator.proto",
+}
+
+// Client API for Edge service
+
+type EdgeClient interface {
+	GetWork(ctx context.Context, in *GetWorkRequest, opts ...grpc.CallOption) (Edge_GetWorkClient, error)
+	ReportWork(ctx context.Context, in *ReportWorkRequest, opts ...grpc.CallOption) (*ReportWorkReply, error)
+	ProdModel(ctx context.Context, in *ProdModelRequest, opts ...grpc.CallOption) (*ProdModelResponse, error)
+}
+
+type edgeClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewEdgeClient(cc *grpc.ClientConn) EdgeClient {
+	return &edgeClient{cc}
+}
+
+func (c *edgeClient) GetWork(ctx context.Context, in *GetWorkRequest, opts ...grpc.CallOption) (Edge_GetWorkClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_Edge_serviceDesc.Streams[0], c.cc, "/aggregatorpb.Edge/GetWork", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &edgeGetWorkClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Edge_GetWorkClient interface {
+	Recv() (*Work, error)
+	grpc.ClientStream
+}
+
+type edgeGetWorkClient struct {
+	grpc.ClientStream
+}
+
+func (x *edgeGetWorkClient) Recv() (*Work, error) {
+	m := new(Work)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *edgeClient) ReportWork(ctx context.Context, in *ReportWorkRequest, opts ...grpc.CallOption) (*ReportWorkReply, error) {
+	out := new(ReportWorkReply)
+	err := grpc.Invoke(ctx, "/aggregatorpb.Edge/ReportWork", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *edgeClient) ProdModel(ctx context.Context, in *ProdModelRequest, opts ...grpc.CallOption) (*ProdModelResponse, error) {
+	out := new(ProdModelResponse)
+	err := grpc.Invoke(ctx, "/aggregatorpb.Edge/ProdModel", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// Server API for Edge service
+
+type EdgeServer interface {
+	GetWork(*GetWorkRequest, Edge_GetWorkServer) error
+	ReportWork(context.Context, *ReportWorkRequest) (*ReportWorkReply, error)
+	ProdModel(context.Context, *ProdModelRequest) (*ProdModelResponse, error)
+}
+
+func RegisterEdgeServer(s *grpc.Server, srv EdgeServer) {
+	s.RegisterService(&_Edge_serviceDesc, srv)
+}
+
+func _Edge_GetWork_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetWorkRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(EdgeServer).GetWork(m, &edgeGetWorkServer{stream})
+}
+
+type Edge_GetWorkServer interface {
+	Send(*Work) error
+	grpc.ServerStream
+}
+
+type edgeGetWorkServer struct {
+	grpc.ServerStream
+}
+
+func (x *edgeGetWorkServer) Send(m *Work) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _Edge_ReportWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportWorkRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).ReportWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/aggregatorpb.Edge/ReportWork",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).ReportWork(ctx, req.(*ReportWorkRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Edge_ProdModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProdModelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EdgeServer).ProdModel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/aggregatorpb.Edge/ProdModel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EdgeServer).ProdModel(ctx, req.(*ProdModelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Edge_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "aggregatorpb.Edge",
+	HandlerType: (*EdgeServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ReportWork",
+			Handler:    _Edge_ReportWork_Handler,
+		},
+		{
+			MethodName: "ProdModel",
+			Handler:    _Edge_ProdModel_Handler,
+		},
+	},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetWork",
+			Handler:       _Edge_GetWork_Handler,
 			ServerStreams: true,
 		},
 	},
@@ -1013,18 +1169,14 @@ func (m *GetWorkRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Ids) > 0 {
-		for _, msg := range m.Ids {
-			dAtA[i] = 0xa
-			i++
-			i = encodeVarintAggregator(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintAggregator(dAtA, i, uint64(m.Id.Size()))
+	n3, err := m.Id.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
 	}
+	i += n3
 	return i, nil
 }
 
@@ -1043,18 +1195,14 @@ func (m *ReportWorkRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Work) > 0 {
-		for _, msg := range m.Work {
-			dAtA[i] = 0xa
-			i++
-			i = encodeVarintAggregator(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintAggregator(dAtA, i, uint64(m.Work.Size()))
+	n4, err := m.Work.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
 	}
+	i += n4
 	return i, nil
 }
 
@@ -1091,18 +1239,14 @@ func (m *ProdModelRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Ids) > 0 {
-		for _, msg := range m.Ids {
-			dAtA[i] = 0xa
-			i++
-			i = encodeVarintAggregator(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintAggregator(dAtA, i, uint64(m.Id.Size()))
+	n5, err := m.Id.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
 	}
+	i += n5
 	return i, nil
 }
 
@@ -1121,20 +1265,43 @@ func (m *ProdModelResponse) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ModelUrls) > 0 {
-		for _, s := range m.ModelUrls {
-			dAtA[i] = 0x12
-			i++
-			l = len(s)
-			for l >= 1<<7 {
-				dAtA[i] = uint8(uint64(l)&0x7f | 0x80)
-				l >>= 7
-				i++
-			}
-			dAtA[i] = uint8(l)
-			i++
-			i += copy(dAtA[i:], s)
-		}
+	if len(m.ModelUrl) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintAggregator(dAtA, i, uint64(len(m.ModelUrl)))
+		i += copy(dAtA[i:], m.ModelUrl)
+	}
+	return i, nil
+}
+
+func (m *ModelTypeAllocation) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ModelTypeAllocation) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintAggregator(dAtA, i, uint64(m.ModelType.Size()))
+	n6, err := m.ModelType.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n6
+	if len(m.Addr) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintAggregator(dAtA, i, uint64(len(m.Addr)))
+		i += copy(dAtA[i:], m.Addr)
 	}
 	return i, nil
 }
@@ -1230,24 +1397,16 @@ func (m *ModelID) Size() (n int) {
 func (m *GetWorkRequest) Size() (n int) {
 	var l int
 	_ = l
-	if len(m.Ids) > 0 {
-		for _, e := range m.Ids {
-			l = e.Size()
-			n += 1 + l + sovAggregator(uint64(l))
-		}
-	}
+	l = m.Id.Size()
+	n += 1 + l + sovAggregator(uint64(l))
 	return n
 }
 
 func (m *ReportWorkRequest) Size() (n int) {
 	var l int
 	_ = l
-	if len(m.Work) > 0 {
-		for _, e := range m.Work {
-			l = e.Size()
-			n += 1 + l + sovAggregator(uint64(l))
-		}
-	}
+	l = m.Work.Size()
+	n += 1 + l + sovAggregator(uint64(l))
 	return n
 }
 
@@ -1260,23 +1419,29 @@ func (m *ReportWorkReply) Size() (n int) {
 func (m *ProdModelRequest) Size() (n int) {
 	var l int
 	_ = l
-	if len(m.Ids) > 0 {
-		for _, e := range m.Ids {
-			l = e.Size()
-			n += 1 + l + sovAggregator(uint64(l))
-		}
-	}
+	l = m.Id.Size()
+	n += 1 + l + sovAggregator(uint64(l))
 	return n
 }
 
 func (m *ProdModelResponse) Size() (n int) {
 	var l int
 	_ = l
-	if len(m.ModelUrls) > 0 {
-		for _, s := range m.ModelUrls {
-			l = len(s)
-			n += 1 + l + sovAggregator(uint64(l))
-		}
+	l = len(m.ModelUrl)
+	if l > 0 {
+		n += 1 + l + sovAggregator(uint64(l))
+	}
+	return n
+}
+
+func (m *ModelTypeAllocation) Size() (n int) {
+	var l int
+	_ = l
+	l = m.ModelType.Size()
+	n += 1 + l + sovAggregator(uint64(l))
+	l = len(m.Addr)
+	if l > 0 {
+		n += 1 + l + sovAggregator(uint64(l))
 	}
 	return n
 }
@@ -1340,7 +1505,7 @@ func (this *GetWorkRequest) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&GetWorkRequest{`,
-		`Ids:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Ids), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
+		`Id:` + strings.Replace(strings.Replace(this.Id.String(), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1350,7 +1515,7 @@ func (this *ReportWorkRequest) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&ReportWorkRequest{`,
-		`Work:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Work), "Work", "Work", 1), `&`, ``, 1) + `,`,
+		`Work:` + strings.Replace(strings.Replace(this.Work.String(), "Work", "Work", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1369,7 +1534,7 @@ func (this *ProdModelRequest) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&ProdModelRequest{`,
-		`Ids:` + strings.Replace(strings.Replace(fmt.Sprintf("%v", this.Ids), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
+		`Id:` + strings.Replace(strings.Replace(this.Id.String(), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1379,7 +1544,18 @@ func (this *ProdModelResponse) String() string {
 		return "nil"
 	}
 	s := strings.Join([]string{`&ProdModelResponse{`,
-		`ModelUrls:` + fmt.Sprintf("%v", this.ModelUrls) + `,`,
+		`ModelUrl:` + fmt.Sprintf("%v", this.ModelUrl) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ModelTypeAllocation) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ModelTypeAllocation{`,
+		`ModelType:` + strings.Replace(strings.Replace(this.ModelType.String(), "ModelID", "ModelID", 1), `&`, ``, 1) + `,`,
+		`Addr:` + fmt.Sprintf("%v", this.Addr) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1891,7 +2067,7 @@ func (m *GetWorkRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Ids", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1915,8 +2091,7 @@ func (m *GetWorkRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Ids = append(m.Ids, ModelID{})
-			if err := m.Ids[len(m.Ids)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Id.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1996,8 +2171,7 @@ func (m *ReportWorkRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Work = append(m.Work, Work{})
-			if err := m.Work[len(m.Work)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Work.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2103,7 +2277,7 @@ func (m *ProdModelRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Ids", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2127,8 +2301,7 @@ func (m *ProdModelRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Ids = append(m.Ids, ModelID{})
-			if err := m.Ids[len(m.Ids)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Id.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2184,7 +2357,7 @@ func (m *ProdModelResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ModelUrls", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ModelUrl", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2209,7 +2382,116 @@ func (m *ProdModelResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ModelUrls = append(m.ModelUrls, string(dAtA[iNdEx:postIndex]))
+			m.ModelUrl = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipAggregator(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthAggregator
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ModelTypeAllocation) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowAggregator
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ModelTypeAllocation: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ModelTypeAllocation: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ModelType", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAggregator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthAggregator
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ModelType.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Addr", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAggregator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAggregator
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Addr = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2340,47 +2622,50 @@ var (
 func init() { proto.RegisterFile("protobuf/aggregatorpb/aggregator.proto", fileDescriptorAggregator) }
 
 var fileDescriptorAggregator = []byte{
-	// 666 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x94, 0x4f, 0x6e, 0xd3, 0x40,
-	0x14, 0xc6, 0x3d, 0x71, 0xda, 0x92, 0x97, 0x34, 0x24, 0x23, 0x40, 0x21, 0xa2, 0x4e, 0x31, 0x12,
-	0xaa, 0xa0, 0x4d, 0x51, 0x39, 0x40, 0x95, 0x26, 0xa1, 0x8d, 0x54, 0xa2, 0xca, 0x6d, 0xc5, 0x32,
-	0x72, 0xe2, 0xc1, 0xb1, 0x6a, 0x7b, 0xcc, 0x78, 0x2c, 0x48, 0x57, 0x1c, 0x81, 0x63, 0x70, 0x94,
-	0xb2, 0xeb, 0x92, 0x15, 0xa2, 0x66, 0x01, 0x1b, 0xa4, 0x1e, 0x01, 0xcd, 0xd8, 0x49, 0x1c, 0xa0,
-	0x42, 0x62, 0x97, 0xf7, 0x27, 0xdf, 0xfb, 0xde, 0xef, 0x8d, 0x0c, 0x8f, 0x03, 0x46, 0x39, 0x1d,
-	0x46, 0xaf, 0xb7, 0x4d, 0xdb, 0x66, 0xc4, 0x36, 0x39, 0x65, 0xc1, 0x30, 0x13, 0x34, 0x65, 0x03,
-	0x2e, 0x65, 0xcb, 0xf5, 0x2d, 0xdb, 0xe1, 0xe3, 0x68, 0xd8, 0x1c, 0x51, 0x6f, 0xdb, 0xa6, 0x36,
-	0xdd, 0x9e, 0xa9, 0x88, 0x48, 0x06, 0xf2, 0x57, 0xf2, 0x67, 0xfd, 0x13, 0x82, 0xe2, 0xc1, 0x24,
-	0x20, 0xec, 0xc8, 0x64, 0xa6, 0x17, 0xe2, 0x2d, 0xc0, 0x01, 0xa3, 0x01, 0x65, 0xdc, 0xa1, 0xfe,
-	0x60, 0xe4, 0x3a, 0xc4, 0xe7, 0x61, 0x0d, 0xad, 0xa3, 0x0d, 0x64, 0x54, 0xe7, 0x95, 0x76, 0x52,
-	0xc0, 0x6b, 0x00, 0x43, 0x93, 0x8f, 0xc6, 0x83, 0xd0, 0x39, 0x27, 0xb5, 0xdc, 0x3a, 0xda, 0x50,
-	0x8d, 0x82, 0xcc, 0x1c, 0x3b, 0xe7, 0x44, 0x94, 0xfd, 0xc8, 0x1b, 0x30, 0x1a, 0xf9, 0x56, 0x58,
-	0x53, 0x93, 0xb2, 0x1f, 0x79, 0x86, 0x4c, 0xe0, 0x47, 0xb0, 0xea, 0x12, 0x93, 0xf9, 0x8e, 0x6f,
-	0x0f, 0x98, 0xc9, 0x49, 0x2d, 0x2f, 0xe7, 0x94, 0xa6, 0x49, 0xc3, 0xe4, 0x04, 0x6f, 0x40, 0x45,
-	0x68, 0xb8, 0x74, 0x64, 0xba, 0x53, 0xa5, 0x25, 0xa9, 0x54, 0xf6, 0x23, 0xef, 0x50, 0xa4, 0x13,
-	0x39, 0xfd, 0x3b, 0x82, 0xfc, 0x2b, 0xca, 0xce, 0xf0, 0x53, 0xc8, 0x39, 0x96, 0x34, 0x5d, 0xdc,
-	0xb9, 0xdb, 0xcc, 0xe2, 0x69, 0xbe, 0xa4, 0x16, 0x71, 0x7b, 0x9d, 0xbd, 0xfc, 0xc5, 0x97, 0x86,
-	0x62, 0xe4, 0x1c, 0x0b, 0x3f, 0x84, 0x92, 0xd0, 0x27, 0xef, 0x4c, 0x2f, 0x70, 0x49, 0x98, 0x2e,
-	0x51, 0xf4, 0x23, 0xaf, 0x9b, 0xa6, 0x70, 0x03, 0x44, 0x38, 0xa3, 0x91, 0xec, 0x21, 0x36, 0x9b,
-	0x62, 0xb8, 0x03, 0x4b, 0x24, 0xa0, 0xa3, 0xb1, 0x5c, 0x40, 0x35, 0x92, 0x40, 0x64, 0x3d, 0x31,
-	0x4e, 0xda, 0x2d, 0x19, 0x49, 0x80, 0xf7, 0xa0, 0x34, 0x16, 0xc0, 0x07, 0x81, 0x24, 0x5e, 0x5b,
-	0x91, 0x36, 0xef, 0x2f, 0xda, 0xcc, 0x9c, 0x24, 0xb5, 0x5a, 0x1c, 0xcf, 0x53, 0xfa, 0x11, 0xac,
-	0xa4, 0x8b, 0xe0, 0x7b, 0xb0, 0x6c, 0x51, 0xcf, 0x74, 0x7c, 0xb9, 0x6f, 0xc1, 0x48, 0x23, 0x81,
-	0x5e, 0xce, 0x1b, 0xf0, 0x49, 0x90, 0x5c, 0xa6, 0x60, 0x14, 0x64, 0xe6, 0x64, 0x12, 0x10, 0x5c,
-	0x96, 0x88, 0x92, 0x4d, 0x72, 0x8e, 0xa5, 0xef, 0x42, 0x79, 0x9f, 0x70, 0x41, 0xcf, 0x20, 0x6f,
-	0x22, 0x12, 0x72, 0xbc, 0x05, 0xaa, 0x63, 0x89, 0xd3, 0xab, 0xff, 0xa2, 0x28, 0xfa, 0xf4, 0x16,
-	0x54, 0x0d, 0x22, 0x5e, 0x47, 0x56, 0x63, 0x13, 0xf2, 0x6f, 0x29, 0x3b, 0x4b, 0x45, 0xf0, 0xa2,
-	0x88, 0x68, 0x4c, 0x15, 0x64, 0x97, 0x5e, 0x85, 0xdb, 0x59, 0x89, 0xc0, 0x9d, 0xe8, 0x2d, 0xa8,
-	0x1c, 0x31, 0x6a, 0xc9, 0x79, 0xff, 0x69, 0x6c, 0x07, 0xaa, 0x19, 0x89, 0x30, 0xa0, 0x7e, 0x48,
-	0xe6, 0x74, 0x22, 0xe6, 0x8a, 0x93, 0xab, 0x33, 0x3a, 0xa7, 0xcc, 0x0d, 0x9f, 0x1c, 0x40, 0xf9,
-	0x84, 0x99, 0x8e, 0x78, 0x83, 0xc7, 0xdc, 0xe4, 0x51, 0x88, 0x57, 0xa1, 0x70, 0xdc, 0x3e, 0xe8,
-	0x76, 0x4e, 0x0f, 0xbb, 0x9d, 0x8a, 0x82, 0x4b, 0x70, 0xeb, 0xc4, 0x68, 0xf5, 0xfa, 0xbd, 0xfe,
-	0x7e, 0x05, 0xc9, 0xe2, 0x69, 0xbb, 0xdd, 0xed, 0x76, 0xba, 0x9d, 0x4a, 0x0e, 0x03, 0x2c, 0xbf,
-	0x68, 0xf5, 0x44, 0xa3, 0xba, 0xf3, 0x13, 0x01, 0xb4, 0x66, 0x0e, 0xf1, 0x2e, 0xac, 0xa4, 0x98,
-	0xf1, 0x83, 0x45, 0xe7, 0x8b, 0xf4, 0xeb, 0x7f, 0x61, 0xa5, 0x2b, 0xcf, 0x10, 0xee, 0x03, 0xcc,
-	0x19, 0xe1, 0xc6, 0x62, 0xd7, 0x1f, 0x07, 0xa8, 0xaf, 0xdd, 0xdc, 0x20, 0xf0, 0x2a, 0xb8, 0x0f,
-	0x85, 0x19, 0x1d, 0xac, 0x2d, 0x76, 0xff, 0x4e, 0xbe, 0xde, 0xb8, 0xb1, 0x9e, 0x60, 0xd5, 0x95,
-	0xbd, 0xcd, 0xcb, 0x2b, 0x4d, 0xf9, 0x7c, 0xa5, 0x29, 0xd7, 0x57, 0x1a, 0x7a, 0x1f, 0x6b, 0xe8,
-	0x63, 0xac, 0xa1, 0x8b, 0x58, 0x43, 0x97, 0xb1, 0x86, 0xbe, 0xc6, 0x1a, 0xfa, 0x11, 0x6b, 0xca,
-	0x75, 0xac, 0xa1, 0x0f, 0xdf, 0x34, 0x65, 0xb8, 0x2c, 0x3f, 0x42, 0xcf, 0x7f, 0x05, 0x00, 0x00,
-	0xff, 0xff, 0xfe, 0xc1, 0x89, 0x40, 0xeb, 0x04, 0x00, 0x00,
+	// 705 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x54, 0x4d, 0x6f, 0xd3, 0x4c,
+	0x10, 0xf6, 0x26, 0xe9, 0x47, 0x26, 0x69, 0xde, 0x64, 0xdf, 0x0f, 0xe5, 0x0d, 0xd4, 0x29, 0x46,
+	0x42, 0x15, 0xb4, 0x69, 0x55, 0x6e, 0x48, 0xa8, 0x4a, 0x93, 0xd0, 0x46, 0x6a, 0xa3, 0xca, 0x6d,
+	0xc5, 0x31, 0xda, 0xc4, 0x8b, 0x63, 0xd5, 0xf6, 0x9a, 0xb5, 0x2d, 0x48, 0x4f, 0xfc, 0x04, 0xfe,
+	0x00, 0x77, 0x7e, 0x4a, 0xb9, 0xf5, 0xc8, 0x09, 0xd1, 0x70, 0x80, 0x63, 0x7f, 0x02, 0xda, 0xb5,
+	0x93, 0xda, 0x40, 0x25, 0xe0, 0xc4, 0x6d, 0xe7, 0x99, 0xc9, 0x33, 0xcf, 0x3c, 0x33, 0x31, 0xdc,
+	0xf3, 0x38, 0x0b, 0xd8, 0x20, 0x7c, 0xb6, 0x41, 0x4c, 0x93, 0x53, 0x93, 0x04, 0x8c, 0x7b, 0x83,
+	0x44, 0xd0, 0x90, 0x05, 0xb8, 0x98, 0x4c, 0xd7, 0xd6, 0x4d, 0x2b, 0x18, 0x85, 0x83, 0xc6, 0x90,
+	0x39, 0x1b, 0x26, 0x33, 0xd9, 0xc6, 0x8c, 0x45, 0x44, 0x32, 0x90, 0xaf, 0xe8, 0xc7, 0xda, 0x3b,
+	0x04, 0x85, 0xbd, 0xb1, 0x47, 0xf9, 0x21, 0xe1, 0xc4, 0xf1, 0xf1, 0x3a, 0x60, 0x8f, 0x33, 0x8f,
+	0xf1, 0xc0, 0x62, 0x6e, 0x7f, 0x68, 0x5b, 0xd4, 0x0d, 0xfc, 0x2a, 0x5a, 0x41, 0xab, 0x48, 0xaf,
+	0x5c, 0x67, 0x5a, 0x51, 0x02, 0x2f, 0x03, 0x0c, 0x48, 0x30, 0x1c, 0xf5, 0x7d, 0xeb, 0x8c, 0x56,
+	0x33, 0x2b, 0x68, 0x35, 0xab, 0xe7, 0x25, 0x72, 0x64, 0x9d, 0x51, 0x91, 0x76, 0x43, 0xa7, 0xcf,
+	0x59, 0xe8, 0x1a, 0x7e, 0x35, 0x1b, 0xa5, 0xdd, 0xd0, 0xd1, 0x25, 0x80, 0xef, 0xc2, 0x92, 0x4d,
+	0x09, 0x77, 0x2d, 0xd7, 0xec, 0x73, 0x12, 0xd0, 0x6a, 0x4e, 0xf6, 0x29, 0x4e, 0x41, 0x9d, 0x04,
+	0x14, 0xaf, 0x42, 0x59, 0x70, 0xd8, 0x6c, 0x48, 0xec, 0x29, 0xd3, 0x9c, 0x64, 0x2a, 0xb9, 0xa1,
+	0xb3, 0x2f, 0xe0, 0x88, 0x4e, 0xfb, 0x8c, 0x20, 0xf7, 0x94, 0xf1, 0x53, 0xfc, 0x00, 0x32, 0x96,
+	0x21, 0x45, 0x17, 0xb6, 0xfe, 0x6d, 0x24, 0xed, 0x69, 0x1c, 0x30, 0x83, 0xda, 0xdd, 0xf6, 0x4e,
+	0xee, 0xfc, 0x43, 0x5d, 0xd1, 0x33, 0x96, 0x81, 0xef, 0x40, 0x51, 0xf0, 0xd3, 0x97, 0xc4, 0xf1,
+	0x6c, 0xea, 0xc7, 0x43, 0x14, 0xdc, 0xd0, 0xe9, 0xc4, 0x10, 0xae, 0x83, 0x08, 0x67, 0x6e, 0x44,
+	0x73, 0x88, 0xc9, 0xa6, 0x36, 0xfc, 0x03, 0x73, 0xd4, 0x63, 0xc3, 0x91, 0x1c, 0x20, 0xab, 0x47,
+	0x81, 0x40, 0x1d, 0xd1, 0x4e, 0xca, 0x2d, 0xea, 0x51, 0x80, 0x77, 0xa0, 0x38, 0x12, 0x86, 0xf7,
+	0x3d, 0xe9, 0x78, 0x75, 0x41, 0xca, 0xfc, 0x3f, 0x2d, 0x33, 0xb1, 0x92, 0x58, 0x6a, 0x61, 0x74,
+	0x0d, 0x69, 0x87, 0xb0, 0x10, 0x0f, 0x82, 0xff, 0x83, 0x79, 0x83, 0x39, 0xc4, 0x72, 0xe5, 0xbc,
+	0x79, 0x3d, 0x8e, 0x84, 0xf5, 0xb2, 0x5f, 0x3f, 0x18, 0x7b, 0xd1, 0x66, 0xf2, 0x7a, 0x5e, 0x22,
+	0xc7, 0x63, 0x8f, 0xe2, 0x92, 0xb4, 0x28, 0x9a, 0x24, 0x63, 0x19, 0xda, 0x63, 0x28, 0xed, 0xd2,
+	0x40, 0xb8, 0xa7, 0xd3, 0xe7, 0x21, 0xf5, 0x83, 0x5f, 0x32, 0x51, 0x6b, 0x42, 0x45, 0xa7, 0xe2,
+	0x36, 0x92, 0x0c, 0x6b, 0x90, 0x7b, 0xc1, 0xf8, 0x69, 0xcc, 0x81, 0xd3, 0x1c, 0xa2, 0x30, 0x26,
+	0x90, 0x55, 0x5a, 0x05, 0xfe, 0x4a, 0x52, 0x78, 0xf6, 0x58, 0xdb, 0x86, 0xf2, 0x21, 0x67, 0x86,
+	0x6c, 0xf7, 0x5b, 0xb2, 0x36, 0xa1, 0x92, 0x20, 0xf0, 0x3d, 0xe6, 0xfa, 0x14, 0xdf, 0x82, 0xc8,
+	0x87, 0x7e, 0xc8, 0xed, 0xd8, 0x98, 0x45, 0x09, 0x9c, 0x70, 0x5b, 0xa3, 0xf0, 0xf7, 0xc1, 0xd4,
+	0xa4, 0xa6, 0x2d, 0x8e, 0x4e, 0x9c, 0x3b, 0x7e, 0x94, 0x72, 0xf3, 0x27, 0xba, 0x27, 0xac, 0xc6,
+	0x90, 0x23, 0x86, 0xc1, 0xe3, 0x56, 0xf2, 0x7d, 0x7f, 0x0f, 0x4a, 0xc7, 0x9c, 0x58, 0xe2, 0xc8,
+	0x8f, 0x02, 0x12, 0x84, 0x3e, 0x5e, 0x82, 0xfc, 0x51, 0x6b, 0xaf, 0xd3, 0x3e, 0xd9, 0xef, 0xb4,
+	0xcb, 0x0a, 0x2e, 0xc2, 0xe2, 0xb1, 0xde, 0xec, 0xf6, 0xba, 0xbd, 0xdd, 0x32, 0x92, 0xc9, 0x93,
+	0x56, 0xab, 0xd3, 0x69, 0x77, 0xda, 0xe5, 0x0c, 0x06, 0x98, 0x7f, 0xd2, 0xec, 0x8a, 0xc2, 0xec,
+	0xd6, 0x1b, 0x04, 0xd0, 0x9c, 0xe9, 0xc0, 0xdb, 0xb0, 0x10, 0xef, 0x11, 0xdf, 0x4e, 0xeb, 0x4b,
+	0xaf, 0xb7, 0xf6, 0x83, 0x75, 0x68, 0xca, 0x26, 0xc2, 0x3d, 0x80, 0xeb, 0x35, 0xe0, 0x7a, 0xba,
+	0xea, 0xbb, 0x1d, 0xd7, 0x96, 0x6f, 0x2e, 0x10, 0x1b, 0x54, 0xb6, 0xc4, 0x9f, 0xb2, 0x63, 0x98,
+	0xf4, 0x8f, 0x53, 0x86, 0x7b, 0x90, 0x9f, 0x1d, 0x07, 0x56, 0xd3, 0xd5, 0xdf, 0x9e, 0x5d, 0xad,
+	0x7e, 0x63, 0x3e, 0xba, 0x2a, 0x4d, 0xd9, 0x59, 0xbb, 0xb8, 0x54, 0x95, 0xf7, 0x97, 0xaa, 0x72,
+	0x75, 0xa9, 0xa2, 0x57, 0x13, 0x15, 0xbd, 0x9d, 0xa8, 0xe8, 0x7c, 0xa2, 0xa2, 0x8b, 0x89, 0x8a,
+	0x3e, 0x4e, 0x54, 0xf4, 0x65, 0xa2, 0x2a, 0x57, 0x13, 0x15, 0xbd, 0xfe, 0xa4, 0x2a, 0x83, 0x79,
+	0xf9, 0xfd, 0x7d, 0xf8, 0x35, 0x00, 0x00, 0xff, 0xff, 0x35, 0x23, 0x9d, 0xcd, 0xe6, 0x05, 0x00,
+	0x00,
 }

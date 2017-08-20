@@ -36,24 +36,34 @@ message ModelID {
 }
 
 message GetWorkRequest {
-  repeated ModelID ids = 1 [(gogoproto.nullable) = false];
+  ModelID id = 1 [(gogoproto.nullable) = false];
 }
 
 message ReportWorkRequest {
-  repeated Work work = 1 [(gogoproto.nullable) = false];
+  Work work = 1 [(gogoproto.nullable) = false];
 }
 
 message ReportWorkReply {}
 
 message ProdModelRequest {
-  repeated ModelID ids = 1 [(gogoproto.nullable) = false];
+  ModelID id = 1 [(gogoproto.nullable) = false];
 }
 
 message ProdModelResponse {
-  repeated string model_urls = 2;
+  string model_url = 2;
+}
+
+message ModelTypeAllocation {
+  ModelID model_type = 1[(gogoproto.nullable) = false];
+  string addr = 2;
 }
 
 service Aggregator {
+  rpc GetWork (GetWorkRequest) returns (stream Work) {}
+  rpc ReportWork(ReportWorkRequest) returns (ReportWorkReply) {}
+}
+
+service Edge {
   rpc GetWork (GetWorkRequest) returns (stream Work) {}
   rpc ReportWork(ReportWorkRequest) returns (ReportWorkReply) {}
   rpc ProdModel(ProdModelRequest) returns (ProdModelResponse) {}

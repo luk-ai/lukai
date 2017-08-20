@@ -7,7 +7,6 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
 	"github.com/d4l3k/pok/protobuf/aggregatorpb"
@@ -35,26 +34,21 @@ func (mt *ModelType) loadProdModelRLocked() error {
 		return nil
 	}
 
-	conn, err := grpc.Dial(PokAggregatorAddress, grpc.WithInsecure())
+	conn, err := grpc.Dial(PokEdgeAddress, grpc.WithInsecure())
 	if err != nil {
 		return err
 	}
 	defer conn.Close()
 
-	c := aggregatorpb.NewAggregatorClient(conn)
+	c := aggregatorpb.NewEdgeClient(conn)
 	resp, err := c.ProdModel(context.TODO(), &aggregatorpb.ProdModelRequest{
-		Ids: []aggregatorpb.ModelID{
-			{
-				Domain:    mt.Domain,
-				ModelType: mt.ModelType,
-			},
+		Id: aggregatorpb.ModelID{
+			Domain:    mt.Domain,
+			ModelType: mt.ModelType,
 		},
 	})
 	if err != nil {
 		return err
-	}
-	if len(resp.ModelUrls) != 1 {
-		return errors.Errorf("server failed to return production model: %+v", resp)
 	}
 
 	if mt.prod.model != nil {
@@ -63,7 +57,7 @@ func (mt *ModelType) loadProdModelRLocked() error {
 		}
 	}
 
-	mt.prod.model, err = tf.GetModel(resp.ModelUrls[0])
+	mt.prod.model, err = tf.GetModel(resp.ModelUrl)
 	if err != nil {
 		return err
 	}
