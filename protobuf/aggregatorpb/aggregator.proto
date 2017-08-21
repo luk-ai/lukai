@@ -27,12 +27,14 @@ message Work {
   bytes model = 5;
   // TODO(d4l3k): consider sending a link to GCS instead of the raw model.
   HyperParams hyper_params = 7 [(gogoproto.nullable) = false];
+  // time_taken is amount of time in seconds it took to process this work.
+  double time_taken = 8;
 }
 
 message ModelID {
   string domain = 1;
   string model_type = 2;
-  int64 id = 3;
+  uint64 id = 3;
 }
 
 message GetWorkRequest {
@@ -43,7 +45,7 @@ message ReportWorkRequest {
   Work work = 1 [(gogoproto.nullable) = false];
 }
 
-message ReportWorkReply {}
+message ReportWorkResponse {}
 
 message ProdModelRequest {
   ModelID id = 1 [(gogoproto.nullable) = false];
@@ -54,17 +56,24 @@ message ProdModelResponse {
 }
 
 message ModelTypeAllocation {
-  ModelID model_type = 1[(gogoproto.nullable) = false];
+  ModelID model_type = 1 [(gogoproto.nullable) = false];
   string addr = 2;
 }
 
+message NotifyRequest {
+  ModelID id = 1 [(gogoproto.nullable) = false];
+}
+message NotifyResponse {}
+
 service Aggregator {
   rpc GetWork (GetWorkRequest) returns (stream Work) {}
-  rpc ReportWork(ReportWorkRequest) returns (ReportWorkReply) {}
+  rpc ReportWork(ReportWorkRequest) returns (ReportWorkResponse) {}
+
+  rpc Notify(NotifyRequest) returns (NotifyResponse) {}
 }
 
 service Edge {
   rpc GetWork (GetWorkRequest) returns (stream Work) {}
-  rpc ReportWork(ReportWorkRequest) returns (ReportWorkReply) {}
+  rpc ReportWork(ReportWorkRequest) returns (ReportWorkResponse) {}
   rpc ProdModel(ProdModelRequest) returns (ProdModelResponse) {}
 }

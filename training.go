@@ -115,6 +115,7 @@ func (mt *ModelType) trainerWorker() error {
 func (mt *ModelType) processWork(
 	ctx context.Context, c aggregatorpb.EdgeClient, work *aggregatorpb.Work,
 ) error {
+	start := time.Now()
 	model, err := tf.LoadModel(bytes.NewReader(work.Model))
 	if err != nil {
 		return err
@@ -156,6 +157,7 @@ func (mt *ModelType) processWork(
 			Epoch:       work.Epoch,
 			Model:       buf.Bytes(),
 			// HyperParams isn't needed here since the server already has that info.
+			TimeTaken: time.Since(start).Seconds(),
 		},
 	}); err != nil {
 		return err

@@ -22,7 +22,12 @@ class AggregatorStub(object):
     self.ReportWork = channel.unary_unary(
         '/aggregatorpb.Aggregator/ReportWork',
         request_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkRequest.SerializeToString,
-        response_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkReply.FromString,
+        response_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkResponse.FromString,
+        )
+    self.Notify = channel.unary_unary(
+        '/aggregatorpb.Aggregator/Notify',
+        request_serializer=aggregatorpb_dot_aggregator__pb2.NotifyRequest.SerializeToString,
+        response_deserializer=aggregatorpb_dot_aggregator__pb2.NotifyResponse.FromString,
         )
 
 
@@ -44,6 +49,13 @@ class AggregatorServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def Notify(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_AggregatorServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -55,7 +67,12 @@ def add_AggregatorServicer_to_server(servicer, server):
       'ReportWork': grpc.unary_unary_rpc_method_handler(
           servicer.ReportWork,
           request_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkRequest.FromString,
-          response_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkReply.SerializeToString,
+          response_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkResponse.SerializeToString,
+      ),
+      'Notify': grpc.unary_unary_rpc_method_handler(
+          servicer.Notify,
+          request_deserializer=aggregatorpb_dot_aggregator__pb2.NotifyRequest.FromString,
+          response_serializer=aggregatorpb_dot_aggregator__pb2.NotifyResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
@@ -81,7 +98,7 @@ class EdgeStub(object):
     self.ReportWork = channel.unary_unary(
         '/aggregatorpb.Edge/ReportWork',
         request_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkRequest.SerializeToString,
-        response_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkReply.FromString,
+        response_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkResponse.FromString,
         )
     self.ProdModel = channel.unary_unary(
         '/aggregatorpb.Edge/ProdModel',
@@ -126,7 +143,7 @@ def add_EdgeServicer_to_server(servicer, server):
       'ReportWork': grpc.unary_unary_rpc_method_handler(
           servicer.ReportWork,
           request_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkRequest.FromString,
-          response_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkReply.SerializeToString,
+          response_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkResponse.SerializeToString,
       ),
       'ProdModel': grpc.unary_unary_rpc_method_handler(
           servicer.ProdModel,
