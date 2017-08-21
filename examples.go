@@ -190,6 +190,15 @@ func (ex *example) readFrom(r io.Reader) (int, error) {
 	return c.n, nil
 }
 
+// TotalExamples returns the number of examples that are currently saved
+// locally.
+func (mt *ModelType) TotalExamples() int64 {
+	mt.examplesMeta.Lock()
+	defer mt.examplesMeta.Unlock()
+
+	return mt.examplesMeta.index.TotalSize
+}
+
 // Log records model input->output pairs for later use in training. This data is
 // saved locally only.
 // - feeds key is the tensorflow output and should be in the form "name:output#".
@@ -302,7 +311,12 @@ func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 	fileReads := map[string][]int64{}
 
 	for i := int64(0); i < n; i++ {
-		exampleIndex := rand.Int63n(mt.examplesMeta.index.TotalExamples)
+		totalExamples := mt.examplesMeta.index.TotalExamples
+		if totalExamples == 0 {
+			break
+		}
+
+		exampleIndex := rand.Int63n(totalExamples)
 		seenCount := int64(0)
 		for _, file := range mt.examplesMeta.index.Files {
 			seenSoFar := seenCount + int64(len(file.Positions))

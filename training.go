@@ -10,8 +10,11 @@ import (
 	"github.com/cenkalti/backoff"
 	"github.com/d4l3k/pok/protobuf/aggregatorpb"
 	"github.com/d4l3k/pok/tf"
+	"github.com/d4l3k/pok/units"
 	"google.golang.org/grpc"
 )
+
+var MaxMsgSize = 100 * units.MB
 
 // StartTraining starts the training worker.
 func (mt *ModelType) StartTraining() error {
@@ -19,6 +22,11 @@ func (mt *ModelType) StartTraining() error {
 	defer mt.training.Unlock()
 
 	if mt.training.running {
+		return nil
+	}
+
+	if mt.TotalExamples() == 0 {
+		log.Printf("No training examples available for %s/%s", mt.Domain, mt.ModelType)
 		return nil
 	}
 
@@ -73,7 +81,13 @@ func (mt *ModelType) StopTraining() error {
 func (mt *ModelType) trainerWorker() error {
 	ctx := context.Background()
 	// TODO(d4l3k): Secure request
-	conn, err := grpc.Dial(PokEdgeAddress, grpc.WithInsecure())
+	conn, err := grpc.Dial(
+		PokEdgeAddress, grpc.WithInsecure(),
+		grpc.WithDefaultCallOptions(
+			grpc.MaxCallRecvMsgSize(MaxMsgSize),
+			grpc.MaxCallSendMsgSize(MaxMsgSize),
+		),
+	)
 	if err != nil {
 		return err
 	}
