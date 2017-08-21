@@ -24,7 +24,10 @@ func Debounce(interval time.Duration, f func()) (call func(), stop func()) {
 	}()
 
 	return func() {
-			callChan <- struct{}{}
+			select {
+			case callChan <- struct{}{}:
+			default:
+			}
 		}, func() {
 			stopChan <- struct{}{}
 		}

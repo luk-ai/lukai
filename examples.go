@@ -2,6 +2,7 @@ package pok
 
 import (
 	"bytes"
+	"compress/gzip"
 	"encoding/gob"
 	"fmt"
 	"io"
@@ -18,6 +19,7 @@ import (
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
 	"github.com/d4l3k/pok/protobuf/clientpb"
+	"github.com/d4l3k/pok/tf"
 	"github.com/d4l3k/pok/units"
 )
 
@@ -34,7 +36,8 @@ var (
 	// IndexFileName is the name of the examples index file.
 	IndexFileName = "index.pb"
 	// FilePerm is the file permission all the example files use.
-	FilePerm os.FileMode = 0600
+	FilePerm os.FileMode = tf.FilePerm
+	DirPerm  os.FileMode = 0700
 )
 
 type example struct {
@@ -59,7 +62,10 @@ func (c *writeCounter) Write(p []byte) (int, error) {
 
 func (ex example) writeTo(w io.Writer) (int, error) {
 	c := writeCounter{target: w}
-	encoder := gob.NewEncoder(&c)
+	gzw := gzip.NewWriter(&c)
+	defer gzw.Close()
+
+	encoder := gob.NewEncoder(gzw)
 	if err := encoder.Encode(uint32(len(ex.feeds))); err != nil {
 		return 0, err
 	}
@@ -104,6 +110,9 @@ func (ex example) writeTo(w io.Writer) (int, error) {
 		return 0, err
 	}
 
+	if err := gzw.Close(); err != nil {
+		return 0, err
+	}
 	return c.n, nil
 }
 
@@ -134,7 +143,12 @@ func (ex *example) readFrom(r io.Reader) (int, error) {
 	}
 
 	c := readCounter{target: r}
-	decoder := gob.NewDecoder(&c)
+	gzr, err := gzip.NewReader(&c)
+	if err != nil {
+		return 0, err
+	}
+	defer gzr.Close()
+	decoder := gob.NewDecoder(gzr)
 
 	var numFeeds uint32
 	if err := decoder.Decode(&numFeeds); err != nil {
@@ -217,11 +231,7 @@ func (mt *ModelType) Log(feeds map[string]*tensorflow.Tensor, targets []string) 
 	if err != nil {
 		return err
 	}
-
-	offset := file.TotalSize
-	if _, err := f.Seek(offset, 0); err != nil {
-		return err
-	}
+	defer f.Close()
 
 	ex := example{
 		feeds:   feeds,
@@ -231,9 +241,11 @@ func (mt *ModelType) Log(feeds map[string]*tensorflow.Tensor, targets []string) 
 	if err != nil {
 		return err
 	}
-	file.Positions = append(file.Positions, int32(offset))
+	file.Positions = append(file.Positions, int32(file.TotalSize))
 	file.TotalSize += int64(n)
 	mt.examplesMeta.index.TotalSize += int64(n)
+
+	mt.examplesMeta.saveIndex()
 
 	return nil
 }
@@ -241,14 +253,17 @@ func (mt *ModelType) Log(feeds map[string]*tensorflow.Tensor, targets []string) 
 // ensureFilePresentLocked checks if there is a valid index entry, and if not,
 // creates one.
 func (mt *ModelType) ensureFilePresentLocked() {
-	lastFile := &mt.examplesMeta.index.Files[len(mt.examplesMeta.index.Files)-1]
+	numFiles := len(mt.examplesMeta.index.Files)
+	if numFiles > 0 {
+		lastFile := &mt.examplesMeta.index.Files[numFiles-1]
 
-	// Create a new file if the file is too old.
-	outdatedFile := lastFile.Created.Before(time.Now().Add(-MaxDaysInFile))
-	// Create a new file if the last one is over the maximum file size.
-	largeFile := lastFile.TotalSize >= int64(MaxFileSize)
-	if !outdatedFile && !largeFile {
-		return
+		// Create a new file if the file is too old.
+		outdatedFile := lastFile.Created.Before(time.Now().Add(-MaxDaysInFile))
+		// Create a new file if the last one is over the maximum file size.
+		largeFile := lastFile.TotalSize >= int64(MaxFileSize)
+		if !outdatedFile && !largeFile {
+			return
+		}
 	}
 
 	now := time.Now()
@@ -321,7 +336,7 @@ func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 		for _, file := range mt.examplesMeta.index.Files {
 			seenSoFar := seenCount + int64(len(file.Positions))
 			if exampleIndex < seenSoFar {
-				fileReads[file.Name] = append(fileReads[file.Name], exampleIndex-seenCount)
+				fileReads[file.Name] = append(fileReads[file.Name], int64(file.Positions[exampleIndex-seenCount]))
 				break
 			}
 			seenCount = seenSoFar
@@ -341,13 +356,14 @@ func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 		if err != nil {
 			return nil, err
 		}
+		defer f.Close()
 
 		for _, offset := range offsets {
 			if _, err := f.Seek(offset, 0); err != nil {
 				return nil, err
 			}
 			if _, err := examples[i].readFrom(f); err != nil {
-				return nil, err
+				return nil, errors.Wrapf(err, "failed to read from %q, offset %d", filename, offset)
 			}
 			i++
 		}

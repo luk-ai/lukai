@@ -2,6 +2,7 @@ package pok
 
 import (
 	"log"
+	"os"
 	"sync"
 	"time"
 
@@ -54,13 +55,17 @@ func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 		DataDir:   dataDir,
 	}
 
+	if err := os.MkdirAll(dataDir, DirPerm); err != nil {
+		return nil, err
+	}
+
 	mt.training.stop = make(chan struct{}, 1)
 	mt.examplesMeta.saveIndex, mt.examplesMeta.stop = debounce.Debounce(
-		300*time.Second,
+		300*time.Millisecond,
 		func() {
-			if err := mt.saveExamplesMeta; err != nil {
+			if err := mt.saveExamplesMeta(); err != nil {
 				// TODO(d4l3k): Better error handling.
-				log.Println(err)
+				log.Printf("saveExamplesMeta error: %+v", err)
 			}
 		},
 	)

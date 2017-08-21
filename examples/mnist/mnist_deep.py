@@ -147,13 +147,14 @@ def main(_):
     correct_prediction = tf.cast(correct_prediction, tf.float32)
   accuracy = tf.reduce_mean(correct_prediction)
 
-  graph_location = tempfile.mkdtemp()
-  print('Saving graph to: %s' % graph_location)
-  train_writer = tf.summary.FileWriter(graph_location)
-  train_writer.add_graph(tf.get_default_graph())
-
   with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
+
+    print('Node names: x = {}, y = {}, keep_prob = {}, train_step = {}'.format(
+      x.name, y_.name, keep_prob.name, train_step.name,
+    ))
+
+    exit()
 
     pok.set_api_token(FLAGS.api_token)
     pok.upload(

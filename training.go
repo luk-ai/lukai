@@ -11,6 +11,7 @@ import (
 	"github.com/d4l3k/pok/protobuf/aggregatorpb"
 	"github.com/d4l3k/pok/tf"
 	"github.com/d4l3k/pok/units"
+	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )
 
@@ -50,7 +51,7 @@ func (mt *ModelType) StartTraining() error {
 
 			if err := mt.trainerWorker(); err != nil {
 				// TODO(d4l3k): Reconnect on network failure.
-				log.Printf("Training error (try #%d). Will retry: %s", retryCount, err)
+				log.Printf("Training error (try #%d). Will retry: %+v", retryCount, err)
 				return err
 			}
 			return nil
@@ -119,7 +120,7 @@ func (mt *ModelType) trainerWorker() error {
 			return err
 		}
 		if err := mt.processWork(ctx, c, work); err != nil {
-			return err
+			return errors.Wrapf(err, "failure while processing work: %+v", work.Id)
 		}
 	}
 
@@ -129,6 +130,7 @@ func (mt *ModelType) trainerWorker() error {
 func (mt *ModelType) processWork(
 	ctx context.Context, c aggregatorpb.EdgeClient, work *aggregatorpb.Work,
 ) error {
+	log.Printf("Training %+v", work.Id)
 	start := time.Now()
 	model, err := tf.LoadModel(bytes.NewReader(work.Model))
 	if err != nil {
@@ -140,7 +142,7 @@ func (mt *ModelType) processWork(
 
 	exampleCount := 0
 
-	for i := int64(0); i < work.HyperParams.NumRounds; i++ {
+	for i := int64(0); i < work.HyperParams.NumLocalRounds; i++ {
 		examples, err := mt.getNExamples(work.HyperParams.BatchSize)
 		if err != nil {
 			return err
@@ -153,7 +155,10 @@ func (mt *ModelType) processWork(
 				return err
 			}
 			if _, err := model.Session.Run(feeds, fetches, targets); err != nil {
-				return err
+				return errors.Wrapf(
+					err, "model.Session.Run(%+v, %+v, %+v) failed",
+					example.feeds, example.fetches, example.targets,
+				)
 			}
 		}
 	}
@@ -163,6 +168,8 @@ func (mt *ModelType) processWork(
 		return err
 	}
 
+	timeTaken := time.Since(start)
+	log.Printf("Training took %s", timeTaken)
 	if _, err := c.ReportWork(ctx, &aggregatorpb.ReportWorkRequest{
 		Work: aggregatorpb.Work{
 			Id:          work.Id,
@@ -171,7 +178,7 @@ func (mt *ModelType) processWork(
 			Epoch:       work.Epoch,
 			Model:       buf.Bytes(),
 			// HyperParams isn't needed here since the server already has that info.
-			TimeTaken: time.Since(start).Seconds(),
+			TimeTaken: timeTaken.Seconds(),
 		},
 	}); err != nil {
 		return err

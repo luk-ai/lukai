@@ -2,6 +2,8 @@ package pok
 
 import (
 	"bytes"
+	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -193,5 +195,73 @@ func TestExamplesSerialization(t *testing.T) {
 				)
 			}
 		}
+	}
+}
+
+func TestLog(t *testing.T) {
+	dir, err := ioutil.TempDir("", "pok-server-TestLog")
+	if err != nil {
+		t.Fatalf("%+v", err)
+	}
+	defer os.RemoveAll(dir)
+	mt := ModelType{
+		Domain:    "test",
+		ModelType: "test",
+		DataDir:   dir,
+	}
+	mt.examplesMeta.saveIndex = func() {}
+
+	examples := []example{
+		{
+			feeds: map[string]*tensorflow.Tensor{
+				"tensor": newTensor(int64(0)),
+			},
+			targets: []string{"target"},
+		},
+		{
+			feeds: map[string]*tensorflow.Tensor{
+				"tensor": newTensor(int64(1)),
+			},
+			targets: []string{"target"},
+		},
+		{
+			feeds: map[string]*tensorflow.Tensor{
+				"tensor": newTensor(int64(2)),
+			},
+			targets: []string{"target"},
+		},
+	}
+	for _, example := range examples {
+		if err := mt.Log(example.feeds, example.targets); err != nil {
+			t.Fatalf("%+v", err)
+		}
+	}
+	seen := map[int64]struct{}{}
+	count := 0
+	for i := 0; i < 1000; i++ {
+		examples, err := mt.getNExamples(int64(len(examples)))
+		if err != nil {
+			t.Fatalf("%+v", err)
+		}
+		count += len(examples)
+		for _, ex := range examples {
+			val := ex.feeds["tensor"].Value().(int64)
+			seen[val] = struct{}{}
+
+			out := exampleToVal(ex)
+			want := exampleToVal(examples[val])
+			if !reflect.DeepEqual(out, want) {
+				t.Fatalf("examples[%d] = %+v; != %+v", val, want, out)
+			}
+		}
+		if len(seen) == len(examples) {
+			break
+		}
+	}
+	if len(seen) != len(examples) {
+		t.Fatalf(
+			"failed to get all examples from getNExamples after %d examples. Seen: %+v",
+			count, seen,
+		)
 	}
 }
