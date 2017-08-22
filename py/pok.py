@@ -53,10 +53,11 @@ def upload(session, domain, model_type, hyper_params, metrics=None,
            event_targets=None, name="", description=""):
     metrics_proto = None
     if metrics is not None:
-        metrics_proto = [
-            client_pb2.Metric(fetch_name=k.name, reduce=v)
-            for k, v in six.iteritems(metrics)
-        ]
+        metrics_proto = []
+        for k, v in six.iteritems(metrics):
+            if k.dtype != tf.float64:
+                k = tf.cast(k, tf.float64)
+            metrics_proto.append(client_pb2.Metric(fetch_name=k.name, reduce=v))
 
     events_proto = None
     if event_targets is not None:

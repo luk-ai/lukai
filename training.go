@@ -9,6 +9,7 @@ import (
 
 	"github.com/cenkalti/backoff"
 	"github.com/d4l3k/pok/protobuf/aggregatorpb"
+	"github.com/d4l3k/pok/protobuf/clientpb"
 	"github.com/d4l3k/pok/tf"
 	"github.com/d4l3k/pok/units"
 	"github.com/pkg/errors"
@@ -138,7 +139,38 @@ func (mt *ModelType) processWork(
 	}
 	defer model.Close()
 
-	cache := makeTFOpCache()
+	cache := makeTFOpCache(model)
+
+	trainTargets := model.Meta.EventTargets[clientpb.EVENT_TRAIN]
+	preTrainTargets, err := cache.resolveTargets(trainTargets.Pre)
+	if err != nil {
+		return err
+	}
+	postTrainTargets, err := cache.resolveTargets(trainTargets.Post)
+	if err != nil {
+		return err
+	}
+
+	evalTargets := model.Meta.EventTargets[clientpb.EVENT_EVAL]
+	preEvalTargets, err := cache.resolveTargets(evalTargets.Post)
+	if err != nil {
+		return err
+	}
+	postEvalTargets, err := cache.resolveTargets(evalTargets.Post)
+	if err != nil {
+		return err
+	}
+
+	var metricFetchNames []string
+	for _, m := range model.Meta.Metrics {
+		metricFetchNames = append(metricFetchNames, m.FetchName)
+	}
+	metricFetches, err := cache.resolveFetches(metricFetchNames)
+	if err != nil {
+		return err
+	}
+
+	preAggMetrics := make([][]float64, len(metricFetches))
 
 	exampleCount := 0
 
@@ -148,9 +180,61 @@ func (mt *ModelType) processWork(
 			return err
 		}
 		exampleCount += len(examples)
+
+		// Compute training metrics first.
+		if len(metricFetches) > 0 {
+			if len(preTrainTargets) > 0 {
+				if _, err := model.Session.Run(nil, nil, preTrainTargets); err != nil {
+					return errors.Wrapf(
+						err, "model.Session.Run(nil, nil, %+v) failed", trainTargets.Pre,
+					)
+				}
+			}
+
+			for _, example := range examples {
+				feeds, err := cache.resolveFeeds(example.feeds)
+				if err != nil {
+					return err
+				}
+				metrics, err := model.Session.Run(feeds, metricFetches, nil)
+				if err != nil {
+					return errors.Wrapf(
+						err, "model.Session.Run(%+v, %+v, %+v) failed",
+						example.feeds, example.fetches, example.targets,
+					)
+				}
+				for i, metric := range metrics {
+					val, ok := metric.Value().(float64)
+					if !ok {
+						return errors.Errorf(
+							"metric %q datatype not float64! = %+v", metricFetchNames, metric.Type())
+					}
+					preAggMetrics[i] = append(preAggMetrics[i], val)
+				}
+			}
+
+			if len(postTrainTargets) > 0 {
+				if _, err := model.Session.Run(nil, nil, postTrainTargets); err != nil {
+					return errors.Wrapf(
+						err, "model.Session.Run(nil, nil, %+v) failed", trainTargets.Post,
+					)
+				}
+			}
+		}
+
+		// Actually train the model on the examples.
+
+		if len(preTrainTargets) > 0 {
+			if _, err := model.Session.Run(nil, nil, preTrainTargets); err != nil {
+				return errors.Wrapf(
+					err, "model.Session.Run(nil, nil, %+v) failed", trainTargets.Pre,
+				)
+			}
+		}
+
 		// TODO(d4l3k): Implement proper batch training
 		for _, example := range examples {
-			feeds, fetches, targets, err := cache.resolve(model, example)
+			feeds, fetches, targets, err := cache.resolve(example)
 			if err != nil {
 				return err
 			}
@@ -158,6 +242,14 @@ func (mt *ModelType) processWork(
 				return errors.Wrapf(
 					err, "model.Session.Run(%+v, %+v, %+v) failed",
 					example.feeds, example.fetches, example.targets,
+				)
+			}
+		}
+
+		if len(postTrainTargets) > 0 {
+			if _, err := model.Session.Run(nil, nil, postTrainTargets); err != nil {
+				return errors.Wrapf(
+					err, "model.Session.Run(nil, nil, %+v) failed", trainTargets.Post,
 				)
 			}
 		}
