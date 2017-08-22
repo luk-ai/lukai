@@ -8,11 +8,13 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
+	"github.com/d4l3k/pok/metrics"
 	"github.com/d4l3k/pok/protobuf/aggregatorpb"
 	"github.com/d4l3k/pok/protobuf/clientpb"
 	"github.com/d4l3k/pok/tf"
 	"github.com/d4l3k/pok/units"
 	"github.com/pkg/errors"
+	"google.golang.org/genproto/googleapis/api/metric"
 	"google.golang.org/grpc"
 )
 
@@ -162,15 +164,15 @@ func (mt *ModelType) processWork(
 	}
 
 	var metricFetchNames []string
+	var aggMetrics []metric.Metric
 	for _, m := range model.Meta.Metrics {
 		metricFetchNames = append(metricFetchNames, m.FetchName)
+		aggMetrics = append(aggMetrics, metrics.Get(m.Reduce))
 	}
 	metricFetches, err := cache.resolveFetches(metricFetchNames)
 	if err != nil {
 		return err
 	}
-
-	preAggMetrics := make([][]float64, len(metricFetches))
 
 	exampleCount := 0
 
@@ -209,7 +211,7 @@ func (mt *ModelType) processWork(
 						return errors.Errorf(
 							"metric %q datatype not float64! = %+v", metricFetchNames, metric.Type())
 					}
-					preAggMetrics[i] = append(preAggMetrics[i], val)
+					aggMetrics[i].Add(val)
 				}
 			}
 
@@ -260,6 +262,11 @@ func (mt *ModelType) processWork(
 		return err
 	}
 
+	var metricVals []float64
+	for _, metric := range aggMetrics {
+		metricVals = append(metricVals, metric.Val())
+	}
+
 	timeTaken := time.Since(start)
 	log.Printf("Training took %s", timeTaken)
 	if _, err := c.ReportWork(ctx, &aggregatorpb.ReportWorkRequest{
@@ -271,6 +278,7 @@ func (mt *ModelType) processWork(
 			Model:       buf.Bytes(),
 			// HyperParams isn't needed here since the server already has that info.
 			TimeTaken: timeTaken.Seconds(),
+			Metrics:   metricVals,
 		},
 	}); err != nil {
 		return err
