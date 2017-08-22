@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='uipb/ui.proto',
   package='uipb',
   syntax='proto3',
-  serialized_pb=_b('\n\ruipb/ui.proto\x12\x04uipb\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a;libpok.proto/aggregatorpb/aggregator.proto\"A\n\x0cLoginRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\"R\n\x0fRegisterRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\"\'\n\x16\x41uthenticationResponse\x12\r\n\x05token\x18\x01 \x01(\t\"\x14\n\x12ResendEmailRequest\"\x15\n\x13ResendEmailResponse\"\x10\n\x0eGetUserRequest\"F\n\x0fGetUserResponse\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0everified_email\x18\x03 \x01(\x08\"\x13\n\x11GetDomainsRequest\"9\n\x12GetDomainsResponse\x12#\n\x07\x64omains\x18\x01 \x03(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"B\n\x06\x44omain\x12\x0c\n\x04name\x18\x01 \x01(\t\x12*\n\x0bmodel_types\x18\x02 \x03(\x0b\x32\x0f.uipb.ModelTypeB\x04\xc8\xde\x1f\x00\")\n\tModelType\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\"\xdb\x02\n\x05Model\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12,\n\x06status\x18\x06 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x13\n\x0bowner_email\x18\x07 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x11\n\tmodel_url\x18\t \x01(\t\x12\x38\n\ncreated_at\x18\n \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x38\n\nupdated_at\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\"\"\n\x10NewDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"7\n\x11NewDomainResponse\x12\"\n\x06\x64omain\x18\x01 \x01(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"\"\n\x10GetDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"\xbe\x01\n\x10GetModelsRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12,\n\x06status\x18\x04 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x0c\n\x04prod\x18\x05 \x01(\x08\x12\r\n\x05query\x18\x06 \x01(\t\x12\r\n\x05\x63ount\x18\x07 \x01(\x03\x12\x0e\n\x06offset\x18\x08 \x01(\x03\x12\r\n\x05order\x18\t \x01(\t\"j\n\x11GetModelsResponse\x12!\n\x06models\x18\x01 \x03(\x0b\x32\x0b.uipb.ModelB\x04\xc8\xde\x1f\x00\x12\x13\n\x0btotal_count\x18\x02 \x01(\x03\x12\r\n\x05\x63ount\x18\x03 \x01(\x03\x12\x0e\n\x06offset\x18\x04 \x01(\x03\"\x1d\n\x0fGetModelRequest\x12\n\n\x02id\x18\x01 \x01(\x04\"&\n\x12NewAPITokenRequest\x12\x10\n\x08\x64uration\x18\x01 \x01(\t2\xd3\x08\n\x02UI\x12S\n\x05Login\x12\x12.uipb.LoginRequest\x1a\x1c.uipb.AuthenticationResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/api/v1/login:\x01*\x12\\\n\x08Register\x12\x15.uipb.RegisterRequest\x1a\x1c.uipb.AuthenticationResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\"\x10/api/v1/register:\x01*\x12\x63\n\x0bResendEmail\x12\x18.uipb.ResendEmailRequest\x1a\x19.uipb.ResendEmailResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/api/v1/resend_email:\x01*\x12P\n\x07GetUser\x12\x14.uipb.GetUserRequest\x1a\x15.uipb.GetUserResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/get_user\x12R\n\tGetDomain\x12\x16.uipb.GetDomainRequest\x1a\x0c.uipb.Domain\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/v1/domain/{domain}\x12W\n\nGetDomains\x12\x17.uipb.GetDomainsRequest\x1a\x18.uipb.GetDomainsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/v1/domain\x12[\n\tNewDomain\x12\x16.uipb.NewDomainRequest\x1a\x17.uipb.NewDomainResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\"\x12/api/v1/domain/new:\x01*\x12\x63\n\x0cNewModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\"&/api/v1/domain/{domain}/model_type/new:\x01*\x12\x63\n\x0cGetModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/domain/{domain}/model_type/{name}\x12Z\n\tGetModels\x12\x16.uipb.GetModelsRequest\x1a\x17.uipb.GetModelsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/model_search\x12J\n\x08GetModel\x12\x15.uipb.GetModelRequest\x1a\x0b.uipb.Model\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/model/{id}\x12g\n\x0bNewAPIToken\x12\x18.uipb.NewAPITokenRequest\x1a\x1c.uipb.AuthenticationResponse\" \x82\xd3\xe4\x93\x02\x1a\"\x15/api/v1/api_token/new:\x01*b\x06proto3')
+  serialized_pb=_b('\n\ruipb/ui.proto\x12\x04uipb\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a;libpok.proto/aggregatorpb/aggregator.proto\"A\n\x0cLoginRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\"R\n\x0fRegisterRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\"\'\n\x16\x41uthenticationResponse\x12\r\n\x05token\x18\x01 \x01(\t\"\x14\n\x12ResendEmailRequest\"\x15\n\x13ResendEmailResponse\"\x10\n\x0eGetUserRequest\"F\n\x0fGetUserResponse\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0everified_email\x18\x03 \x01(\x08\"\x13\n\x11GetDomainsRequest\"9\n\x12GetDomainsResponse\x12#\n\x07\x64omains\x18\x01 \x03(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"B\n\x06\x44omain\x12\x0c\n\x04name\x18\x01 \x01(\t\x12*\n\x0bmodel_types\x18\x02 \x03(\x0b\x32\x0f.uipb.ModelTypeB\x04\xc8\xde\x1f\x00\")\n\tModelType\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\"\xdb\x02\n\x05Model\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12,\n\x06status\x18\x06 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x13\n\x0bowner_email\x18\x07 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x11\n\tmodel_url\x18\t \x01(\t\x12\x38\n\ncreated_at\x18\n \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x38\n\nupdated_at\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\"\"\n\x10NewDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"7\n\x11NewDomainResponse\x12\"\n\x06\x64omain\x18\x01 \x01(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"\"\n\x10GetDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"\xbe\x01\n\x10GetModelsRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12,\n\x06status\x18\x04 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x0c\n\x04prod\x18\x05 \x01(\x08\x12\r\n\x05query\x18\x06 \x01(\t\x12\r\n\x05\x63ount\x18\x07 \x01(\x03\x12\x0e\n\x06offset\x18\x08 \x01(\x03\x12\r\n\x05order\x18\t \x01(\t\"j\n\x11GetModelsResponse\x12!\n\x06models\x18\x01 \x03(\x0b\x32\x0b.uipb.ModelB\x04\xc8\xde\x1f\x00\x12\x13\n\x0btotal_count\x18\x02 \x01(\x03\x12\r\n\x05\x63ount\x18\x03 \x01(\x03\x12\x0e\n\x06offset\x18\x04 \x01(\x03\"\x1d\n\x0fGetModelRequest\x12\n\n\x02id\x18\x01 \x01(\x04\"&\n\x12NewAPITokenRequest\x12\x10\n\x08\x64uration\x18\x01 \x01(\t2\xe6\t\n\x02UI\x12S\n\x05Login\x12\x12.uipb.LoginRequest\x1a\x1c.uipb.AuthenticationResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/api/v1/login:\x01*\x12\\\n\x08Register\x12\x15.uipb.RegisterRequest\x1a\x1c.uipb.AuthenticationResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\"\x10/api/v1/register:\x01*\x12\x63\n\x0bResendEmail\x12\x18.uipb.ResendEmailRequest\x1a\x19.uipb.ResendEmailResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/api/v1/resend_email:\x01*\x12P\n\x07GetUser\x12\x14.uipb.GetUserRequest\x1a\x15.uipb.GetUserResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/get_user\x12R\n\tGetDomain\x12\x16.uipb.GetDomainRequest\x1a\x0c.uipb.Domain\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/v1/domain/{domain}\x12W\n\nGetDomains\x12\x17.uipb.GetDomainsRequest\x1a\x18.uipb.GetDomainsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/v1/domain\x12[\n\tNewDomain\x12\x16.uipb.NewDomainRequest\x1a\x17.uipb.NewDomainResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\"\x12/api/v1/domain/new:\x01*\x12\x63\n\x0cNewModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\"&/api/v1/domain/{domain}/model_type/new:\x01*\x12\x63\n\x0cGetModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/domain/{domain}/model_type/{name}\x12Z\n\tGetModels\x12\x16.uipb.GetModelsRequest\x1a\x17.uipb.GetModelsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/model_search\x12\x90\x01\n\x13\x43\x61ncelModelTraining\x12(.aggregatorpb.CancelModelTrainingRequest\x1a).aggregatorpb.CancelModelTrainingResponse\"$\x82\xd3\xe4\x93\x02\x1e\"\x1c/api/v1/model/{id.id}/cancel\x12J\n\x08GetModel\x12\x15.uipb.GetModelRequest\x1a\x0b.uipb.Model\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/model/{id}\x12g\n\x0bNewAPIToken\x12\x18.uipb.NewAPITokenRequest\x1a\x1c.uipb.AuthenticationResponse\" \x82\xd3\xe4\x93\x02\x1a\"\x15/api/v1/api_token/new:\x01*b\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.DESCRIPTOR,])
 
@@ -1046,6 +1046,11 @@ try:
           request_serializer=GetModelsRequest.SerializeToString,
           response_deserializer=GetModelsResponse.FromString,
           )
+      self.CancelModelTraining = channel.unary_unary(
+          '/uipb.UI/CancelModelTraining',
+          request_serializer=github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.CancelModelTrainingRequest.SerializeToString,
+          response_deserializer=github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.CancelModelTrainingResponse.FromString,
+          )
       self.GetModel = channel.unary_unary(
           '/uipb.UI/GetModel',
           request_serializer=GetModelRequest.SerializeToString,
@@ -1132,6 +1137,13 @@ try:
       context.set_details('Method not implemented!')
       raise NotImplementedError('Method not implemented!')
 
+    def CancelModelTraining(self, request, context):
+      # missing associated documentation comment in .proto file
+      pass
+      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+      context.set_details('Method not implemented!')
+      raise NotImplementedError('Method not implemented!')
+
     def GetModel(self, request, context):
       # missing associated documentation comment in .proto file
       pass
@@ -1199,6 +1211,11 @@ try:
             request_deserializer=GetModelsRequest.FromString,
             response_serializer=GetModelsResponse.SerializeToString,
         ),
+        'CancelModelTraining': grpc.unary_unary_rpc_method_handler(
+            servicer.CancelModelTraining,
+            request_deserializer=github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.CancelModelTrainingRequest.FromString,
+            response_serializer=github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.CancelModelTrainingResponse.SerializeToString,
+        ),
         'GetModel': grpc.unary_unary_rpc_method_handler(
             servicer.GetModel,
             request_deserializer=GetModelRequest.FromString,
@@ -1260,6 +1277,10 @@ try:
       pass
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
     def GetModels(self, request, context):
+      # missing associated documentation comment in .proto file
+      pass
+      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+    def CancelModelTraining(self, request, context):
       # missing associated documentation comment in .proto file
       pass
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
@@ -1331,6 +1352,11 @@ try:
       pass
       raise NotImplementedError()
     GetModels.future = None
+    def CancelModelTraining(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+      # missing associated documentation comment in .proto file
+      pass
+      raise NotImplementedError()
+    CancelModelTraining.future = None
     def GetModel(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
       # missing associated documentation comment in .proto file
       pass
@@ -1350,6 +1376,7 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_deserializers = {
+      ('uipb.UI', 'CancelModelTraining'): github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.CancelModelTrainingRequest.FromString,
       ('uipb.UI', 'GetDomain'): GetDomainRequest.FromString,
       ('uipb.UI', 'GetDomains'): GetDomainsRequest.FromString,
       ('uipb.UI', 'GetModel'): GetModelRequest.FromString,
@@ -1364,6 +1391,7 @@ try:
       ('uipb.UI', 'ResendEmail'): ResendEmailRequest.FromString,
     }
     response_serializers = {
+      ('uipb.UI', 'CancelModelTraining'): github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.CancelModelTrainingResponse.SerializeToString,
       ('uipb.UI', 'GetDomain'): Domain.SerializeToString,
       ('uipb.UI', 'GetDomains'): GetDomainsResponse.SerializeToString,
       ('uipb.UI', 'GetModel'): Model.SerializeToString,
@@ -1378,6 +1406,7 @@ try:
       ('uipb.UI', 'ResendEmail'): ResendEmailResponse.SerializeToString,
     }
     method_implementations = {
+      ('uipb.UI', 'CancelModelTraining'): face_utilities.unary_unary_inline(servicer.CancelModelTraining),
       ('uipb.UI', 'GetDomain'): face_utilities.unary_unary_inline(servicer.GetDomain),
       ('uipb.UI', 'GetDomains'): face_utilities.unary_unary_inline(servicer.GetDomains),
       ('uipb.UI', 'GetModel'): face_utilities.unary_unary_inline(servicer.GetModel),
@@ -1402,6 +1431,7 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_serializers = {
+      ('uipb.UI', 'CancelModelTraining'): github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.CancelModelTrainingRequest.SerializeToString,
       ('uipb.UI', 'GetDomain'): GetDomainRequest.SerializeToString,
       ('uipb.UI', 'GetDomains'): GetDomainsRequest.SerializeToString,
       ('uipb.UI', 'GetModel'): GetModelRequest.SerializeToString,
@@ -1416,6 +1446,7 @@ try:
       ('uipb.UI', 'ResendEmail'): ResendEmailRequest.SerializeToString,
     }
     response_deserializers = {
+      ('uipb.UI', 'CancelModelTraining'): github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.CancelModelTrainingResponse.FromString,
       ('uipb.UI', 'GetDomain'): Domain.FromString,
       ('uipb.UI', 'GetDomains'): GetDomainsResponse.FromString,
       ('uipb.UI', 'GetModel'): Model.FromString,
@@ -1430,6 +1461,7 @@ try:
       ('uipb.UI', 'ResendEmail'): ResendEmailResponse.FromString,
     }
     cardinalities = {
+      'CancelModelTraining': cardinality.Cardinality.UNARY_UNARY,
       'GetDomain': cardinality.Cardinality.UNARY_UNARY,
       'GetDomains': cardinality.Cardinality.UNARY_UNARY,
       'GetModel': cardinality.Cardinality.UNARY_UNARY,

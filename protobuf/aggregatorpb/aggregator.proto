@@ -9,6 +9,7 @@ enum TrainingStatus {
   TRAINING = 1;
   SUCCEEDED = 2;
   FAILED = 3;
+  CANCELED = 4;
 }
 
 message HyperParams {
@@ -67,11 +68,19 @@ message NotifyRequest {
 }
 message NotifyResponse {}
 
+message CancelModelTrainingRequest {
+  ModelID id = 1 [(gogoproto.nullable) = false];
+}
+
+message CancelModelTrainingResponse {}
+
+
 service Aggregator {
   rpc GetWork (GetWorkRequest) returns (stream Work) {}
   rpc ReportWork(ReportWorkRequest) returns (ReportWorkResponse) {}
 
   rpc Notify(NotifyRequest) returns (NotifyResponse) {}
+  rpc CancelModelTraining(CancelModelTrainingRequest) returns (CancelModelTrainingResponse) {}
 }
 
 service Edge {

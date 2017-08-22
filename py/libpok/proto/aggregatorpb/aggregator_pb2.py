@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='aggregatorpb/aggregator.proto',
   package='aggregatorpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x1d\x61ggregatorpb/aggregator.proto\x12\x0c\x61ggregatorpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\"\x82\x01\n\x0bHyperParams\x12\x1a\n\x12proportion_clients\x18\x01 \x01(\x01\x12\x12\n\nbatch_size\x18\x02 \x01(\x03\x12\x12\n\nnum_rounds\x18\x03 \x01(\x03\x12\x15\n\rlearning_rate\x18\x04 \x01(\x01\x12\x18\n\x10num_local_rounds\x18\x05 \x01(\x03\"\xd4\x01\n\x04Work\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x14\n\x0cnum_examples\x18\x02 \x01(\x03\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x03\x12\r\n\x05\x65poch\x18\x04 \x01(\x03\x12\r\n\x05model\x18\x05 \x01(\x0c\x12\x35\n\x0chyper_params\x18\x07 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x12\n\ntime_taken\x18\x08 \x01(\x01\x12\x0f\n\x07metrics\x18\t \x03(\x01\"9\n\x07ModelID\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x04\"9\n\x0eGetWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\";\n\x11ReportWorkRequest\x12&\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkB\x04\xc8\xde\x1f\x00\"\x14\n\x12ReportWorkResponse\";\n\x10ProdModelRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"&\n\x11ProdModelResponse\x12\x11\n\tmodel_url\x18\x02 \x01(\t\"T\n\x13ModelTypeAllocation\x12/\n\nmodel_type\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x0c\n\x04\x61\x64\x64r\x18\x02 \x01(\t\"8\n\rNotifyRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x10\n\x0eNotifyResponse*H\n\x0eTrainingStatus\x12\r\n\tSCHEDULED\x10\x00\x12\x0c\n\x08TRAINING\x10\x01\x12\r\n\tSUCCEEDED\x10\x02\x12\n\n\x06\x46\x41ILED\x10\x03\x32\xe7\x01\n\nAggregator\x12?\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x12.aggregatorpb.Work\"\x00\x30\x01\x12Q\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00\x12\x45\n\x06Notify\x12\x1b.aggregatorpb.NotifyRequest\x1a\x1c.aggregatorpb.NotifyResponse\"\x00\x32\xea\x01\n\x04\x45\x64ge\x12?\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x12.aggregatorpb.Work\"\x00\x30\x01\x12Q\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00\x12N\n\tProdModel\x12\x1e.aggregatorpb.ProdModelRequest\x1a\x1f.aggregatorpb.ProdModelResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x1d\x61ggregatorpb/aggregator.proto\x12\x0c\x61ggregatorpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\"\x82\x01\n\x0bHyperParams\x12\x1a\n\x12proportion_clients\x18\x01 \x01(\x01\x12\x12\n\nbatch_size\x18\x02 \x01(\x03\x12\x12\n\nnum_rounds\x18\x03 \x01(\x03\x12\x15\n\rlearning_rate\x18\x04 \x01(\x01\x12\x18\n\x10num_local_rounds\x18\x05 \x01(\x03\"\xd4\x01\n\x04Work\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x14\n\x0cnum_examples\x18\x02 \x01(\x03\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x03\x12\r\n\x05\x65poch\x18\x04 \x01(\x03\x12\r\n\x05model\x18\x05 \x01(\x0c\x12\x35\n\x0chyper_params\x18\x07 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x12\n\ntime_taken\x18\x08 \x01(\x01\x12\x0f\n\x07metrics\x18\t \x03(\x01\"9\n\x07ModelID\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x04\"9\n\x0eGetWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\";\n\x11ReportWorkRequest\x12&\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkB\x04\xc8\xde\x1f\x00\"\x14\n\x12ReportWorkResponse\";\n\x10ProdModelRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"&\n\x11ProdModelResponse\x12\x11\n\tmodel_url\x18\x02 \x01(\t\"T\n\x13ModelTypeAllocation\x12/\n\nmodel_type\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x0c\n\x04\x61\x64\x64r\x18\x02 \x01(\t\"8\n\rNotifyRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x10\n\x0eNotifyResponse\"E\n\x1a\x43\x61ncelModelTrainingRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1d\n\x1b\x43\x61ncelModelTrainingResponse*V\n\x0eTrainingStatus\x12\r\n\tSCHEDULED\x10\x00\x12\x0c\n\x08TRAINING\x10\x01\x12\r\n\tSUCCEEDED\x10\x02\x12\n\n\x06\x46\x41ILED\x10\x03\x12\x0c\n\x08\x43\x41NCELED\x10\x04\x32\xd5\x02\n\nAggregator\x12?\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x12.aggregatorpb.Work\"\x00\x30\x01\x12Q\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00\x12\x45\n\x06Notify\x12\x1b.aggregatorpb.NotifyRequest\x1a\x1c.aggregatorpb.NotifyResponse\"\x00\x12l\n\x13\x43\x61ncelModelTraining\x12(.aggregatorpb.CancelModelTrainingRequest\x1a).aggregatorpb.CancelModelTrainingResponse\"\x00\x32\xea\x01\n\x04\x45\x64ge\x12?\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x12.aggregatorpb.Work\"\x00\x30\x01\x12Q\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00\x12N\n\tProdModel\x12\x1e.aggregatorpb.ProdModelRequest\x1a\x1f.aggregatorpb.ProdModelResponse\"\x00\x62\x06proto3')
   ,
   dependencies=[])
 
@@ -46,11 +46,15 @@ _TRAININGSTATUS = _descriptor.EnumDescriptor(
       name='FAILED', index=3, number=3,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CANCELED', index=4, number=4,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=906,
-  serialized_end=978,
+  serialized_start=1008,
+  serialized_end=1094,
 )
 _sym_db.RegisterEnumDescriptor(_TRAININGSTATUS)
 
@@ -59,6 +63,7 @@ SCHEDULED = 0
 TRAINING = 1
 SUCCEEDED = 2
 FAILED = 3
+CANCELED = 4
 
 
 
@@ -486,6 +491,61 @@ _NOTIFYRESPONSE = _descriptor.Descriptor(
   serialized_end=904,
 )
 
+
+_CANCELMODELTRAININGREQUEST = _descriptor.Descriptor(
+  name='CancelModelTrainingRequest',
+  full_name='aggregatorpb.CancelModelTrainingRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='id', full_name='aggregatorpb.CancelModelTrainingRequest.id', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=906,
+  serialized_end=975,
+)
+
+
+_CANCELMODELTRAININGRESPONSE = _descriptor.Descriptor(
+  name='CancelModelTrainingResponse',
+  full_name='aggregatorpb.CancelModelTrainingResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=977,
+  serialized_end=1006,
+)
+
 _WORK.fields_by_name['id'].message_type = _MODELID
 _WORK.fields_by_name['hyper_params'].message_type = _HYPERPARAMS
 _GETWORKREQUEST.fields_by_name['id'].message_type = _MODELID
@@ -493,6 +553,7 @@ _REPORTWORKREQUEST.fields_by_name['work'].message_type = _WORK
 _PRODMODELREQUEST.fields_by_name['id'].message_type = _MODELID
 _MODELTYPEALLOCATION.fields_by_name['model_type'].message_type = _MODELID
 _NOTIFYREQUEST.fields_by_name['id'].message_type = _MODELID
+_CANCELMODELTRAININGREQUEST.fields_by_name['id'].message_type = _MODELID
 DESCRIPTOR.message_types_by_name['HyperParams'] = _HYPERPARAMS
 DESCRIPTOR.message_types_by_name['Work'] = _WORK
 DESCRIPTOR.message_types_by_name['ModelID'] = _MODELID
@@ -504,6 +565,8 @@ DESCRIPTOR.message_types_by_name['ProdModelResponse'] = _PRODMODELRESPONSE
 DESCRIPTOR.message_types_by_name['ModelTypeAllocation'] = _MODELTYPEALLOCATION
 DESCRIPTOR.message_types_by_name['NotifyRequest'] = _NOTIFYREQUEST
 DESCRIPTOR.message_types_by_name['NotifyResponse'] = _NOTIFYRESPONSE
+DESCRIPTOR.message_types_by_name['CancelModelTrainingRequest'] = _CANCELMODELTRAININGREQUEST
+DESCRIPTOR.message_types_by_name['CancelModelTrainingResponse'] = _CANCELMODELTRAININGRESPONSE
 DESCRIPTOR.enum_types_by_name['TrainingStatus'] = _TRAININGSTATUS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -584,6 +647,20 @@ NotifyResponse = _reflection.GeneratedProtocolMessageType('NotifyResponse', (_me
   ))
 _sym_db.RegisterMessage(NotifyResponse)
 
+CancelModelTrainingRequest = _reflection.GeneratedProtocolMessageType('CancelModelTrainingRequest', (_message.Message,), dict(
+  DESCRIPTOR = _CANCELMODELTRAININGREQUEST,
+  __module__ = 'aggregatorpb.aggregator_pb2'
+  # @@protoc_insertion_point(class_scope:aggregatorpb.CancelModelTrainingRequest)
+  ))
+_sym_db.RegisterMessage(CancelModelTrainingRequest)
+
+CancelModelTrainingResponse = _reflection.GeneratedProtocolMessageType('CancelModelTrainingResponse', (_message.Message,), dict(
+  DESCRIPTOR = _CANCELMODELTRAININGRESPONSE,
+  __module__ = 'aggregatorpb.aggregator_pb2'
+  # @@protoc_insertion_point(class_scope:aggregatorpb.CancelModelTrainingResponse)
+  ))
+_sym_db.RegisterMessage(CancelModelTrainingResponse)
+
 
 _WORK.fields_by_name['id'].has_options = True
 _WORK.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
@@ -599,6 +676,8 @@ _MODELTYPEALLOCATION.fields_by_name['model_type'].has_options = True
 _MODELTYPEALLOCATION.fields_by_name['model_type']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _NOTIFYREQUEST.fields_by_name['id'].has_options = True
 _NOTIFYREQUEST.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
+_CANCELMODELTRAININGREQUEST.fields_by_name['id'].has_options = True
+_CANCELMODELTRAININGREQUEST.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 try:
   # THESE ELEMENTS WILL BE DEPRECATED.
   # Please use the generated *_pb2_grpc.py files instead.
@@ -634,6 +713,11 @@ try:
           request_serializer=NotifyRequest.SerializeToString,
           response_deserializer=NotifyResponse.FromString,
           )
+      self.CancelModelTraining = channel.unary_unary(
+          '/aggregatorpb.Aggregator/CancelModelTraining',
+          request_serializer=CancelModelTrainingRequest.SerializeToString,
+          response_deserializer=CancelModelTrainingResponse.FromString,
+          )
 
 
   class AggregatorServicer(object):
@@ -661,6 +745,13 @@ try:
       context.set_details('Method not implemented!')
       raise NotImplementedError('Method not implemented!')
 
+    def CancelModelTraining(self, request, context):
+      # missing associated documentation comment in .proto file
+      pass
+      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+      context.set_details('Method not implemented!')
+      raise NotImplementedError('Method not implemented!')
+
 
   def add_AggregatorServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -678,6 +769,11 @@ try:
             servicer.Notify,
             request_deserializer=NotifyRequest.FromString,
             response_serializer=NotifyResponse.SerializeToString,
+        ),
+        'CancelModelTraining': grpc.unary_unary_rpc_method_handler(
+            servicer.CancelModelTraining,
+            request_deserializer=CancelModelTrainingRequest.FromString,
+            response_serializer=CancelModelTrainingResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -781,6 +877,10 @@ try:
       # missing associated documentation comment in .proto file
       pass
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+    def CancelModelTraining(self, request, context):
+      # missing associated documentation comment in .proto file
+      pass
+      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
 
 
   class BetaAggregatorStub(object):
@@ -805,6 +905,11 @@ try:
       pass
       raise NotImplementedError()
     Notify.future = None
+    def CancelModelTraining(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+      # missing associated documentation comment in .proto file
+      pass
+      raise NotImplementedError()
+    CancelModelTraining.future = None
 
 
   def beta_create_Aggregator_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
@@ -814,16 +919,19 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_deserializers = {
+      ('aggregatorpb.Aggregator', 'CancelModelTraining'): CancelModelTrainingRequest.FromString,
       ('aggregatorpb.Aggregator', 'GetWork'): GetWorkRequest.FromString,
       ('aggregatorpb.Aggregator', 'Notify'): NotifyRequest.FromString,
       ('aggregatorpb.Aggregator', 'ReportWork'): ReportWorkRequest.FromString,
     }
     response_serializers = {
+      ('aggregatorpb.Aggregator', 'CancelModelTraining'): CancelModelTrainingResponse.SerializeToString,
       ('aggregatorpb.Aggregator', 'GetWork'): Work.SerializeToString,
       ('aggregatorpb.Aggregator', 'Notify'): NotifyResponse.SerializeToString,
       ('aggregatorpb.Aggregator', 'ReportWork'): ReportWorkResponse.SerializeToString,
     }
     method_implementations = {
+      ('aggregatorpb.Aggregator', 'CancelModelTraining'): face_utilities.unary_unary_inline(servicer.CancelModelTraining),
       ('aggregatorpb.Aggregator', 'GetWork'): face_utilities.unary_stream_inline(servicer.GetWork),
       ('aggregatorpb.Aggregator', 'Notify'): face_utilities.unary_unary_inline(servicer.Notify),
       ('aggregatorpb.Aggregator', 'ReportWork'): face_utilities.unary_unary_inline(servicer.ReportWork),
@@ -839,16 +947,19 @@ try:
     file not marked beta) for all further purposes. This function was
     generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
     request_serializers = {
+      ('aggregatorpb.Aggregator', 'CancelModelTraining'): CancelModelTrainingRequest.SerializeToString,
       ('aggregatorpb.Aggregator', 'GetWork'): GetWorkRequest.SerializeToString,
       ('aggregatorpb.Aggregator', 'Notify'): NotifyRequest.SerializeToString,
       ('aggregatorpb.Aggregator', 'ReportWork'): ReportWorkRequest.SerializeToString,
     }
     response_deserializers = {
+      ('aggregatorpb.Aggregator', 'CancelModelTraining'): CancelModelTrainingResponse.FromString,
       ('aggregatorpb.Aggregator', 'GetWork'): Work.FromString,
       ('aggregatorpb.Aggregator', 'Notify'): NotifyResponse.FromString,
       ('aggregatorpb.Aggregator', 'ReportWork'): ReportWorkResponse.FromString,
     }
     cardinalities = {
+      'CancelModelTraining': cardinality.Cardinality.UNARY_UNARY,
       'GetWork': cardinality.Cardinality.UNARY_STREAM,
       'Notify': cardinality.Cardinality.UNARY_UNARY,
       'ReportWork': cardinality.Cardinality.UNARY_UNARY,

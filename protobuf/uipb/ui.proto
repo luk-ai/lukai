@@ -8,7 +8,6 @@ import "github.com/d4l3k/pok/protobuf/aggregatorpb/aggregator.proto";
 
 package uipb;
 
-
 message LoginRequest {
   string email = 1;
   string password = 2;
@@ -172,6 +171,12 @@ service UI {
   rpc GetModels (GetModelsRequest) returns (GetModelsResponse) {
     option (google.api.http) = {
       get: "/api/v1/model_search"
+    };
+  }
+
+  rpc CancelModelTraining (aggregatorpb.CancelModelTrainingRequest) returns (aggregatorpb.CancelModelTrainingResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/model/{id.id}/cancel"
     };
   }
 

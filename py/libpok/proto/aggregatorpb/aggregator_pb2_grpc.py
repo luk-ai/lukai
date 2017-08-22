@@ -29,6 +29,11 @@ class AggregatorStub(object):
         request_serializer=aggregatorpb_dot_aggregator__pb2.NotifyRequest.SerializeToString,
         response_deserializer=aggregatorpb_dot_aggregator__pb2.NotifyResponse.FromString,
         )
+    self.CancelModelTraining = channel.unary_unary(
+        '/aggregatorpb.Aggregator/CancelModelTraining',
+        request_serializer=aggregatorpb_dot_aggregator__pb2.CancelModelTrainingRequest.SerializeToString,
+        response_deserializer=aggregatorpb_dot_aggregator__pb2.CancelModelTrainingResponse.FromString,
+        )
 
 
 class AggregatorServicer(object):
@@ -56,6 +61,13 @@ class AggregatorServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def CancelModelTraining(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_AggregatorServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -73,6 +85,11 @@ def add_AggregatorServicer_to_server(servicer, server):
           servicer.Notify,
           request_deserializer=aggregatorpb_dot_aggregator__pb2.NotifyRequest.FromString,
           response_serializer=aggregatorpb_dot_aggregator__pb2.NotifyResponse.SerializeToString,
+      ),
+      'CancelModelTraining': grpc.unary_unary_rpc_method_handler(
+          servicer.CancelModelTraining,
+          request_deserializer=aggregatorpb_dot_aggregator__pb2.CancelModelTrainingRequest.FromString,
+          response_serializer=aggregatorpb_dot_aggregator__pb2.CancelModelTrainingResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
