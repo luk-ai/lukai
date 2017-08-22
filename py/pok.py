@@ -1,18 +1,28 @@
 from __future__ import print_function
 
 from libpok.proto.aggregatorpb import aggregator_pb2
+from libpok.proto.clientpb import client_pb2
 from libpok.proto.managerpb import manager_pb2
 from libpok.proto.managerpb import manager_pb2_grpc
 from libpok.proto.uipb import ui_pb2
 from libpok import saver
 
 import grpc
+import six
 
 import tempfile
 import shutil
 from os import path
 
 HyperParams = aggregator_pb2.HyperParams
+
+# Metric reduces.
+for k, v in client_pb2.MetricReduce.items():
+    globals()[k] = v
+
+# Event target types.
+for k, v in client_pb2.Event.items():
+    globals()[k] = v
 
 def get_client():
     channel = grpc.insecure_channel('localhost:5002')
@@ -23,10 +33,44 @@ def set_api_token(token):
     global api_token
     api_token = token
 
-def upload(sess, domain, model_type, hyper_params, name="", description=""):
+def _v_to_array(v):
+    if v is None:
+        return []
+    if isinstance(v, list):
+        return v
+    return [v]
+
+def _op_to_name(ops):
+    return [op.name for op in ops]
+
+def _get_ith(tpl, i):
+    if i < len(tpl) and i >= 0:
+        return tpl[i]
+    return None
+
+
+def upload(session, domain, model_type, hyper_params, metrics=None,
+           event_targets=None, name="", description=""):
+    metrics_proto = None
+    if metrics is not None:
+        metrics_proto = [
+            client_pb2.Metric(fetch_name=k.name, reduce=v)
+            for k, v in six.iteritems(metrics)
+        ]
+
+    events_proto = None
+    if event_targets is not None:
+        events_proto = {}
+        for k, v in six.iteritems(event_targets):
+            pre = _op_to_name(_v_to_array(_get_ith(v, 0)))
+            post = _op_to_name(_v_to_array(_get_ith(v, 1)))
+            events_proto[k] = client_pb2.EventTargets(pre=pre, post=post)
+
     dir = tempfile.mkdtemp("pok_model_upload_py")
     file_path = path.join(dir, "model.tar.gz")
-    saver.save(sess, target=file_path)
+    saver.save(session, target=file_path, metrics=metrics_proto,
+               event_targets=events_proto)
+
     with open(file_path, 'rb') as content_file:
         content = content_file.read()
     shutil.rmtree(dir)

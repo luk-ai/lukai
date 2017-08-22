@@ -87,7 +87,7 @@ def deepnn(x):
   # Dropout - controls the complexity of the model, prevents co-adaptation of
   # features.
   with tf.name_scope('dropout'):
-    keep_prob = tf.placeholder(tf.float32)
+    keep_prob = tf.Variable(tf.constant(1.0, shape=[]))
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
   # Map the 1024 features to 10 classes, one for each digit
@@ -150,15 +150,13 @@ def main(_):
   with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
-    print('Node names: x = {}, y = {}, keep_prob = {}, train_step = {}'.format(
-      x.name, y_.name, keep_prob.name, train_step.name,
+    print('Node names: x = {}, y = {}, train_step = {}'.format(
+      x.name, y_.name, train_step.name,
     ))
-
-    exit()
 
     pok.set_api_token(FLAGS.api_token)
     pok.upload(
-        sess,
+        session=sess,
         domain=FLAGS.domain,
         model_type=FLAGS.model_type,
         name=FLAGS.name,
@@ -168,8 +166,16 @@ def main(_):
             batch_size = 10,
             num_rounds = 100,
             learning_rate = learning_rate,
-            num_local_rounds = 20,
+            num_local_rounds = 10,
         ),
+        metrics={
+          accuracy: pok.REDUCE_MEAN,
+        },
+        event_targets={
+          pok.EVENT_TRAIN: (keep_prob.assign(0.5),),
+          pok.EVENT_INFER: (keep_prob.assign(1.0),),
+          pok.EVENT_EVAL: (keep_prob.assign(1.0),),
+        },
     )
 
 if __name__ == '__main__':

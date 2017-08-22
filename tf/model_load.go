@@ -4,7 +4,6 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
-	"encoding/json"
 	"io"
 	"io/ioutil"
 	"os"
@@ -17,10 +16,10 @@ import (
 )
 
 const (
-	SaverDefName           = "saver_def.pb"
-	GraphDefName           = "graph_def.pb"
-	SavedModelName         = "saved_model"
-	TrainableVariablesName = "trainable_variables.json"
+	SaverDefName   = "saver_def.pb"
+	GraphDefName   = "graph_def.pb"
+	SavedModelName = "saved_model"
+	ModelMetaName  = "model_meta.pb"
 	// FilePerm is the file permission all the model files use.
 	FilePerm = 0600
 )
@@ -86,8 +85,12 @@ func (model *Model) Load(reader io.Reader) error {
 				return err
 			}
 			foundSaverDef = true
-		} else if header.Name == TrainableVariablesName {
-			if err := json.NewDecoder(tr).Decode(&model.TrainableVariables); err != nil {
+		} else if header.Name == ModelMetaName {
+			var buf bytes.Buffer
+			if _, err := buf.ReadFrom(tr); err != nil {
+				return err
+			}
+			if err := proto.Unmarshal(buf.Bytes(), &model.Meta); err != nil {
 				return err
 			}
 		} else {
@@ -192,12 +195,12 @@ func (model *Model) Save(writer io.Writer) error {
 	}
 
 	{
-		buf, err := json.Marshal(model.TrainableVariables)
+		buf, err := proto.Marshal(&model.Meta)
 		if err != nil {
 			return err
 		}
 		if err := tw.WriteHeader(&tar.Header{
-			Name: TrainableVariablesName,
+			Name: ModelMetaName,
 			Mode: FilePerm,
 			Size: int64(len(buf)),
 		}); err != nil {

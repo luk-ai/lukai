@@ -36,8 +36,8 @@ func TestLoadSaveModel(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(model.TrainableVariables) != 2 {
-		t.Errorf("model.TrainableVariables = %+v; len should be 2", model.TrainableVariables)
+	if len(model.Meta.TrainableVariables) != 2 {
+		t.Errorf("model.TrainableVariables = %+v; len should be 2", model.Meta.TrainableVariables)
 	}
 
 	var buf bytes.Buffer
@@ -84,7 +84,7 @@ func TestModelLoadPrefix(t *testing.T) {
 		}
 	}
 
-	prePrefixOpName, _, err := ParseNodeOutput(model.TrainableVariables[0])
+	prePrefixOpName, _, err := ParseNodeOutput(model.Meta.TrainableVariables[0])
 	if err != nil {
 		t.Fatal(err)
 	}

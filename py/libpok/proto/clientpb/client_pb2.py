@@ -3,6 +3,7 @@
 
 import sys
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
+from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
@@ -20,10 +21,135 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='clientpb/client.proto',
   package='clientpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x15\x63lientpb/client.proto\x12\x08\x63lientpb\x1a\x1fgoogle/protobuf/timestamp.proto\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\"\x7f\n\x0b\x45xampleFile\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x35\n\x07\x63reated\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x12\n\ntotal_size\x18\x03 \x01(\x03\x12\x17\n\tpositions\x18\x04 \x03(\x05\x42\x04\xc8\xde\x1f\x00\"f\n\x0c\x45xampleIndex\x12\x16\n\x0etotal_examples\x18\x01 \x01(\x03\x12\x12\n\ntotal_size\x18\x02 \x01(\x03\x12*\n\x05\x66iles\x18\x03 \x03(\x0b\x32\x15.clientpb.ExampleFileB\x04\xc8\xde\x1f\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x15\x63lientpb/client.proto\x12\x08\x63lientpb\x1a\x1fgoogle/protobuf/timestamp.proto\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\"\x7f\n\x0b\x45xampleFile\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x35\n\x07\x63reated\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x12\n\ntotal_size\x18\x03 \x01(\x03\x12\x17\n\tpositions\x18\x04 \x03(\x05\x42\x04\xc8\xde\x1f\x00\"f\n\x0c\x45xampleIndex\x12\x16\n\x0etotal_examples\x18\x01 \x01(\x03\x12\x12\n\ntotal_size\x18\x02 \x01(\x03\x12*\n\x05\x66iles\x18\x03 \x03(\x0b\x32\x15.clientpb.ExampleFileB\x04\xc8\xde\x1f\x00\"D\n\x06Metric\x12\x12\n\nfetch_name\x18\x01 \x01(\t\x12&\n\x06reduce\x18\x02 \x01(\x0e\x32\x16.clientpb.MetricReduce\")\n\x0c\x45ventTargets\x12\x0b\n\x03pre\x18\x01 \x03(\t\x12\x0c\n\x04post\x18\x02 \x03(\t\"\xdc\x01\n\tModelMeta\x12\x1b\n\x13trainable_variables\x18\x01 \x03(\t\x12!\n\x07metrics\x18\x02 \x03(\x0b\x32\x10.clientpb.Metric\x12\x42\n\revent_targets\x18\x03 \x03(\x0b\x32%.clientpb.ModelMeta.EventTargetsEntryB\x04\xc8\xde\x1f\x00\x1aK\n\x11\x45ventTargetsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.clientpb.EventTargets:\x02\x38\x01*\x82\x02\n\x0cMetricReduce\x12\x12\n\x0eREDUCE_UNKNOWN\x10\x00\x12\x0f\n\x0bREDUCE_MEAN\x10\x01\x12\x0e\n\nREDUCE_MIN\x10\x02\x12\x0e\n\nREDUCE_MAX\x10\x03\x12\x0e\n\nREDUCE_SUM\x10\x04\x12\x0f\n\x0bREDUCE_PROD\x10\x05\x12\r\n\tREDUCE_P1\x10\x06\x12\r\n\tREDUCE_P5\x10\x07\x12\x0e\n\nREDUCE_P10\x10\x08\x12\x0e\n\nREDUCE_P25\x10\t\x12\x0e\n\nREDUCE_P50\x10\n\x12\x0e\n\nREDUCE_P75\x10\x0b\x12\x0e\n\nREDUCE_P90\x10\x0c\x12\x0e\n\nREDUCE_P95\x10\r\x12\x0e\n\nREDUCE_P99\x10\x0e*L\n\x05\x45vent\x12\x11\n\rEVENT_UNKNOWN\x10\x00\x12\x0f\n\x0b\x45VENT_TRAIN\x10\x01\x12\x0f\n\x0b\x45VENT_INFER\x10\x02\x12\x0e\n\nEVENT_EVAL\x10\x03\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
+_METRICREDUCE = _descriptor.EnumDescriptor(
+  name='MetricReduce',
+  full_name='clientpb.MetricReduce',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_UNKNOWN', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_MEAN', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_MIN', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_MAX', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_SUM', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_PROD', index=5, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P1', index=6, number=6,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P5', index=7, number=7,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P10', index=8, number=8,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P25', index=9, number=9,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P50', index=10, number=10,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P75', index=11, number=11,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P90', index=12, number=12,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P95', index=13, number=13,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='REDUCE_P99', index=14, number=14,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=685,
+  serialized_end=943,
+)
+_sym_db.RegisterEnumDescriptor(_METRICREDUCE)
+
+MetricReduce = enum_type_wrapper.EnumTypeWrapper(_METRICREDUCE)
+_EVENT = _descriptor.EnumDescriptor(
+  name='Event',
+  full_name='clientpb.Event',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='EVENT_UNKNOWN', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='EVENT_TRAIN', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='EVENT_INFER', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='EVENT_EVAL', index=3, number=3,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=945,
+  serialized_end=1021,
+)
+_sym_db.RegisterEnumDescriptor(_EVENT)
+
+Event = enum_type_wrapper.EnumTypeWrapper(_EVENT)
+REDUCE_UNKNOWN = 0
+REDUCE_MEAN = 1
+REDUCE_MIN = 2
+REDUCE_MAX = 3
+REDUCE_SUM = 4
+REDUCE_PROD = 5
+REDUCE_P1 = 6
+REDUCE_P5 = 7
+REDUCE_P10 = 8
+REDUCE_P25 = 9
+REDUCE_P50 = 10
+REDUCE_P75 = 11
+REDUCE_P90 = 12
+REDUCE_P95 = 13
+REDUCE_P99 = 14
+EVENT_UNKNOWN = 0
+EVENT_TRAIN = 1
+EVENT_INFER = 2
+EVENT_EVAL = 3
 
 
 
@@ -123,10 +249,178 @@ _EXAMPLEINDEX = _descriptor.Descriptor(
   serialized_end=346,
 )
 
+
+_METRIC = _descriptor.Descriptor(
+  name='Metric',
+  full_name='clientpb.Metric',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='fetch_name', full_name='clientpb.Metric.fetch_name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='reduce', full_name='clientpb.Metric.reduce', index=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=348,
+  serialized_end=416,
+)
+
+
+_EVENTTARGETS = _descriptor.Descriptor(
+  name='EventTargets',
+  full_name='clientpb.EventTargets',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='pre', full_name='clientpb.EventTargets.pre', index=0,
+      number=1, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='post', full_name='clientpb.EventTargets.post', index=1,
+      number=2, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=418,
+  serialized_end=459,
+)
+
+
+_MODELMETA_EVENTTARGETSENTRY = _descriptor.Descriptor(
+  name='EventTargetsEntry',
+  full_name='clientpb.ModelMeta.EventTargetsEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='clientpb.ModelMeta.EventTargetsEntry.key', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='clientpb.ModelMeta.EventTargetsEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=607,
+  serialized_end=682,
+)
+
+_MODELMETA = _descriptor.Descriptor(
+  name='ModelMeta',
+  full_name='clientpb.ModelMeta',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='trainable_variables', full_name='clientpb.ModelMeta.trainable_variables', index=0,
+      number=1, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='metrics', full_name='clientpb.ModelMeta.metrics', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='event_targets', full_name='clientpb.ModelMeta.event_targets', index=2,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+  ],
+  extensions=[
+  ],
+  nested_types=[_MODELMETA_EVENTTARGETSENTRY, ],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=462,
+  serialized_end=682,
+)
+
 _EXAMPLEFILE.fields_by_name['created'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _EXAMPLEINDEX.fields_by_name['files'].message_type = _EXAMPLEFILE
+_METRIC.fields_by_name['reduce'].enum_type = _METRICREDUCE
+_MODELMETA_EVENTTARGETSENTRY.fields_by_name['value'].message_type = _EVENTTARGETS
+_MODELMETA_EVENTTARGETSENTRY.containing_type = _MODELMETA
+_MODELMETA.fields_by_name['metrics'].message_type = _METRIC
+_MODELMETA.fields_by_name['event_targets'].message_type = _MODELMETA_EVENTTARGETSENTRY
 DESCRIPTOR.message_types_by_name['ExampleFile'] = _EXAMPLEFILE
 DESCRIPTOR.message_types_by_name['ExampleIndex'] = _EXAMPLEINDEX
+DESCRIPTOR.message_types_by_name['Metric'] = _METRIC
+DESCRIPTOR.message_types_by_name['EventTargets'] = _EVENTTARGETS
+DESCRIPTOR.message_types_by_name['ModelMeta'] = _MODELMETA
+DESCRIPTOR.enum_types_by_name['MetricReduce'] = _METRICREDUCE
+DESCRIPTOR.enum_types_by_name['Event'] = _EVENT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ExampleFile = _reflection.GeneratedProtocolMessageType('ExampleFile', (_message.Message,), dict(
@@ -143,6 +437,35 @@ ExampleIndex = _reflection.GeneratedProtocolMessageType('ExampleIndex', (_messag
   ))
 _sym_db.RegisterMessage(ExampleIndex)
 
+Metric = _reflection.GeneratedProtocolMessageType('Metric', (_message.Message,), dict(
+  DESCRIPTOR = _METRIC,
+  __module__ = 'clientpb.client_pb2'
+  # @@protoc_insertion_point(class_scope:clientpb.Metric)
+  ))
+_sym_db.RegisterMessage(Metric)
+
+EventTargets = _reflection.GeneratedProtocolMessageType('EventTargets', (_message.Message,), dict(
+  DESCRIPTOR = _EVENTTARGETS,
+  __module__ = 'clientpb.client_pb2'
+  # @@protoc_insertion_point(class_scope:clientpb.EventTargets)
+  ))
+_sym_db.RegisterMessage(EventTargets)
+
+ModelMeta = _reflection.GeneratedProtocolMessageType('ModelMeta', (_message.Message,), dict(
+
+  EventTargetsEntry = _reflection.GeneratedProtocolMessageType('EventTargetsEntry', (_message.Message,), dict(
+    DESCRIPTOR = _MODELMETA_EVENTTARGETSENTRY,
+    __module__ = 'clientpb.client_pb2'
+    # @@protoc_insertion_point(class_scope:clientpb.ModelMeta.EventTargetsEntry)
+    ))
+  ,
+  DESCRIPTOR = _MODELMETA,
+  __module__ = 'clientpb.client_pb2'
+  # @@protoc_insertion_point(class_scope:clientpb.ModelMeta)
+  ))
+_sym_db.RegisterMessage(ModelMeta)
+_sym_db.RegisterMessage(ModelMeta.EventTargetsEntry)
+
 
 _EXAMPLEFILE.fields_by_name['created'].has_options = True
 _EXAMPLEFILE.fields_by_name['created']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001\310\336\037\000'))
@@ -150,6 +473,10 @@ _EXAMPLEFILE.fields_by_name['positions'].has_options = True
 _EXAMPLEFILE.fields_by_name['positions']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _EXAMPLEINDEX.fields_by_name['files'].has_options = True
 _EXAMPLEINDEX.fields_by_name['files']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
+_MODELMETA_EVENTTARGETSENTRY.has_options = True
+_MODELMETA_EVENTTARGETSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
+_MODELMETA.fields_by_name['event_targets'].has_options = True
+_MODELMETA.fields_by_name['event_targets']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 try:
   # THESE ELEMENTS WILL BE DEPRECATED.
   # Please use the generated *_pb2_grpc.py files instead.

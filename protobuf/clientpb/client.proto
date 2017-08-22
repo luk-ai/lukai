@@ -17,3 +17,46 @@ message ExampleIndex {
   int64 total_size = 2;
   repeated ExampleFile files = 3 [(gogoproto.nullable) = false];
 }
+
+enum MetricReduce {
+  REDUCE_UNKNOWN = 0;
+
+  REDUCE_MEAN = 1;
+  REDUCE_MIN = 2;
+  REDUCE_MAX = 3;
+  REDUCE_SUM = 4;
+  REDUCE_PROD = 5;
+
+  REDUCE_P1 = 6;
+  REDUCE_P5 = 7;
+  REDUCE_P10 = 8;
+  REDUCE_P25 = 9;
+  REDUCE_P50 = 10;
+  REDUCE_P75 = 11;
+  REDUCE_P90 = 12;
+  REDUCE_P95 = 13;
+  REDUCE_P99 = 14;
+}
+
+message Metric {
+  string fetch_name = 1;
+  MetricReduce reduce = 2;
+}
+
+enum Event {
+  EVENT_UNKNOWN = 0;
+  EVENT_TRAIN = 1;
+  EVENT_INFER = 2;
+  EVENT_EVAL = 3;
+}
+
+message EventTargets {
+  repeated string pre = 1;
+  repeated string post = 2;
+}
+
+message ModelMeta {
+  repeated string trainable_variables = 1;
+  repeated Metric metrics = 2;
+  map<int32, EventTargets> event_targets = 3 [(gogoproto.nullable) = false];
+}

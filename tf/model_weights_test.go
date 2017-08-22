@@ -14,8 +14,8 @@ func TestModelWeights(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(weights) != len(model.TrainableVariables) {
-		t.Fatalf("model.Weights() = %+v; len != %d", weights, len(model.TrainableVariables))
+	if len(weights) != len(model.Meta.TrainableVariables) {
+		t.Fatalf("model.Weights() = %+v; len != %d", weights, len(model.Meta.TrainableVariables))
 	}
 }
 

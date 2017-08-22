@@ -5,17 +5,18 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/d4l3k/pok/protobuf/clientpb"
 	tensorflowpb "github.com/d4l3k/pok/protobuf/tensorflow"
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
 type Model struct {
-	Graph              *tensorflow.Graph
-	Session            *tensorflow.Session
-	SaverDef           tensorflowpb.SaverDef
-	TrainableVariables []string
-	Prefix             string
+	Graph    *tensorflow.Graph
+	Session  *tensorflow.Session
+	SaverDef tensorflowpb.SaverDef
+	Meta     clientpb.ModelMeta
+	Prefix   string
 }
 
 func (model Model) ApplyPrefix(op string) string {

@@ -8,7 +8,7 @@ import (
 
 func (model *Model) TrainableVariablesOutputs() ([]tensorflow.Output, error) {
 	var outputs []tensorflow.Output
-	for _, name := range model.TrainableVariables {
+	for _, name := range model.Meta.TrainableVariables {
 		op, n, err := ParseNodeOutput(name)
 		if err != nil {
 			return nil, err
@@ -49,7 +49,7 @@ func (model *Model) AddScaledWeights(
 	feeds := map[tensorflow.Output]*tensorflow.Tensor{
 		model.Graph.Operation(PokVarScaleOp).Output(0): scale,
 	}
-	for i, variable := range model.TrainableVariables {
+	for i, variable := range model.Meta.TrainableVariables {
 		opName := PokVarPrefix + strings.Replace(variable, ":", "/", -1)
 		op := model.Graph.Operation(opName)
 		feeds[op.Output(0)] = weights[i]
