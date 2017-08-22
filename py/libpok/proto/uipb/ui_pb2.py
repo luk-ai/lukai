@@ -13,6 +13,7 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 from libpok.proto.aggregatorpb import aggregator_pb2 as github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2
 
 
@@ -20,9 +21,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='uipb/ui.proto',
   package='uipb',
   syntax='proto3',
-  serialized_pb=_b('\n\ruipb/ui.proto\x12\x04uipb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1cgoogle/api/annotations.proto\x1a;libpok.proto/aggregatorpb/aggregator.proto\"A\n\x0cLoginRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\"R\n\x0fRegisterRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\"\'\n\x16\x41uthenticationResponse\x12\r\n\x05token\x18\x01 \x01(\t\"\x14\n\x12ResendEmailRequest\"\x15\n\x13ResendEmailResponse\"\x10\n\x0eGetUserRequest\"F\n\x0fGetUserResponse\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0everified_email\x18\x03 \x01(\x08\"\x13\n\x11GetDomainsRequest\"9\n\x12GetDomainsResponse\x12#\n\x07\x64omains\x18\x01 \x03(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"B\n\x06\x44omain\x12\x0c\n\x04name\x18\x01 \x01(\t\x12*\n\x0bmodel_types\x18\x02 \x03(\x0b\x32\x0f.uipb.ModelTypeB\x04\xc8\xde\x1f\x00\")\n\tModelType\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\"\xe7\x01\n\x05Model\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12,\n\x06status\x18\x06 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x13\n\x0bowner_email\x18\x07 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x11\n\tmodel_url\x18\t \x01(\t\"\"\n\x10NewDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"7\n\x11NewDomainResponse\x12\"\n\x06\x64omain\x18\x01 \x01(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"\"\n\x10GetDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"\xbe\x01\n\x10GetModelsRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12,\n\x06status\x18\x04 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x0c\n\x04prod\x18\x05 \x01(\x08\x12\r\n\x05query\x18\x06 \x01(\t\x12\r\n\x05\x63ount\x18\x07 \x01(\x03\x12\x0e\n\x06offset\x18\x08 \x01(\x03\x12\r\n\x05order\x18\t \x01(\t\"j\n\x11GetModelsResponse\x12!\n\x06models\x18\x01 \x03(\x0b\x32\x0b.uipb.ModelB\x04\xc8\xde\x1f\x00\x12\x13\n\x0btotal_count\x18\x02 \x01(\x03\x12\r\n\x05\x63ount\x18\x03 \x01(\x03\x12\x0e\n\x06offset\x18\x04 \x01(\x03\"\x1d\n\x0fGetModelRequest\x12\n\n\x02id\x18\x01 \x01(\x04\"&\n\x12NewAPITokenRequest\x12\x10\n\x08\x64uration\x18\x01 \x01(\t2\xd3\x08\n\x02UI\x12S\n\x05Login\x12\x12.uipb.LoginRequest\x1a\x1c.uipb.AuthenticationResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/api/v1/login:\x01*\x12\\\n\x08Register\x12\x15.uipb.RegisterRequest\x1a\x1c.uipb.AuthenticationResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\"\x10/api/v1/register:\x01*\x12\x63\n\x0bResendEmail\x12\x18.uipb.ResendEmailRequest\x1a\x19.uipb.ResendEmailResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/api/v1/resend_email:\x01*\x12P\n\x07GetUser\x12\x14.uipb.GetUserRequest\x1a\x15.uipb.GetUserResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/get_user\x12R\n\tGetDomain\x12\x16.uipb.GetDomainRequest\x1a\x0c.uipb.Domain\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/v1/domain/{domain}\x12W\n\nGetDomains\x12\x17.uipb.GetDomainsRequest\x1a\x18.uipb.GetDomainsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/v1/domain\x12[\n\tNewDomain\x12\x16.uipb.NewDomainRequest\x1a\x17.uipb.NewDomainResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\"\x12/api/v1/domain/new:\x01*\x12\x63\n\x0cNewModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\"&/api/v1/domain/{domain}/model_type/new:\x01*\x12\x63\n\x0cGetModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/domain/{domain}/model_type/{name}\x12Z\n\tGetModels\x12\x16.uipb.GetModelsRequest\x1a\x17.uipb.GetModelsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/model_search\x12J\n\x08GetModel\x12\x15.uipb.GetModelRequest\x1a\x0b.uipb.Model\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/model/{id}\x12g\n\x0bNewAPIToken\x12\x18.uipb.NewAPITokenRequest\x1a\x1c.uipb.AuthenticationResponse\" \x82\xd3\xe4\x93\x02\x1a\"\x15/api/v1/api_token/new:\x01*b\x06proto3')
+  serialized_pb=_b('\n\ruipb/ui.proto\x12\x04uipb\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a;libpok.proto/aggregatorpb/aggregator.proto\"A\n\x0cLoginRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\"R\n\x0fRegisterRequest\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x10\n\x08remember\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\"\'\n\x16\x41uthenticationResponse\x12\r\n\x05token\x18\x01 \x01(\t\"\x14\n\x12ResendEmailRequest\"\x15\n\x13ResendEmailResponse\"\x10\n\x0eGetUserRequest\"F\n\x0fGetUserResponse\x12\r\n\x05\x65mail\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0everified_email\x18\x03 \x01(\x08\"\x13\n\x11GetDomainsRequest\"9\n\x12GetDomainsResponse\x12#\n\x07\x64omains\x18\x01 \x03(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"B\n\x06\x44omain\x12\x0c\n\x04name\x18\x01 \x01(\t\x12*\n\x0bmodel_types\x18\x02 \x03(\x0b\x32\x0f.uipb.ModelTypeB\x04\xc8\xde\x1f\x00\")\n\tModelType\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\"\xdb\x02\n\x05Model\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12,\n\x06status\x18\x06 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x13\n\x0bowner_email\x18\x07 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x11\n\tmodel_url\x18\t \x01(\t\x12\x38\n\ncreated_at\x18\n \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x38\n\nupdated_at\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\"\"\n\x10NewDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"7\n\x11NewDomainResponse\x12\"\n\x06\x64omain\x18\x01 \x01(\x0b\x32\x0c.uipb.DomainB\x04\xc8\xde\x1f\x00\"\"\n\x10GetDomainRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\"\xbe\x01\n\x10GetModelsRequest\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12,\n\x06status\x18\x04 \x01(\x0e\x32\x1c.aggregatorpb.TrainingStatus\x12\x0c\n\x04prod\x18\x05 \x01(\x08\x12\r\n\x05query\x18\x06 \x01(\t\x12\r\n\x05\x63ount\x18\x07 \x01(\x03\x12\x0e\n\x06offset\x18\x08 \x01(\x03\x12\r\n\x05order\x18\t \x01(\t\"j\n\x11GetModelsResponse\x12!\n\x06models\x18\x01 \x03(\x0b\x32\x0b.uipb.ModelB\x04\xc8\xde\x1f\x00\x12\x13\n\x0btotal_count\x18\x02 \x01(\x03\x12\r\n\x05\x63ount\x18\x03 \x01(\x03\x12\x0e\n\x06offset\x18\x04 \x01(\x03\"\x1d\n\x0fGetModelRequest\x12\n\n\x02id\x18\x01 \x01(\x04\"&\n\x12NewAPITokenRequest\x12\x10\n\x08\x64uration\x18\x01 \x01(\t2\xd3\x08\n\x02UI\x12S\n\x05Login\x12\x12.uipb.LoginRequest\x1a\x1c.uipb.AuthenticationResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/api/v1/login:\x01*\x12\\\n\x08Register\x12\x15.uipb.RegisterRequest\x1a\x1c.uipb.AuthenticationResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\"\x10/api/v1/register:\x01*\x12\x63\n\x0bResendEmail\x12\x18.uipb.ResendEmailRequest\x1a\x19.uipb.ResendEmailResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\"\x14/api/v1/resend_email:\x01*\x12P\n\x07GetUser\x12\x14.uipb.GetUserRequest\x1a\x15.uipb.GetUserResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/get_user\x12R\n\tGetDomain\x12\x16.uipb.GetDomainRequest\x1a\x0c.uipb.Domain\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/api/v1/domain/{domain}\x12W\n\nGetDomains\x12\x17.uipb.GetDomainsRequest\x1a\x18.uipb.GetDomainsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/api/v1/domain\x12[\n\tNewDomain\x12\x16.uipb.NewDomainRequest\x1a\x17.uipb.NewDomainResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\"\x12/api/v1/domain/new:\x01*\x12\x63\n\x0cNewModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\"&/api/v1/domain/{domain}/model_type/new:\x01*\x12\x63\n\x0cGetModelType\x12\x0f.uipb.ModelType\x1a\x0f.uipb.ModelType\"1\x82\xd3\xe4\x93\x02+\x12)/api/v1/domain/{domain}/model_type/{name}\x12Z\n\tGetModels\x12\x16.uipb.GetModelsRequest\x1a\x17.uipb.GetModelsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/model_search\x12J\n\x08GetModel\x12\x15.uipb.GetModelRequest\x1a\x0b.uipb.Model\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/model/{id}\x12g\n\x0bNewAPIToken\x12\x18.uipb.NewAPITokenRequest\x1a\x1c.uipb.AuthenticationResponse\" \x82\xd3\xe4\x93\x02\x1a\"\x15/api/v1/api_token/new:\x01*b\x06proto3')
   ,
-  dependencies=[github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.DESCRIPTOR,])
+  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.DESCRIPTOR,])
 
 
 
@@ -67,8 +68,8 @@ _LOGINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=161,
-  serialized_end=226,
+  serialized_start=194,
+  serialized_end=259,
 )
 
 
@@ -119,8 +120,8 @@ _REGISTERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=228,
-  serialized_end=310,
+  serialized_start=261,
+  serialized_end=343,
 )
 
 
@@ -150,8 +151,8 @@ _AUTHENTICATIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=312,
-  serialized_end=351,
+  serialized_start=345,
+  serialized_end=384,
 )
 
 
@@ -174,8 +175,8 @@ _RESENDEMAILREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=353,
-  serialized_end=373,
+  serialized_start=386,
+  serialized_end=406,
 )
 
 
@@ -198,8 +199,8 @@ _RESENDEMAILRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=375,
-  serialized_end=396,
+  serialized_start=408,
+  serialized_end=429,
 )
 
 
@@ -222,8 +223,8 @@ _GETUSERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=398,
-  serialized_end=414,
+  serialized_start=431,
+  serialized_end=447,
 )
 
 
@@ -267,8 +268,8 @@ _GETUSERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=416,
-  serialized_end=486,
+  serialized_start=449,
+  serialized_end=519,
 )
 
 
@@ -291,8 +292,8 @@ _GETDOMAINSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=488,
-  serialized_end=507,
+  serialized_start=521,
+  serialized_end=540,
 )
 
 
@@ -322,8 +323,8 @@ _GETDOMAINSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=509,
-  serialized_end=566,
+  serialized_start=542,
+  serialized_end=599,
 )
 
 
@@ -360,8 +361,8 @@ _DOMAIN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=568,
-  serialized_end=634,
+  serialized_start=601,
+  serialized_end=667,
 )
 
 
@@ -398,8 +399,8 @@ _MODELTYPE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=636,
-  serialized_end=677,
+  serialized_start=669,
+  serialized_end=710,
 )
 
 
@@ -473,6 +474,20 @@ _MODEL = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='created_at', full_name='uipb.Model.created_at', index=9,
+      number=10, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001\310\336\037\000'))),
+    _descriptor.FieldDescriptor(
+      name='updated_at', full_name='uipb.Model.updated_at', index=10,
+      number=11, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001\310\336\037\000'))),
   ],
   extensions=[
   ],
@@ -485,8 +500,8 @@ _MODEL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=680,
-  serialized_end=911,
+  serialized_start=713,
+  serialized_end=1060,
 )
 
 
@@ -516,8 +531,8 @@ _NEWDOMAINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=913,
-  serialized_end=947,
+  serialized_start=1062,
+  serialized_end=1096,
 )
 
 
@@ -547,8 +562,8 @@ _NEWDOMAINRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=949,
-  serialized_end=1004,
+  serialized_start=1098,
+  serialized_end=1153,
 )
 
 
@@ -578,8 +593,8 @@ _GETDOMAINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1006,
-  serialized_end=1040,
+  serialized_start=1155,
+  serialized_end=1189,
 )
 
 
@@ -665,8 +680,8 @@ _GETMODELSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1043,
-  serialized_end=1233,
+  serialized_start=1192,
+  serialized_end=1382,
 )
 
 
@@ -717,8 +732,8 @@ _GETMODELSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1235,
-  serialized_end=1341,
+  serialized_start=1384,
+  serialized_end=1490,
 )
 
 
@@ -748,8 +763,8 @@ _GETMODELREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1343,
-  serialized_end=1372,
+  serialized_start=1492,
+  serialized_end=1521,
 )
 
 
@@ -779,14 +794,16 @@ _NEWAPITOKENREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1374,
-  serialized_end=1412,
+  serialized_start=1523,
+  serialized_end=1561,
 )
 
 _GETDOMAINSRESPONSE.fields_by_name['domains'].message_type = _DOMAIN
 _DOMAIN.fields_by_name['model_types'].message_type = _MODELTYPE
 _MODEL.fields_by_name['status'].enum_type = github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2._TRAININGSTATUS
 _MODEL.fields_by_name['hyper_params'].message_type = github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2._HYPERPARAMS
+_MODEL.fields_by_name['created_at'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_MODEL.fields_by_name['updated_at'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _NEWDOMAINRESPONSE.fields_by_name['domain'].message_type = _DOMAIN
 _GETMODELSREQUEST.fields_by_name['status'].enum_type = github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2._TRAININGSTATUS
 _GETMODELSRESPONSE.fields_by_name['models'].message_type = _MODEL
@@ -951,6 +968,10 @@ _DOMAIN.fields_by_name['model_types'].has_options = True
 _DOMAIN.fields_by_name['model_types']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _MODEL.fields_by_name['hyper_params'].has_options = True
 _MODEL.fields_by_name['hyper_params']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
+_MODEL.fields_by_name['created_at'].has_options = True
+_MODEL.fields_by_name['created_at']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001\310\336\037\000'))
+_MODEL.fields_by_name['updated_at'].has_options = True
+_MODEL.fields_by_name['updated_at']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001\310\336\037\000'))
 _NEWDOMAINRESPONSE.fields_by_name['domain'].has_options = True
 _NEWDOMAINRESPONSE.fields_by_name['domain']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _GETMODELSRESPONSE.fields_by_name['models'].has_options = True

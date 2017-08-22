@@ -1,7 +1,9 @@
 syntax = "proto3";
 
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "github.com/d4l3k/pok/protobuf/aggregatorpb/aggregator.proto";
 
 package uipb;
@@ -63,6 +65,9 @@ message Model {
   string owner_email = 7;
   aggregatorpb.HyperParams hyper_params = 8 [(gogoproto.nullable) = false];
   string model_url = 9;
+
+  google.protobuf.Timestamp created_at = 10 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  google.protobuf.Timestamp updated_at = 11 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
 }
 
 message NewDomainRequest {
