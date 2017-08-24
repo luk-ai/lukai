@@ -145,7 +145,7 @@ def main(_):
   with tf.name_scope('accuracy'):
     correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
     correct_prediction = tf.cast(correct_prediction, tf.float32)
-  accuracy = tf.reduce_mean(correct_prediction)
+  accuracy = tf.reduce_mean(correct_prediction, name="accuracy")
 
   with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())

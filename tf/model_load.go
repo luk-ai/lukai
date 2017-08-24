@@ -51,6 +51,7 @@ func (model *Model) Load(reader io.Reader) error {
 	if err != nil {
 		return err
 	}
+	defer gr.Close()
 
 	var foundSaverDef, foundModel bool
 

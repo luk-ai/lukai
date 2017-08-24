@@ -62,7 +62,7 @@ func (mt *ModelType) loadProdModelRLocked() error {
 		return err
 	}
 	mt.prod.lastUpdate = time.Now()
-	mt.prod.cache = makeTFOpCache()
+	mt.prod.cache = makeTFOpCache(mt.prod.model)
 
 	// TODO(d4l3k): Quantize model weights.
 	// TODO(d4l3k): Train with local examples.
@@ -80,7 +80,6 @@ func (mt *ModelType) Run(
 	defer mt.prod.RUnlock()
 
 	feedsResolved, fetchesResolved, targetsResolved, err := mt.prod.cache.resolve(
-		mt.prod.model,
 		example{
 			feeds:   feeds,
 			fetches: fetches,

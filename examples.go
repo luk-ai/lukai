@@ -1,7 +1,6 @@
 package pok
 
 import (
-	"bytes"
 	"compress/gzip"
 	"encoding/gob"
 	"fmt"
@@ -10,7 +9,6 @@ import (
 	"math/rand"
 	"os"
 	"path"
-	"reflect"
 	"sort"
 	"time"
 
@@ -66,40 +64,9 @@ func (ex example) writeTo(w io.Writer) (int, error) {
 	defer gzw.Close()
 
 	encoder := gob.NewEncoder(gzw)
-	if err := encoder.Encode(uint32(len(ex.feeds))); err != nil {
+
+	if err := tf.EncodeTensorMap(encoder, ex.feeds); err != nil {
 		return 0, err
-	}
-
-	keys := make([]string, 0, len(ex.feeds))
-	for key := range ex.feeds {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-
-	for _, key := range keys {
-		val := ex.feeds[key]
-		if err := encoder.Encode(key); err != nil {
-			return 0, err
-		}
-		if err := encoder.Encode(val.DataType()); err != nil {
-			return 0, err
-		}
-		if err := encoder.Encode(val.Shape()); err != nil {
-			return 0, err
-		}
-		if val.DataType() == tensorflow.String {
-			if err := encoder.Encode(val.Value()); err != nil {
-				return 0, err
-			}
-		} else {
-			var buf bytes.Buffer
-			if _, err := val.WriteContentsTo(&buf); err != nil {
-				return 0, err
-			}
-			if err := encoder.Encode(buf.Bytes()); err != nil {
-				return 0, err
-			}
-		}
 	}
 
 	if err := encoder.Encode(ex.fetches); err != nil {
@@ -114,13 +81,6 @@ func (ex example) writeTo(w io.Writer) (int, error) {
 		return 0, err
 	}
 	return c.n, nil
-}
-
-func nDimensionalTensor(t reflect.Type, n int) interface{} {
-	for i := 0; i < n; i++ {
-		t = reflect.SliceOf(t)
-	}
-	return reflect.New(t).Interface()
 }
 
 type readCounter struct {
@@ -138,9 +98,7 @@ func (c *readCounter) Read(p []byte) (int, error) {
 }
 
 func (ex *example) readFrom(r io.Reader) (int, error) {
-	*ex = example{
-		feeds: map[string]*tensorflow.Tensor{},
-	}
+	*ex = example{}
 
 	c := readCounter{target: r}
 	gzr, err := gzip.NewReader(&c)
@@ -150,48 +108,9 @@ func (ex *example) readFrom(r io.Reader) (int, error) {
 	defer gzr.Close()
 	decoder := gob.NewDecoder(gzr)
 
-	var numFeeds uint32
-	if err := decoder.Decode(&numFeeds); err != nil {
-		return 0, errors.Wrap(err, "numFeeds")
-	}
-
-	for i := uint32(0); i < numFeeds; i++ {
-		var key string
-		if err := decoder.Decode(&key); err != nil {
-			return 0, errors.Wrap(err, "key")
-		}
-		var dataType tensorflow.DataType
-		if err := decoder.Decode(&dataType); err != nil {
-			return 0, errors.Wrap(err, "dataType")
-		}
-		var shape []int64
-		if err := decoder.Decode(&shape); err != nil {
-			return 0, errors.Wrap(err, "shape")
-		}
-
-		var val *tensorflow.Tensor
-		var err error
-		if dataType == tensorflow.String {
-			valPtr := nDimensionalTensor(reflect.TypeOf(""), len(shape))
-			if err := decoder.Decode(valPtr); err != nil {
-				return 0, errors.Wrap(err, "str")
-			}
-			goTensor := reflect.Indirect(reflect.ValueOf(valPtr)).Interface()
-			val, err = tensorflow.NewTensor(goTensor)
-			if err != nil {
-				return 0, err
-			}
-		} else {
-			var buf []byte
-			if err := decoder.Decode(&buf); err != nil {
-				return 0, errors.Wrap(err, "buf")
-			}
-			val, err = tensorflow.ReadTensor(dataType, shape, bytes.NewReader(buf))
-			if err != nil {
-				return 0, errors.Wrap(err, "val")
-			}
-		}
-		ex.feeds[key] = val
+	ex.feeds, err = tf.DecodeTensorMap(decoder)
+	if err != nil {
+		return 0, errors.Wrap(err, "feeds")
 	}
 
 	if err := decoder.Decode(&ex.fetches); err != nil {
@@ -210,7 +129,7 @@ func (mt *ModelType) TotalExamples() int64 {
 	mt.examplesMeta.Lock()
 	defer mt.examplesMeta.Unlock()
 
-	return mt.examplesMeta.index.TotalSize
+	return mt.examplesMeta.index.TotalExamples
 }
 
 // Log records model input->output pairs for later use in training. This data is

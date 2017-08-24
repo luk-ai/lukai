@@ -41,6 +41,7 @@ enum MetricReduce {
 message Metric {
   string fetch_name = 1;
   MetricReduce reduce = 2;
+  string name = 3;
 }
 
 enum Event {

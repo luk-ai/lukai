@@ -1,6 +1,9 @@
 package tf
 
 import (
+	"bytes"
+	"compress/gzip"
+	"encoding/gob"
 	"strings"
 
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
@@ -32,6 +35,75 @@ func (model *Model) Weights() ([]*tensorflow.Tensor, error) {
 		return nil, err
 	}
 	return results, nil
+}
+
+func (model *Model) WeightsMap() (map[string]*tensorflow.Tensor, error) {
+	m := map[string]*tensorflow.Tensor{}
+
+	weights, err := model.Weights()
+	if err != nil {
+		return nil, err
+	}
+
+	for i, weight := range weights {
+		key := model.Meta.TrainableVariables[i]
+		m[key] = weight
+	}
+
+	return m, nil
+}
+
+func (model *Model) ExportWeights() ([]byte, error) {
+	weights, err := model.WeightsMap()
+	if err != nil {
+		return nil, err
+	}
+	var buf bytes.Buffer
+	gzw := gzip.NewWriter(&buf)
+	defer gzw.Close()
+
+	enc := gob.NewEncoder(gzw)
+	if err := EncodeTensorMap(enc, weights); err != nil {
+		return nil, err
+	}
+	if err := gzw.Close(); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+// ImportWeights imports a by
+func (model *Model) ImportWeights(buf []byte) error {
+	gzr, err := gzip.NewReader(bytes.NewReader(buf))
+	if err != nil {
+		return err
+	}
+	defer gzr.Close()
+
+	dec := gob.NewDecoder(gzr)
+	weights, err := DecodeTensorMap(dec)
+	if err != nil {
+		return err
+	}
+
+	feeds := map[tensorflow.Output]*tensorflow.Tensor{}
+	for _, variable := range model.Meta.TrainableVariables {
+		opName := PokVarPrefix + strings.Replace(variable, ":", "/", -1)
+		op := model.Graph.Operation(opName)
+		feeds[op.Output(0)] = weights[variable]
+	}
+
+	if _, err := model.Session.Run(
+		feeds,
+		nil,
+		[]*tensorflow.Operation{
+			model.Graph.Operation(PokAssignOp),
+		},
+	); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 const (

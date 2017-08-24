@@ -1,7 +1,6 @@
 package pok
 
 import (
-	"bytes"
 	"context"
 	"io"
 	"log"
@@ -14,7 +13,6 @@ import (
 	"github.com/d4l3k/pok/tf"
 	"github.com/d4l3k/pok/units"
 	"github.com/pkg/errors"
-	"google.golang.org/genproto/googleapis/api/metric"
 	"google.golang.org/grpc"
 )
 
@@ -135,11 +133,17 @@ func (mt *ModelType) processWork(
 ) error {
 	log.Printf("Training %+v", work.Id)
 	start := time.Now()
-	model, err := tf.LoadModel(bytes.NewReader(work.Model))
+	model, err := tf.GetModel(work.ModelUrl)
 	if err != nil {
 		return err
 	}
 	defer model.Close()
+
+	if err := model.ImportWeights(work.ModelWeights); err != nil {
+		return err
+	}
+	// Clear model weights to save memory.
+	work.ModelWeights = nil
 
 	cache := makeTFOpCache(model)
 
@@ -164,7 +168,7 @@ func (mt *ModelType) processWork(
 	}
 
 	var metricFetchNames []string
-	var aggMetrics []metric.Metric
+	var aggMetrics []metrics.Metric
 	for _, m := range model.Meta.Metrics {
 		metricFetchNames = append(metricFetchNames, m.FetchName)
 		aggMetrics = append(aggMetrics, metrics.Get(m.Reduce))
@@ -185,8 +189,8 @@ func (mt *ModelType) processWork(
 
 		// Compute training metrics first.
 		if len(metricFetches) > 0 {
-			if len(preTrainTargets) > 0 {
-				if _, err := model.Session.Run(nil, nil, preTrainTargets); err != nil {
+			if len(preEvalTargets) > 0 {
+				if _, err := model.Session.Run(nil, nil, preEvalTargets); err != nil {
 					return errors.Wrapf(
 						err, "model.Session.Run(nil, nil, %+v) failed", trainTargets.Pre,
 					)
@@ -209,14 +213,16 @@ func (mt *ModelType) processWork(
 					val, ok := metric.Value().(float64)
 					if !ok {
 						return errors.Errorf(
-							"metric %q datatype not float64! = %+v", metricFetchNames, metric.Type())
+							"metric %q datatype not float64! = %+v",
+							metricFetchNames, metric.DataType(),
+						)
 					}
 					aggMetrics[i].Add(val)
 				}
 			}
 
-			if len(postTrainTargets) > 0 {
-				if _, err := model.Session.Run(nil, nil, postTrainTargets); err != nil {
+			if len(postEvalTargets) > 0 {
+				if _, err := model.Session.Run(nil, nil, postEvalTargets); err != nil {
 					return errors.Wrapf(
 						err, "model.Session.Run(nil, nil, %+v) failed", trainTargets.Post,
 					)
@@ -257,8 +263,8 @@ func (mt *ModelType) processWork(
 		}
 	}
 
-	var buf bytes.Buffer
-	if model.Save(&buf); err != nil {
+	weights, err := model.ExportWeights()
+	if err != nil {
 		return err
 	}
 
@@ -271,11 +277,11 @@ func (mt *ModelType) processWork(
 	log.Printf("Training took %s", timeTaken)
 	if _, err := c.ReportWork(ctx, &aggregatorpb.ReportWorkRequest{
 		Work: aggregatorpb.Work{
-			Id:          work.Id,
-			NumExamples: int64(exampleCount),
-			NumClients:  1,
-			Epoch:       work.Epoch,
-			Model:       buf.Bytes(),
+			Id:           work.Id,
+			NumExamples:  int64(exampleCount),
+			NumClients:   1,
+			Epoch:        work.Epoch,
+			ModelWeights: weights,
 			// HyperParams isn't needed here since the server already has that info.
 			TimeTaken: timeTaken.Seconds(),
 			Metrics:   metricVals,

@@ -25,11 +25,15 @@ message Work {
   int64 num_examples = 2;
   int64 num_clients = 3;
   int64 epoch = 4;
-  bytes model = 5;
+  bytes model_weights = 5;
+  string model_url = 10;
+
   // TODO(d4l3k): consider sending a link to GCS instead of the raw model.
   HyperParams hyper_params = 7 [(gogoproto.nullable) = false];
+
   // time_taken is amount of time in seconds it took to process this work.
   double time_taken = 8;
+
   // metrics are the values produced by the model defined metrics.
   repeated double metrics = 9;
 }

@@ -7,7 +7,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"path"
+	"runtime/pprof"
 	"strconv"
 	"sync"
 
@@ -20,6 +22,8 @@ var (
 	numClients = flag.Int("num_clients", 10, "the number of clients to simulate")
 	modelType  = flag.String("model_type", "mnist", "the name of the model type")
 	domain     = flag.String("domain", "", "the name of the domain")
+
+	profile = flag.Bool("profile", false, "whether to produce a cpu & memory profile")
 )
 
 var (
@@ -171,11 +175,6 @@ func main() {
 			log.Fatal("# images != # labels")
 		}
 
-		dropout, err := tensorflow.NewTensor(float32(0.5))
-		if err != nil {
-			log.Fatal(err)
-		}
-
 		for i, image := range images {
 			client := clients[i%len(clients)]
 			x, err := tensorflow.NewTensor([][]float32{image})
@@ -188,15 +187,38 @@ func main() {
 			}
 			if err := client.Log(
 				map[string]*tensorflow.Tensor{
-					"Placeholder:0":         x,
-					"Placeholder_1:0":       y,
-					"dropout/Placeholder:0": dropout,
+					"Placeholder:0":   x,
+					"Placeholder_1:0": y,
 				},
 				[]string{"adam_optimizer/Adam"},
 			); err != nil {
 				log.Fatal(err)
 			}
 		}
+	}
+
+	if *profile {
+		f, err := os.OpenFile("/tmp/cpu.prof", os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0755)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+		pprof.StartCPUProfile(f)
+
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt)
+		go func() {
+			for range c {
+				f, err := os.OpenFile("/tmp/heap.prof", os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0755)
+				if err != nil {
+					log.Fatal(err)
+				}
+				defer f.Close()
+				pprof.WriteHeapProfile(f)
+				pprof.StopCPUProfile()
+				os.Exit(0)
+			}
+		}()
 	}
 
 	for i, mt := range clients {

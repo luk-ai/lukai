@@ -51,3 +51,14 @@ func TestAddScaledWeights(t *testing.T) {
 		}
 	}
 }
+
+func TestImportExportWeights(t *testing.T) {
+	model := loadTestModel(t)
+	weights, err := model.ExportWeights()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := model.ImportWeights(weights); err != nil {
+		t.Fatal(err)
+	}
+}

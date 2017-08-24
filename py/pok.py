@@ -7,6 +7,7 @@ from libpok.proto.managerpb import manager_pb2_grpc
 from libpok.proto.uipb import ui_pb2
 from libpok import saver
 
+import tensorflow as tf
 import grpc
 import six
 
@@ -55,9 +56,11 @@ def upload(session, domain, model_type, hyper_params, metrics=None,
     if metrics is not None:
         metrics_proto = []
         for k, v in six.iteritems(metrics):
+            metric_name = k.name
             if k.dtype != tf.float64:
                 k = tf.cast(k, tf.float64)
-            metrics_proto.append(client_pb2.Metric(fetch_name=k.name, reduce=v))
+            metrics_proto.append(client_pb2.Metric(fetch_name=k.name, reduce=v,
+                                                   name=metric_name))
 
     events_proto = None
     if event_targets is not None:
