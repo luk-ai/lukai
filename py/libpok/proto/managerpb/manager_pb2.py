@@ -13,18 +13,78 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
-from libpok.proto.uipb import ui_pb2 as github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_uipb_dot_ui__pb2
+from github.com.gogo.protobuf.gogoproto import gogo_pb2 as github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2
+from github.com.d4l3k.pok.protobuf.aggregatorpb import aggregator_pb2 as github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='managerpb/manager.proto',
   package='managerpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x17managerpb/manager.proto\x12\tmanagerpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a+libpok.proto/uipb/ui.proto\"D\n\x12UploadModelRequest\x12\x1f\n\x04meta\x18\x01 \x01(\x0b\x32\x0b.uipb.ModelB\x04\xc8\xde\x1f\x00\x12\r\n\x05model\x18\x02 \x01(\x0c\":\n\x13UploadModelResponse\x12\x10\n\x08model_id\x18\x01 \x01(\x04\x12\x11\n\tmodel_url\x18\x02 \x01(\t2Y\n\x07Manager\x12N\n\x0bUploadModel\x12\x1d.managerpb.UploadModelRequest\x1a\x1e.managerpb.UploadModelResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x17managerpb/manager.proto\x12\tmanagerpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a;github.com/d4l3k/pok/protobuf/aggregatorpb/aggregator.proto\"\x85\x01\n\x05Model\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\"I\n\x12UploadModelRequest\x12$\n\x04meta\x18\x01 \x01(\x0b\x32\x10.managerpb.ModelB\x04\xc8\xde\x1f\x00\x12\r\n\x05model\x18\x02 \x01(\x0c\":\n\x13UploadModelResponse\x12\x10\n\x08model_id\x18\x01 \x01(\x04\x12\x11\n\tmodel_url\x18\x02 \x01(\t2Y\n\x07Manager\x12N\n\x0bUploadModel\x12\x1d.managerpb.UploadModelRequest\x1a\x1e.managerpb.UploadModelResponse\"\x00\x62\x06proto3')
   ,
-  dependencies=[github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_uipb_dot_ui__pb2.DESCRIPTOR,])
+  dependencies=[github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.DESCRIPTOR,])
 
 
+
+
+_MODEL = _descriptor.Descriptor(
+  name='Model',
+  full_name='managerpb.Model',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='domain', full_name='managerpb.Model.domain', index=0,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='model_type', full_name='managerpb.Model.model_type', index=1,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='managerpb.Model.name', index=2,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='description', full_name='managerpb.Model.description', index=3,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='hyper_params', full_name='managerpb.Model.hyper_params', index=4,
+      number=8, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=147,
+  serialized_end=280,
+)
 
 
 _UPLOADMODELREQUEST = _descriptor.Descriptor(
@@ -60,8 +120,8 @@ _UPLOADMODELREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=130,
-  serialized_end=198,
+  serialized_start=282,
+  serialized_end=355,
 )
 
 
@@ -98,14 +158,23 @@ _UPLOADMODELRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=200,
-  serialized_end=258,
+  serialized_start=357,
+  serialized_end=415,
 )
 
-_UPLOADMODELREQUEST.fields_by_name['meta'].message_type = github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_uipb_dot_ui__pb2._MODEL
+_MODEL.fields_by_name['hyper_params'].message_type = github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2._HYPERPARAMS
+_UPLOADMODELREQUEST.fields_by_name['meta'].message_type = _MODEL
+DESCRIPTOR.message_types_by_name['Model'] = _MODEL
 DESCRIPTOR.message_types_by_name['UploadModelRequest'] = _UPLOADMODELREQUEST
 DESCRIPTOR.message_types_by_name['UploadModelResponse'] = _UPLOADMODELRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+Model = _reflection.GeneratedProtocolMessageType('Model', (_message.Message,), dict(
+  DESCRIPTOR = _MODEL,
+  __module__ = 'managerpb.manager_pb2'
+  # @@protoc_insertion_point(class_scope:managerpb.Model)
+  ))
+_sym_db.RegisterMessage(Model)
 
 UploadModelRequest = _reflection.GeneratedProtocolMessageType('UploadModelRequest', (_message.Message,), dict(
   DESCRIPTOR = _UPLOADMODELREQUEST,
@@ -122,6 +191,8 @@ UploadModelResponse = _reflection.GeneratedProtocolMessageType('UploadModelRespo
 _sym_db.RegisterMessage(UploadModelResponse)
 
 
+_MODEL.fields_by_name['hyper_params'].has_options = True
+_MODEL.fields_by_name['hyper_params']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _UPLOADMODELREQUEST.fields_by_name['meta'].has_options = True
 _UPLOADMODELREQUEST.fields_by_name['meta']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 try:

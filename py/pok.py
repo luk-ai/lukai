@@ -4,7 +4,6 @@ from libpok.proto.aggregatorpb import aggregator_pb2
 from libpok.proto.clientpb import client_pb2
 from libpok.proto.managerpb import manager_pb2
 from libpok.proto.managerpb import manager_pb2_grpc
-from libpok.proto.uipb import ui_pb2
 from libpok import saver
 
 import tensorflow as tf
@@ -83,7 +82,7 @@ def upload(session, domain, model_type, hyper_params, metrics=None,
     client = get_client()
     resp = client.UploadModel(
         request=manager_pb2.UploadModelRequest(
-            meta=ui_pb2.Model(
+            meta=manager_pb2.Model(
                 domain=domain,
                 model_type=model_type,
                 name=name,

@@ -1,15 +1,21 @@
 syntax = "proto3";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-import "github.com/d4l3k/pok/protobuf/uipb/ui.proto";
+import "github.com/d4l3k/pok/protobuf/aggregatorpb/aggregator.proto";
 
 package managerpb;
 
+message Model {
+  string domain = 2;
+  string model_type = 3;
+  string name = 4;
+  string description = 5;
+  aggregatorpb.HyperParams hyper_params = 8 [(gogoproto.nullable) = false];
+}
+
 // UploadModelRequest is a request to upload a model and start training it.
-// Currently the only meta fields that are used are:
-// - domain, model_type, name, description, hyper_params
 message UploadModelRequest {
-  uipb.Model meta = 1 [(gogoproto.nullable) = false];
+  Model meta = 1 [(gogoproto.nullable) = false];
   bytes model = 2;
 }
 

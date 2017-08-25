@@ -8,6 +8,7 @@
 		protobuf/managerpb/manager.proto
 
 	It has these top-level messages:
+		Model
 		UploadModelRequest
 		UploadModelResponse
 */
@@ -17,7 +18,7 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 import _ "github.com/gogo/protobuf/gogoproto"
-import uipb "github.com/d4l3k/pok/protobuf/uipb"
+import aggregatorpb "github.com/d4l3k/pok/protobuf/aggregatorpb"
 
 import bytes "bytes"
 
@@ -42,23 +43,68 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
+type Model struct {
+	Domain      string                   `protobuf:"bytes,2,opt,name=domain,proto3" json:"domain,omitempty"`
+	ModelType   string                   `protobuf:"bytes,3,opt,name=model_type,json=modelType,proto3" json:"model_type,omitempty"`
+	Name        string                   `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Description string                   `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	HyperParams aggregatorpb.HyperParams `protobuf:"bytes,8,opt,name=hyper_params,json=hyperParams" json:"hyper_params"`
+}
+
+func (m *Model) Reset()                    { *m = Model{} }
+func (*Model) ProtoMessage()               {}
+func (*Model) Descriptor() ([]byte, []int) { return fileDescriptorManager, []int{0} }
+
+func (m *Model) GetDomain() string {
+	if m != nil {
+		return m.Domain
+	}
+	return ""
+}
+
+func (m *Model) GetModelType() string {
+	if m != nil {
+		return m.ModelType
+	}
+	return ""
+}
+
+func (m *Model) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *Model) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *Model) GetHyperParams() aggregatorpb.HyperParams {
+	if m != nil {
+		return m.HyperParams
+	}
+	return aggregatorpb.HyperParams{}
+}
+
 // UploadModelRequest is a request to upload a model and start training it.
-// Currently the only meta fields that are used are:
-// - domain, model_type, name, description, hyper_params
 type UploadModelRequest struct {
-	Meta  uipb.Model `protobuf:"bytes,1,opt,name=meta" json:"meta"`
-	Model []byte     `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
+	Meta  Model  `protobuf:"bytes,1,opt,name=meta" json:"meta"`
+	Model []byte `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
 }
 
 func (m *UploadModelRequest) Reset()                    { *m = UploadModelRequest{} }
 func (*UploadModelRequest) ProtoMessage()               {}
-func (*UploadModelRequest) Descriptor() ([]byte, []int) { return fileDescriptorManager, []int{0} }
+func (*UploadModelRequest) Descriptor() ([]byte, []int) { return fileDescriptorManager, []int{1} }
 
-func (m *UploadModelRequest) GetMeta() uipb.Model {
+func (m *UploadModelRequest) GetMeta() Model {
 	if m != nil {
 		return m.Meta
 	}
-	return uipb.Model{}
+	return Model{}
 }
 
 func (m *UploadModelRequest) GetModel() []byte {
@@ -75,7 +121,7 @@ type UploadModelResponse struct {
 
 func (m *UploadModelResponse) Reset()                    { *m = UploadModelResponse{} }
 func (*UploadModelResponse) ProtoMessage()               {}
-func (*UploadModelResponse) Descriptor() ([]byte, []int) { return fileDescriptorManager, []int{1} }
+func (*UploadModelResponse) Descriptor() ([]byte, []int) { return fileDescriptorManager, []int{2} }
 
 func (m *UploadModelResponse) GetModelId() uint64 {
 	if m != nil {
@@ -92,8 +138,51 @@ func (m *UploadModelResponse) GetModelUrl() string {
 }
 
 func init() {
+	proto.RegisterType((*Model)(nil), "managerpb.Model")
 	proto.RegisterType((*UploadModelRequest)(nil), "managerpb.UploadModelRequest")
 	proto.RegisterType((*UploadModelResponse)(nil), "managerpb.UploadModelResponse")
+}
+func (this *Model) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*Model)
+	if !ok {
+		that2, ok := that.(Model)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.Domain != that1.Domain {
+		return false
+	}
+	if this.ModelType != that1.ModelType {
+		return false
+	}
+	if this.Name != that1.Name {
+		return false
+	}
+	if this.Description != that1.Description {
+		return false
+	}
+	if !this.HyperParams.Equal(&that1.HyperParams) {
+		return false
+	}
+	return true
 }
 func (this *UploadModelRequest) Equal(that interface{}) bool {
 	if that == nil {
@@ -160,6 +249,20 @@ func (this *UploadModelResponse) Equal(that interface{}) bool {
 		return false
 	}
 	return true
+}
+func (this *Model) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 9)
+	s = append(s, "&managerpb.Model{")
+	s = append(s, "Domain: "+fmt.Sprintf("%#v", this.Domain)+",\n")
+	s = append(s, "ModelType: "+fmt.Sprintf("%#v", this.ModelType)+",\n")
+	s = append(s, "Name: "+fmt.Sprintf("%#v", this.Name)+",\n")
+	s = append(s, "Description: "+fmt.Sprintf("%#v", this.Description)+",\n")
+	s = append(s, "HyperParams: "+strings.Replace(this.HyperParams.GoString(), `&`, ``, 1)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
 }
 func (this *UploadModelRequest) GoString() string {
 	if this == nil {
@@ -264,6 +367,56 @@ var _Manager_serviceDesc = grpc.ServiceDesc{
 	Metadata: "protobuf/managerpb/manager.proto",
 }
 
+func (m *Model) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Model) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Domain) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintManager(dAtA, i, uint64(len(m.Domain)))
+		i += copy(dAtA[i:], m.Domain)
+	}
+	if len(m.ModelType) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintManager(dAtA, i, uint64(len(m.ModelType)))
+		i += copy(dAtA[i:], m.ModelType)
+	}
+	if len(m.Name) > 0 {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintManager(dAtA, i, uint64(len(m.Name)))
+		i += copy(dAtA[i:], m.Name)
+	}
+	if len(m.Description) > 0 {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintManager(dAtA, i, uint64(len(m.Description)))
+		i += copy(dAtA[i:], m.Description)
+	}
+	dAtA[i] = 0x42
+	i++
+	i = encodeVarintManager(dAtA, i, uint64(m.HyperParams.Size()))
+	n1, err := m.HyperParams.MarshalTo(dAtA[i:])
+	if err != nil {
+		return 0, err
+	}
+	i += n1
+	return i, nil
+}
+
 func (m *UploadModelRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -282,11 +435,11 @@ func (m *UploadModelRequest) MarshalTo(dAtA []byte) (int, error) {
 	dAtA[i] = 0xa
 	i++
 	i = encodeVarintManager(dAtA, i, uint64(m.Meta.Size()))
-	n1, err := m.Meta.MarshalTo(dAtA[i:])
+	n2, err := m.Meta.MarshalTo(dAtA[i:])
 	if err != nil {
 		return 0, err
 	}
-	i += n1
+	i += n2
 	if len(m.Model) > 0 {
 		dAtA[i] = 0x12
 		i++
@@ -352,6 +505,30 @@ func encodeVarintManager(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return offset + 1
 }
+func (m *Model) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Domain)
+	if l > 0 {
+		n += 1 + l + sovManager(uint64(l))
+	}
+	l = len(m.ModelType)
+	if l > 0 {
+		n += 1 + l + sovManager(uint64(l))
+	}
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovManager(uint64(l))
+	}
+	l = len(m.Description)
+	if l > 0 {
+		n += 1 + l + sovManager(uint64(l))
+	}
+	l = m.HyperParams.Size()
+	n += 1 + l + sovManager(uint64(l))
+	return n
+}
+
 func (m *UploadModelRequest) Size() (n int) {
 	var l int
 	_ = l
@@ -390,12 +567,26 @@ func sovManager(x uint64) (n int) {
 func sozManager(x uint64) (n int) {
 	return sovManager(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
+func (this *Model) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Model{`,
+		`Domain:` + fmt.Sprintf("%v", this.Domain) + `,`,
+		`ModelType:` + fmt.Sprintf("%v", this.ModelType) + `,`,
+		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
+		`Description:` + fmt.Sprintf("%v", this.Description) + `,`,
+		`HyperParams:` + strings.Replace(strings.Replace(this.HyperParams.String(), "HyperParams", "aggregatorpb.HyperParams", 1), `&`, ``, 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
 func (this *UploadModelRequest) String() string {
 	if this == nil {
 		return "nil"
 	}
 	s := strings.Join([]string{`&UploadModelRequest{`,
-		`Meta:` + strings.Replace(strings.Replace(this.Meta.String(), "Model", "uipb.Model", 1), `&`, ``, 1) + `,`,
+		`Meta:` + strings.Replace(strings.Replace(this.Meta.String(), "Model", "Model", 1), `&`, ``, 1) + `,`,
 		`Model:` + fmt.Sprintf("%v", this.Model) + `,`,
 		`}`,
 	}, "")
@@ -419,6 +610,202 @@ func valueToStringManager(v interface{}) string {
 	}
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
+}
+func (m *Model) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowManager
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Model: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Model: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Domain", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManager
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManager
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Domain = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ModelType", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManager
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManager
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ModelType = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManager
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManager
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManager
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthManager
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Description = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HyperParams", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowManager
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthManager
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.HyperParams.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipManager(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthManager
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *UploadModelRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -737,24 +1124,31 @@ var (
 func init() { proto.RegisterFile("protobuf/managerpb/manager.proto", fileDescriptorManager) }
 
 var fileDescriptorManager = []byte{
-	// 304 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x28, 0x28, 0xca, 0x2f,
-	0xc9, 0x4f, 0x2a, 0x4d, 0xd3, 0xcf, 0x4d, 0xcc, 0x4b, 0x4c, 0x4f, 0x2d, 0x2a, 0x48, 0x82, 0xb1,
-	0xf4, 0xc0, 0x52, 0x42, 0x9c, 0x70, 0x09, 0x29, 0xdd, 0xf4, 0xcc, 0x92, 0x8c, 0xd2, 0x24, 0xbd,
-	0xe4, 0xfc, 0x5c, 0xfd, 0xf4, 0xfc, 0xf4, 0x7c, 0x7d, 0xb8, 0x66, 0x10, 0x0f, 0xcc, 0x01, 0xb3,
-	0x20, 0x3a, 0xa5, 0xb4, 0x91, 0x94, 0xa7, 0x98, 0xe4, 0x18, 0x67, 0xeb, 0x17, 0xe4, 0x67, 0x23,
-	0xf4, 0x94, 0x66, 0x16, 0x24, 0xe9, 0x97, 0x66, 0x42, 0x14, 0x2b, 0x05, 0x72, 0x09, 0x85, 0x16,
-	0xe4, 0xe4, 0x27, 0xa6, 0xf8, 0xe6, 0xa7, 0xa4, 0xe6, 0x04, 0xa5, 0x16, 0x96, 0xa6, 0x16, 0x97,
-	0x08, 0xa9, 0x72, 0xb1, 0xe4, 0xa6, 0x96, 0x24, 0x4a, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x1b, 0x71,
-	0xeb, 0x81, 0xf4, 0xe8, 0x81, 0x55, 0x38, 0xb1, 0x9c, 0xb8, 0x27, 0xcf, 0x10, 0x04, 0x96, 0x16,
-	0x12, 0xe1, 0x62, 0xcd, 0x05, 0x09, 0x4a, 0x30, 0x29, 0x30, 0x6a, 0xf0, 0x04, 0x41, 0x38, 0x4a,
-	0xbe, 0x5c, 0xc2, 0x28, 0x46, 0x16, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x0a, 0x49, 0x72, 0x71, 0x80,
-	0xe5, 0xe3, 0x33, 0x53, 0xc0, 0xe6, 0xb2, 0x04, 0xb1, 0x83, 0xf9, 0x9e, 0x29, 0x42, 0xd2, 0x5c,
-	0x9c, 0x10, 0xa9, 0xd2, 0x22, 0x88, 0x59, 0x9c, 0x41, 0x10, 0xb5, 0xa1, 0x45, 0x39, 0x46, 0x91,
-	0x5c, 0xec, 0xbe, 0x90, 0xa0, 0x10, 0xf2, 0xe3, 0xe2, 0x46, 0x32, 0x59, 0x48, 0x56, 0x0f, 0x1e,
-	0x46, 0x7a, 0x98, 0x9e, 0x90, 0x92, 0xc3, 0x25, 0x0d, 0x71, 0x90, 0x12, 0x83, 0x93, 0xce, 0x85,
-	0x87, 0x72, 0x0c, 0x37, 0x1e, 0xca, 0x31, 0x7c, 0x78, 0x28, 0xc7, 0xd8, 0xf0, 0x48, 0x8e, 0x71,
-	0xc5, 0x23, 0x39, 0xc6, 0x13, 0x8f, 0xe4, 0x18, 0x2f, 0x3c, 0x92, 0x63, 0x7c, 0xf0, 0x48, 0x8e,
-	0xf1, 0xc5, 0x23, 0x39, 0x86, 0x0f, 0x8f, 0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0x48, 0x62, 0x03,
-	0x87, 0x98, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0x2c, 0xf0, 0xb6, 0x82, 0xbc, 0x01, 0x00, 0x00,
+	// 409 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x51, 0xb1, 0x8e, 0xd3, 0x40,
+	0x10, 0xf5, 0x82, 0x73, 0x77, 0x19, 0x5f, 0x81, 0x16, 0x84, 0x7c, 0x41, 0xb7, 0x58, 0xae, 0x4e,
+	0x08, 0x6c, 0xe9, 0x42, 0x47, 0x97, 0x0a, 0x8a, 0x20, 0x64, 0x11, 0x24, 0xaa, 0x68, 0x1d, 0x2f,
+	0x8e, 0x15, 0xdb, 0xbb, 0xac, 0xed, 0x22, 0x1d, 0x9f, 0xc0, 0x67, 0xf0, 0x09, 0x7c, 0x42, 0xca,
+	0x94, 0x54, 0x88, 0x98, 0x86, 0x32, 0x9f, 0x80, 0x3c, 0x1b, 0x12, 0x23, 0x44, 0x37, 0x6f, 0xde,
+	0x9b, 0xb7, 0x6f, 0x66, 0xc1, 0x53, 0x5a, 0xd6, 0x32, 0x6e, 0x3e, 0x84, 0x05, 0x2f, 0x79, 0x2a,
+	0xb4, 0x8a, 0xff, 0x54, 0x01, 0x52, 0x74, 0x78, 0x24, 0x46, 0xcf, 0xd2, 0xac, 0x5e, 0x36, 0x71,
+	0xb0, 0x90, 0x45, 0x98, 0xca, 0x54, 0x86, 0xc7, 0xe1, 0x0e, 0x21, 0xc0, 0xca, 0x4c, 0x8e, 0x5e,
+	0xf4, 0xe4, 0xc9, 0xf3, 0x7c, 0xbc, 0x0a, 0x95, 0x5c, 0x9d, 0x66, 0x78, 0x9a, 0x6a, 0x91, 0xf2,
+	0x5a, 0x76, 0x6f, 0x9e, 0x80, 0x19, 0xf6, 0xbf, 0x12, 0x18, 0x4c, 0x65, 0x22, 0x72, 0xfa, 0x10,
+	0xce, 0x12, 0x59, 0xf0, 0xac, 0x74, 0xef, 0x78, 0xe4, 0x66, 0x18, 0x1d, 0x10, 0xbd, 0x06, 0x28,
+	0x3a, 0xc1, 0xbc, 0x5e, 0x2b, 0xe1, 0xde, 0x45, 0x6e, 0x88, 0x9d, 0xb7, 0x6b, 0x25, 0x28, 0x05,
+	0xbb, 0xe4, 0x85, 0x70, 0x6d, 0x24, 0xb0, 0xa6, 0x1e, 0x38, 0x89, 0xa8, 0x16, 0x3a, 0x53, 0x75,
+	0x26, 0x4b, 0x77, 0x80, 0x54, 0xbf, 0x45, 0x27, 0x70, 0xb9, 0x5c, 0x2b, 0xa1, 0xe7, 0x8a, 0x6b,
+	0x5e, 0x54, 0xee, 0x85, 0x47, 0x6e, 0x9c, 0xdb, 0xab, 0xa0, 0x1f, 0x36, 0x78, 0xd9, 0x29, 0xde,
+	0xa0, 0x60, 0x62, 0x6f, 0xbe, 0x3f, 0xb6, 0x22, 0x67, 0x79, 0x6a, 0xf9, 0xef, 0x80, 0xce, 0x54,
+	0x2e, 0x79, 0x82, 0xf9, 0x23, 0xf1, 0xb1, 0x11, 0x55, 0x4d, 0x9f, 0x80, 0x5d, 0x88, 0x9a, 0xbb,
+	0x04, 0x1d, 0xef, 0x05, 0xc7, 0xb3, 0x06, 0x28, 0x3b, 0x18, 0xa1, 0x86, 0x3e, 0x80, 0x01, 0x2e,
+	0x82, 0x1b, 0x5f, 0x46, 0x06, 0xf8, 0x53, 0xb8, 0xff, 0x97, 0x6f, 0xa5, 0x64, 0x59, 0x09, 0x7a,
+	0x05, 0x17, 0xe6, 0x0e, 0x59, 0x82, 0xe6, 0x76, 0x74, 0x8e, 0xf8, 0x55, 0x42, 0x1f, 0x81, 0x39,
+	0xc8, 0xbc, 0xd1, 0xf9, 0xe1, 0x7a, 0x46, 0x3b, 0xd3, 0xf9, 0xed, 0x7b, 0x38, 0x9f, 0x9a, 0x0c,
+	0xf4, 0x35, 0x38, 0x3d, 0x67, 0x7a, 0xdd, 0x0b, 0xf7, 0xef, 0x26, 0x23, 0xf6, 0x3f, 0xda, 0x04,
+	0xf2, 0xad, 0xc9, 0xd3, 0xed, 0x8e, 0x59, 0xdf, 0x76, 0xcc, 0xda, 0xef, 0x18, 0xf9, 0xd4, 0x32,
+	0xf2, 0xa5, 0x65, 0x64, 0xd3, 0x32, 0xb2, 0x6d, 0x19, 0xf9, 0xd1, 0x32, 0xf2, 0xab, 0x65, 0xd6,
+	0xbe, 0x65, 0xe4, 0xf3, 0x4f, 0x66, 0xc5, 0x67, 0xf8, 0xe3, 0xe3, 0xdf, 0x01, 0x00, 0x00, 0xff,
+	0xff, 0x2e, 0x88, 0x8f, 0x9d, 0x8c, 0x02, 0x00, 0x00,
 }
