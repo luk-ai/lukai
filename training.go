@@ -284,6 +284,7 @@ func (mt *ModelType) processWork(
 			ModelWeights: weights,
 			// HyperParams isn't needed here since the server already has that info.
 			TimeTaken: timeTaken.Seconds(),
+			Started:   work.Started,
 			Metrics:   metricVals,
 		},
 	}); err != nil {
