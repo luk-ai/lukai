@@ -55,8 +55,10 @@ def _add_assign_add():
 
     group_assign = []
     group_assign_add = []
+    group_assign_add_quantized = []
 
     for v in tf.trainable_variables():
+        # Input variables
         name = "pok/update/var/"+v.name.replace(':','/')
         vin = tf.placeholder(v.dtype, v.shape, name=name)
         typedScale = typedScales.get(v.dtype)
@@ -65,7 +67,35 @@ def _add_assign_add():
             typedScales[v.dtype] = typedScale
 
         group_assign.append(v.assign(vin))
-        group_assign_add.append(v.assign_add(vin * typedScale))
+        assign_add = v.assign_add(vin * typedScale)
+        group_assign_add.append(assign_add)
+
+        # Add quantize assign_add + variable export
+        if v.dtype.base_dtype != tf.float32:
+            group_assign_add_quantized.append(assign_add)
+            continue
+
+        # Quantized output weights
+        flat_name = v.name.replace(':','/')
+        name = "pok/quant/out/" + flat_name
+        minv = tf.reduce_min(v, name=name+'/min')
+        maxv = tf.reduce_max(v, name=name+'/max')
+        quantized_dtype = tf.quint8
+        quantized = tf.quantize_v2(v, minv, maxv, quantized_dtype, name=name)
+
+        # Quantized input weights
+        name = "pok/quant/in/" + flat_name
+        inp = tf.placeholder(quantized_dtype, v.shape, name=name)
+        minp = tf.placeholder(tf.float32, name=name+'/min')
+        maxp = tf.placeholder(tf.float32, name=name+'/max')
+        dequantized = tf.dequantize(inp, minp, maxp)
+        assign_add = v.assign_add(dequantized * typedScale)
+        group_assign_add_quantized.append(assign_add)
+
 
     tf.group(*group_assign, name="pok/update/assign")
     tf.group(*group_assign_add, name="pok/update/assign_add")
+    tf.group(*group_assign_add_quantized, name="pok/update/assign_add_quant")
+
+
+

@@ -19,6 +19,7 @@ message HyperParams {
   int64 num_rounds = 3;
   double learning_rate = 4;
   int64 num_local_rounds = 5;
+  bool quantized_updates = 6;
 }
 
 message Work {
