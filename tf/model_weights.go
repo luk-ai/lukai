@@ -106,6 +106,48 @@ func (model *Model) ImportWeights(buf []byte) error {
 	return nil
 }
 
+// ImportAddWeights imports weights and then adds them to the current with a
+// scaler.
+func (model *Model) ImportAddWeights(scale float64, buf []byte) error {
+	gzr, err := gzip.NewReader(bytes.NewReader(buf))
+	if err != nil {
+		return err
+	}
+	defer gzr.Close()
+
+	dec := gob.NewDecoder(gzr)
+	weights, err := DecodeTensorMap(dec)
+	if err != nil {
+		return err
+	}
+
+	scaleTensor, err := tensorflow.NewTensor(scale)
+	if err != nil {
+		return err
+	}
+
+	feeds := map[tensorflow.Output]*tensorflow.Tensor{
+		model.Graph.Operation(PokVarScaleOp).Output(0): scaleTensor,
+	}
+	for _, variable := range model.Meta.TrainableVariables {
+		opName := PokVarPrefix + strings.Replace(variable, ":", "/", -1)
+		op := model.Graph.Operation(opName)
+		feeds[op.Output(0)] = weights[variable]
+	}
+
+	if _, err := model.Session.Run(
+		feeds,
+		nil,
+		[]*tensorflow.Operation{
+			model.Graph.Operation(PokAssignAddOp),
+		},
+	); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 const (
 	PokAssignOp    = "pok/update/assign"
 	PokAssignAddOp = "pok/update/assign_add"

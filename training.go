@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"log"
+	"runtime"
 	"time"
 
 	"github.com/cenkalti/backoff"
@@ -123,6 +124,9 @@ func (mt *ModelType) trainerWorker() error {
 		if err := mt.processWork(ctx, c, work); err != nil {
 			return errors.Wrapf(err, "failure while processing work: %+v", work.Id)
 		}
+		// Tensorflow doesn't free memory until the finalizer runs, and GC doesn't
+		// run very often since most memory allocations are in C.
+		runtime.GC()
 	}
 
 	return nil
@@ -142,8 +146,6 @@ func (mt *ModelType) processWork(
 	if err := model.ImportWeights(work.ModelWeights); err != nil {
 		return err
 	}
-	// Clear model weights to save memory.
-	work.ModelWeights = nil
 
 	cache := makeTFOpCache(model)
 
@@ -261,6 +263,10 @@ func (mt *ModelType) processWork(
 				)
 			}
 		}
+	}
+
+	if err := model.ImportAddWeights(-1.0, work.ModelWeights); err != nil {
+		return err
 	}
 
 	weights, err := model.ExportWeights()
