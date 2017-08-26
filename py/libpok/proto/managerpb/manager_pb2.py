@@ -13,17 +13,16 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
-from github.com.gogo.protobuf.gogoproto import gogo_pb2 as github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2
-from github.com.d4l3k.pok.protobuf.aggregatorpb import aggregator_pb2 as github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2
+from libpok.proto.aggregatorpb import aggregator_pb2 as github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='managerpb/manager.proto',
   package='managerpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x17managerpb/manager.proto\x12\tmanagerpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a;github.com/d4l3k/pok/protobuf/aggregatorpb/aggregator.proto\"\x85\x01\n\x05Model\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\"I\n\x12UploadModelRequest\x12$\n\x04meta\x18\x01 \x01(\x0b\x32\x10.managerpb.ModelB\x04\xc8\xde\x1f\x00\x12\r\n\x05model\x18\x02 \x01(\x0c\":\n\x13UploadModelResponse\x12\x10\n\x08model_id\x18\x01 \x01(\x04\x12\x11\n\tmodel_url\x18\x02 \x01(\t2Y\n\x07Manager\x12N\n\x0bUploadModel\x12\x1d.managerpb.UploadModelRequest\x1a\x1e.managerpb.UploadModelResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x17managerpb/manager.proto\x12\tmanagerpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a;libpok.proto/aggregatorpb/aggregator.proto\"\x85\x01\n\x05Model\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\"I\n\x12UploadModelRequest\x12$\n\x04meta\x18\x01 \x01(\x0b\x32\x10.managerpb.ModelB\x04\xc8\xde\x1f\x00\x12\r\n\x05model\x18\x02 \x01(\x0c\":\n\x13UploadModelResponse\x12\x10\n\x08model_id\x18\x01 \x01(\x04\x12\x11\n\tmodel_url\x18\x02 \x01(\t2Y\n\x07Manager\x12N\n\x0bUploadModel\x12\x1d.managerpb.UploadModelRequest\x1a\x1e.managerpb.UploadModelResponse\"\x00\x62\x06proto3')
   ,
-  dependencies=[github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.DESCRIPTOR,])
+  dependencies=[github_dot_com_dot_d4l3k_dot_pok_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.DESCRIPTOR,])
 
 
 

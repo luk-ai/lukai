@@ -30,7 +30,7 @@ godeps: .tensorflow
 	touch .tensorflow
 
 .PHONY: protobuf
-protobuf: protobuf/tensorflow $(PROTO_GO_FILES)
+protobuf: protobuf/tensorflow $(PROTO_GO_FILES) fixuppyproto
 
 current_dir = $(shell pwd)
 tensorflow_dir = "$(current_dir)/../../tensorflow/tensorflow/"
@@ -49,6 +49,9 @@ proto_import_paths=-I ${GOPATH}/src -I ${GOPATH}/src/github.com/grpc-ecosystem/g
 %.pb.go: %.proto
 	protoc --proto_path=${GOPATH}/src:. ${proto_import_paths} $< --gogoslick_out=plugins=grpc:. --grpc-gateway_out=logtostderr=true:.
 	python -m grpc_tools.protoc ${proto_import_paths} --python_out=${python_proto_dir} --grpc_python_out=${python_proto_dir} $<
+
+.PHONY: fixuppyproto
+fixuppyproto:
 	$(SED_INPLACE) '/import gogo_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
 	$(SED_INPLACE) 's/github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
 	$(SED_INPLACE) '/import annotations_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
@@ -60,6 +63,8 @@ proto_import_paths=-I ${GOPATH}/src -I ${GOPATH}/src/github.com/grpc-ecosystem/g
 .PHONY: clean
 clean:
 	find . -type f -name '*.pb.go' -delete
+	find . -type f -name '*_pb2_grpc.py' -delete
+	find . -type f -name '*_pb2.py' -delete
 
 .PHONY: loc
 loc:
