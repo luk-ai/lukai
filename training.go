@@ -143,6 +143,8 @@ func (mt *ModelType) processWork(
 	}
 	defer model.Close()
 
+	log.Printf("Fetching model took %s", time.Since(start))
+
 	if err := model.ImportWeights(work.ModelWeights); err != nil {
 		return err
 	}

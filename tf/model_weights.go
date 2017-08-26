@@ -9,6 +9,25 @@ import (
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
+// NumWeights returns the total number of weights the model has.
+func (model *Model) NumWeights() (int64, error) {
+	weights, err := model.Weights()
+	if err != nil {
+		return 0, err
+	}
+	total := int64(0)
+	for _, w := range weights {
+		subtotal := int64(1)
+		for _, dim := range w.Shape() {
+			if dim >= 0 {
+				subtotal *= dim
+			}
+		}
+		total += subtotal
+	}
+	return total, nil
+}
+
 func (model *Model) TrainableVariablesOutputs() ([]tensorflow.Output, error) {
 	var outputs []tensorflow.Output
 	for _, name := range model.Meta.TrainableVariables {
