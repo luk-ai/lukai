@@ -1,9 +1,9 @@
 package tf
 
 import (
-	"bytes"
 	"compress/gzip"
 	"encoding/gob"
+	"io"
 	"strings"
 
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
@@ -11,7 +11,7 @@ import (
 
 // NumWeights returns the total number of weights the model has.
 func (model *Model) NumWeights() (int64, error) {
-	weights, err := model.Weights()
+	weights, err := model.WeightsMap()
 	if err != nil {
 		return 0, err
 	}
@@ -28,7 +28,7 @@ func (model *Model) NumWeights() (int64, error) {
 	return total, nil
 }
 
-func (model *Model) TrainableVariablesOutputs() ([]tensorflow.Output, error) {
+func (model *Model) trainableVariablesOutputs() ([]tensorflow.Output, error) {
 	var outputs []tensorflow.Output
 	for _, name := range model.Meta.TrainableVariables {
 		op, n, err := ParseNodeOutput(name)
@@ -40,8 +40,8 @@ func (model *Model) TrainableVariablesOutputs() ([]tensorflow.Output, error) {
 	return outputs, nil
 }
 
-func (model *Model) Weights() ([]*tensorflow.Tensor, error) {
-	outputs, err := model.TrainableVariablesOutputs()
+func (model *Model) weights() ([]*tensorflow.Tensor, error) {
+	outputs, err := model.trainableVariablesOutputs()
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (model *Model) Weights() ([]*tensorflow.Tensor, error) {
 func (model *Model) WeightsMap() (map[string]*tensorflow.Tensor, error) {
 	m := map[string]*tensorflow.Tensor{}
 
-	weights, err := model.Weights()
+	weights, err := model.weights()
 	if err != nil {
 		return nil, err
 	}
@@ -72,39 +72,26 @@ func (model *Model) WeightsMap() (map[string]*tensorflow.Tensor, error) {
 	return m, nil
 }
 
-func (model *Model) ExportWeights() ([]byte, error) {
+func (model *Model) ExportWeights(wr io.Writer) error {
 	weights, err := model.WeightsMap()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var buf bytes.Buffer
-	gzw := gzip.NewWriter(&buf)
+	gzw := gzip.NewWriter(wr)
 	defer gzw.Close()
 
 	enc := gob.NewEncoder(gzw)
 	if err := EncodeTensorMap(enc, weights); err != nil {
-		return nil, err
+		return err
 	}
 	if err := gzw.Close(); err != nil {
-		return nil, err
+		return err
 	}
-	return buf.Bytes(), nil
+	return nil
 }
 
-// ImportWeights imports a by
-func (model *Model) ImportWeights(buf []byte) error {
-	gzr, err := gzip.NewReader(bytes.NewReader(buf))
-	if err != nil {
-		return err
-	}
-	defer gzr.Close()
-
-	dec := gob.NewDecoder(gzr)
-	weights, err := DecodeTensorMap(dec)
-	if err != nil {
-		return err
-	}
-
+// SetWeights sets the weights of the model.
+func (model *Model) SetWeights(weights map[string]*tensorflow.Tensor) error {
 	feeds := map[tensorflow.Output]*tensorflow.Tensor{}
 	for _, variable := range model.Meta.TrainableVariables {
 		opName := PokVarPrefix + strings.Replace(variable, ":", "/", -1)
@@ -125,21 +112,9 @@ func (model *Model) ImportWeights(buf []byte) error {
 	return nil
 }
 
-// ImportAddWeights imports weights and then adds them to the current with a
+// AddWeights imports weights and then adds them to the current with a
 // scaler.
-func (model *Model) ImportAddWeights(scale float64, buf []byte) error {
-	gzr, err := gzip.NewReader(bytes.NewReader(buf))
-	if err != nil {
-		return err
-	}
-	defer gzr.Close()
-
-	dec := gob.NewDecoder(gzr)
-	weights, err := DecodeTensorMap(dec)
-	if err != nil {
-		return err
-	}
-
+func (model *Model) AddWeights(scale float64, weights map[string]*tensorflow.Tensor) error {
 	scaleTensor, err := tensorflow.NewTensor(scale)
 	if err != nil {
 		return err
@@ -167,36 +142,24 @@ func (model *Model) ImportAddWeights(scale float64, buf []byte) error {
 	return nil
 }
 
+func LoadWeights(r io.Reader) (map[string]*tensorflow.Tensor, error) {
+	gzr, err := gzip.NewReader(r)
+	if err != nil {
+		return nil, err
+	}
+	defer gzr.Close()
+
+	decoder := gob.NewDecoder(gzr)
+	m, err := DecodeTensorMap(decoder)
+	if err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 const (
 	PokAssignOp    = "pok/update/assign"
 	PokAssignAddOp = "pok/update/assign_add"
 	PokVarPrefix   = "pok/update/var/"
 	PokVarScaleOp  = "pok/update/scale"
 )
-
-// AddScaledWeights computes:
-//   trainable variables += scale * weights
-func (model *Model) AddScaledWeights(
-	weights []*tensorflow.Tensor, scale *tensorflow.Tensor,
-) error {
-	feeds := map[tensorflow.Output]*tensorflow.Tensor{
-		model.Graph.Operation(PokVarScaleOp).Output(0): scale,
-	}
-	for i, variable := range model.Meta.TrainableVariables {
-		opName := PokVarPrefix + strings.Replace(variable, ":", "/", -1)
-		op := model.Graph.Operation(opName)
-		feeds[op.Output(0)] = weights[i]
-	}
-
-	if _, err := model.Session.Run(
-		feeds,
-		nil,
-		[]*tensorflow.Operation{
-			model.Graph.Operation(PokAssignAddOp),
-		},
-	); err != nil {
-		return err
-	}
-
-	return nil
-}

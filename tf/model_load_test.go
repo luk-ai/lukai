@@ -74,7 +74,7 @@ func TestModelLoadPrefix(t *testing.T) {
 	if err := model.Load(file); err != nil {
 		t.Fatal(err)
 	}
-	outputs, err := model.TrainableVariablesOutputs()
+	outputs, err := model.trainableVariablesOutputs()
 	if err != nil {
 		t.Fatal(err)
 	}

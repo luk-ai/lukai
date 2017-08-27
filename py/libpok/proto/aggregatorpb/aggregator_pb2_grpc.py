@@ -17,9 +17,9 @@ class AggregatorStub(object):
     self.GetWork = channel.unary_stream(
         '/aggregatorpb.Aggregator/GetWork',
         request_serializer=aggregatorpb_dot_aggregator__pb2.GetWorkRequest.SerializeToString,
-        response_deserializer=aggregatorpb_dot_aggregator__pb2.Work.FromString,
+        response_deserializer=aggregatorpb_dot_aggregator__pb2.GetWorkResponse.FromString,
         )
-    self.ReportWork = channel.unary_unary(
+    self.ReportWork = channel.stream_unary(
         '/aggregatorpb.Aggregator/ReportWork',
         request_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkRequest.SerializeToString,
         response_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkResponse.FromString,
@@ -47,7 +47,7 @@ class AggregatorServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def ReportWork(self, request, context):
+  def ReportWork(self, request_iterator, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -74,9 +74,9 @@ def add_AggregatorServicer_to_server(servicer, server):
       'GetWork': grpc.unary_stream_rpc_method_handler(
           servicer.GetWork,
           request_deserializer=aggregatorpb_dot_aggregator__pb2.GetWorkRequest.FromString,
-          response_serializer=aggregatorpb_dot_aggregator__pb2.Work.SerializeToString,
+          response_serializer=aggregatorpb_dot_aggregator__pb2.GetWorkResponse.SerializeToString,
       ),
-      'ReportWork': grpc.unary_unary_rpc_method_handler(
+      'ReportWork': grpc.stream_unary_rpc_method_handler(
           servicer.ReportWork,
           request_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkRequest.FromString,
           response_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkResponse.SerializeToString,
@@ -110,9 +110,9 @@ class EdgeStub(object):
     self.GetWork = channel.unary_stream(
         '/aggregatorpb.Edge/GetWork',
         request_serializer=aggregatorpb_dot_aggregator__pb2.GetWorkRequest.SerializeToString,
-        response_deserializer=aggregatorpb_dot_aggregator__pb2.Work.FromString,
+        response_deserializer=aggregatorpb_dot_aggregator__pb2.GetWorkResponse.FromString,
         )
-    self.ReportWork = channel.unary_unary(
+    self.ReportWork = channel.stream_unary(
         '/aggregatorpb.Edge/ReportWork',
         request_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkRequest.SerializeToString,
         response_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkResponse.FromString,
@@ -135,7 +135,7 @@ class EdgeServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def ReportWork(self, request, context):
+  def ReportWork(self, request_iterator, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -155,9 +155,9 @@ def add_EdgeServicer_to_server(servicer, server):
       'GetWork': grpc.unary_stream_rpc_method_handler(
           servicer.GetWork,
           request_deserializer=aggregatorpb_dot_aggregator__pb2.GetWorkRequest.FromString,
-          response_serializer=aggregatorpb_dot_aggregator__pb2.Work.SerializeToString,
+          response_serializer=aggregatorpb_dot_aggregator__pb2.GetWorkResponse.SerializeToString,
       ),
-      'ReportWork': grpc.unary_unary_rpc_method_handler(
+      'ReportWork': grpc.stream_unary_rpc_method_handler(
           servicer.ReportWork,
           request_deserializer=aggregatorpb_dot_aggregator__pb2.ReportWorkRequest.FromString,
           response_serializer=aggregatorpb_dot_aggregator__pb2.ReportWorkResponse.SerializeToString,

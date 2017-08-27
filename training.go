@@ -114,14 +114,25 @@ func (mt *ModelType) trainerWorker() error {
 		default:
 		}
 
-		work, err := stream.Recv()
+		resp, err := stream.Recv()
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
 			return err
 		}
-		if err := mt.processWork(ctx, c, work); err != nil {
+		weights := ReadModelWeights(func() (*aggregatorpb.ModelWeightChunk, error) {
+			resp, err := stream.Recv()
+			if err != nil {
+				return nil, err
+			}
+			return resp.GetWeights(), nil
+		})
+		if err != nil {
+			return err
+		}
+		work := resp.GetWork()
+		if err := mt.processWork(ctx, c, work, weights); err != nil {
 			return errors.Wrapf(err, "failure while processing work: %+v", work.Id)
 		}
 		// Tensorflow doesn't free memory until the finalizer runs, and GC doesn't
@@ -132,9 +143,63 @@ func (mt *ModelType) trainerWorker() error {
 	return nil
 }
 
+var modelWeightChunkSize = 100 * units.KB
+
+func ReadModelWeights(recv func() (*aggregatorpb.ModelWeightChunk, error)) io.ReadCloser {
+	r, w := io.Pipe()
+	go func() {
+		for {
+			resp, err := recv()
+			if err != nil {
+				w.CloseWithError(err)
+				return
+			}
+			if resp == nil {
+				w.CloseWithError(errors.New("received something other than weight chunk"))
+				return
+			}
+			w.Write(resp.Body)
+			if !resp.More {
+				w.Close()
+				return
+			}
+		}
+	}()
+	return r
+}
+
+func SendModelWeights(r io.Reader, send func(aggregatorpb.ModelWeightChunk) error) error {
+	buf := make([]byte, modelWeightChunkSize)
+	size := 0
+	for {
+		n, err := r.Read(buf[size:])
+		if err != nil && err != io.EOF {
+			return err
+		}
+		size += n
+		if size == modelWeightChunkSize || err == io.EOF {
+			if err := send(aggregatorpb.ModelWeightChunk{
+				Body: buf[:size],
+				More: err == io.EOF,
+			}); err != nil {
+				return err
+			}
+			size = 0
+		}
+		if err == io.EOF {
+			return nil
+		}
+	}
+}
+
 func (mt *ModelType) processWork(
-	ctx context.Context, c aggregatorpb.EdgeClient, work *aggregatorpb.Work,
+	ctx context.Context,
+	c aggregatorpb.EdgeClient,
+	work *aggregatorpb.Work,
+	weightsReader io.ReadCloser,
 ) error {
+	defer weightsReader.Close()
+
 	log.Printf("Training %+v", work.Id)
 	start := time.Now()
 	model, err := tf.GetModel(work.ModelUrl)
@@ -145,7 +210,12 @@ func (mt *ModelType) processWork(
 
 	log.Printf("Fetching model took %s", time.Since(start))
 
-	if err := model.ImportWeights(work.ModelWeights); err != nil {
+	weights, err := tf.LoadWeights(weightsReader)
+	if err != nil {
+		return err
+	}
+
+	if err := model.SetWeights(weights); err != nil {
 		return err
 	}
 
@@ -267,12 +337,7 @@ func (mt *ModelType) processWork(
 		}
 	}
 
-	if err := model.ImportAddWeights(-1.0, work.ModelWeights); err != nil {
-		return err
-	}
-
-	weights, err := model.ExportWeights()
-	if err != nil {
+	if err := model.AddWeights(-1.0, weights); err != nil {
 		return err
 	}
 
@@ -283,19 +348,45 @@ func (mt *ModelType) processWork(
 
 	timeTaken := time.Since(start)
 	log.Printf("Training took %s", timeTaken)
-	if _, err := c.ReportWork(ctx, &aggregatorpb.ReportWorkRequest{
-		Work: aggregatorpb.Work{
-			Id:           work.Id,
-			NumExamples:  int64(exampleCount),
-			NumClients:   1,
-			Epoch:        work.Epoch,
-			ModelWeights: weights,
-			// HyperParams isn't needed here since the server already has that info.
-			TimeTaken: timeTaken.Seconds(),
-			Started:   work.Started,
-			Metrics:   metricVals,
+
+	stream, err := c.ReportWork(ctx)
+	if err != nil {
+		return err
+	}
+	if err := stream.Send(&aggregatorpb.ReportWorkRequest{
+		Type: &aggregatorpb.ReportWorkRequest_Work{
+			&aggregatorpb.Work{
+				Id:          work.Id,
+				NumExamples: int64(exampleCount),
+				NumClients:  1,
+				Epoch:       work.Epoch,
+				// HyperParams isn't needed here since the server already has that info.
+				TimeTaken: timeTaken.Seconds(),
+				Started:   work.Started,
+				Metrics:   metricVals,
+			},
 		},
 	}); err != nil {
+		return err
+	}
+
+	finalWeightsR, finalWeightsW := io.Pipe()
+	defer finalWeightsW.Close()
+	if err := model.ExportWeights(finalWeightsW); err != nil {
+		return err
+	}
+
+	if err := SendModelWeights(finalWeightsR, func(chunk aggregatorpb.ModelWeightChunk) error {
+		return stream.Send(&aggregatorpb.ReportWorkRequest{
+			Type: &aggregatorpb.ReportWorkRequest_Weights{
+				&chunk,
+			},
+		})
+	}); err != nil {
+		return err
+	}
+
+	if _, err := stream.CloseAndRecv(); err != nil {
 		return err
 	}
 

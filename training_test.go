@@ -58,8 +58,8 @@ func (s *testEdgeServer) GetWork(
 	return errNotImplemented
 }
 
-func (s *testEdgeServer) ReportWork(ctx context.Context, req *aggregatorpb.ReportWorkRequest) (*aggregatorpb.ReportWorkResponse, error) {
-	return nil, errNotImplemented
+func (s *testEdgeServer) ReportWork(stream aggregatorpb.Edge_ReportWorkServer) error {
+	return errNotImplemented
 }
 
 func newTestModelType(t *testing.T) (*ModelType, func()) {

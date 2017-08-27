@@ -1,15 +1,14 @@
 package tf
 
 import (
+	"bytes"
 	"math"
 	"testing"
-
-	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
 func TestModelWeights(t *testing.T) {
 	model := loadTestModel(t)
-	weights, err := model.Weights()
+	weights, err := model.weights()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -21,21 +20,22 @@ func TestModelWeights(t *testing.T) {
 
 func TestAddScaledWeights(t *testing.T) {
 	model := loadTestModel(t)
-	weights, err := model.Weights()
+	weights, err := model.weights()
 	if err != nil {
 		t.Fatal(err)
 	}
 	var1 := weights[0].Value().([][]float32)
 
-	scale, err := tensorflow.NewTensor(0.5)
+	weightsMap, err := model.WeightsMap()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := model.AddScaledWeights(weights, scale); err != nil {
+
+	if err := model.AddWeights(0.5, weightsMap); err != nil {
 		t.Fatal(err)
 	}
 
-	weights2, err := model.Weights()
+	weights2, err := model.weights()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,11 +54,15 @@ func TestAddScaledWeights(t *testing.T) {
 
 func TestImportExportWeights(t *testing.T) {
 	model := loadTestModel(t)
-	weights, err := model.ExportWeights()
+	var buf bytes.Buffer
+	if err := model.ExportWeights(&buf); err != nil {
+		t.Fatal(err)
+	}
+	weights, err := LoadWeights(&buf)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := model.ImportWeights(weights); err != nil {
+	if err := model.SetWeights(weights); err != nil {
 		t.Fatal(err)
 	}
 }
