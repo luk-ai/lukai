@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	lru "github.com/hashicorp/golang-lru"
 	"github.com/pkg/errors"
 
 	"github.com/d4l3k/pok/debounce"
@@ -16,6 +17,10 @@ import (
 var (
 	ErrNotImplemented = errors.New("not implemented")
 	PokEdgeAddress    = "localhost:5003"
+
+	// ModelCacheSize controls how many training models are cached between
+	// training iterations.
+	ModelCacheSize = 3
 
 	outOfDateModelTimeout = 24 * time.Hour
 )
@@ -45,6 +50,8 @@ type ModelType struct {
 		saveIndex func()
 		stop      func()
 	}
+
+	modelCache *lru.Cache
 }
 
 func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
@@ -68,6 +75,14 @@ func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 			}
 		},
 	)
+
+	var err error
+	mt.modelCache, err = lru.NewWithEvict(ModelCacheSize, func(key, val interface{}) {
+		val.(*tf.Model).Close()
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	if err := mt.loadExamplesMeta(); err != nil {
 		return nil, err

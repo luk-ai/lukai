@@ -79,6 +79,8 @@ func (mt *ModelType) StopTraining() error {
 
 	mt.training.stop <- struct{}{}
 
+	mt.modelCache.Purge()
+
 	return nil
 }
 
@@ -154,13 +156,21 @@ func (mt *ModelType) processWork(
 
 	log.Printf("Training %+v", work.Id)
 	start := time.Now()
-	model, err := tf.GetModel(work.ModelUrl)
-	if err != nil {
-		return err
-	}
-	defer model.Close()
+	var model *tf.Model
+	modelI, ok := mt.modelCache.Get(work.ModelUrl)
+	if ok {
+		log.Printf("Model from cache")
+		model = modelI.(*tf.Model)
+	} else {
+		var err error
+		model, err = tf.GetModel(work.ModelUrl)
+		if err != nil {
+			return err
+		}
+		mt.modelCache.Add(work.ModelUrl, model)
 
-	log.Printf("Fetching model took %s", time.Since(start))
+		log.Printf("Fetching model took %s", time.Since(start))
+	}
 
 	weights, err := tf.LoadWeights(weightsReader)
 	if err != nil {
