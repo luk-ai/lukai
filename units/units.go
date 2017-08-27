@@ -2,7 +2,7 @@ package units
 
 import "time"
 
-var (
+const (
 	B  = 1
 	KB = 1000 * B
 	MB = 1000 * KB
@@ -11,6 +11,6 @@ var (
 	PB = 1000 * TB
 )
 
-var (
+const (
 	Day = 24 * time.Hour
 )

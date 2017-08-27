@@ -9,6 +9,7 @@ import (
 
 	"github.com/cenkalti/backoff"
 	"github.com/d4l3k/pok/metrics"
+	"github.com/d4l3k/pok/net"
 	"github.com/d4l3k/pok/protobuf/aggregatorpb"
 	"github.com/d4l3k/pok/protobuf/clientpb"
 	"github.com/d4l3k/pok/tf"
@@ -121,7 +122,7 @@ func (mt *ModelType) trainerWorker() error {
 		if err != nil {
 			return err
 		}
-		weights := ReadModelWeights(func() (*aggregatorpb.ModelWeightChunk, error) {
+		weights := net.ReadModelWeights(func() (*aggregatorpb.ModelWeightChunk, error) {
 			resp, err := stream.Recv()
 			if err != nil {
 				return nil, err
@@ -141,55 +142,6 @@ func (mt *ModelType) trainerWorker() error {
 	}
 
 	return nil
-}
-
-var modelWeightChunkSize = 100 * units.KB
-
-func ReadModelWeights(recv func() (*aggregatorpb.ModelWeightChunk, error)) io.ReadCloser {
-	r, w := io.Pipe()
-	go func() {
-		for {
-			resp, err := recv()
-			if err != nil {
-				w.CloseWithError(err)
-				return
-			}
-			if resp == nil {
-				w.CloseWithError(errors.New("received something other than weight chunk"))
-				return
-			}
-			w.Write(resp.Body)
-			if !resp.More {
-				w.Close()
-				return
-			}
-		}
-	}()
-	return r
-}
-
-func SendModelWeights(r io.Reader, send func(aggregatorpb.ModelWeightChunk) error) error {
-	buf := make([]byte, modelWeightChunkSize)
-	size := 0
-	for {
-		n, err := r.Read(buf[size:])
-		if err != nil && err != io.EOF {
-			return err
-		}
-		size += n
-		if size == modelWeightChunkSize || err == io.EOF {
-			if err := send(aggregatorpb.ModelWeightChunk{
-				Body: buf[:size],
-				More: err == io.EOF,
-			}); err != nil {
-				return err
-			}
-			size = 0
-		}
-		if err == io.EOF {
-			return nil
-		}
-	}
 }
 
 func (mt *ModelType) processWork(
@@ -370,19 +322,18 @@ func (mt *ModelType) processWork(
 		return err
 	}
 
-	finalWeightsR, finalWeightsW := io.Pipe()
-	defer finalWeightsW.Close()
-	if err := model.ExportWeights(finalWeightsW); err != nil {
-		return err
-	}
-
-	if err := SendModelWeights(finalWeightsR, func(chunk aggregatorpb.ModelWeightChunk) error {
+	w := net.NewModelWeightsWriter(func(chunk aggregatorpb.ModelWeightChunk) error {
 		return stream.Send(&aggregatorpb.ReportWorkRequest{
 			Type: &aggregatorpb.ReportWorkRequest_Weights{
 				&chunk,
 			},
 		})
-	}); err != nil {
+	})
+
+	if err := model.ExportWeights(w); err != nil {
+		return err
+	}
+	if err := w.Close(); err != nil {
 		return err
 	}
 

@@ -5,16 +5,16 @@ import (
 	"net"
 	"os"
 	"testing"
-	"time"
 
 	"golang.org/x/net/context"
 
-	"github.com/cenkalti/backoff"
-	"github.com/d4l3k/pok/protobuf/aggregatorpb"
+	"google.golang.org/grpc"
+
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
-	"google.golang.org/grpc"
+	"github.com/d4l3k/pok/protobuf/aggregatorpb"
+	"github.com/d4l3k/pok/testutil"
 )
 
 var errNotImplemented = errors.New("not implemented")
@@ -106,7 +106,7 @@ func TestModelTraining(t *testing.T) {
 	mt.training.Unlock()
 
 	mt.StopTraining()
-	succeedsSoon(t, func() error {
+	testutil.SucceedsSoon(t, func() error {
 		mt.training.Lock()
 		defer mt.training.Unlock()
 
@@ -115,13 +115,4 @@ func TestModelTraining(t *testing.T) {
 		}
 		return nil
 	})
-}
-
-func succeedsSoon(t *testing.T, f func() error) {
-	opts := backoff.NewExponentialBackOff()
-	opts.MaxElapsedTime = 15 * time.Second
-	opts.InitialInterval = 1 * time.Microsecond
-	if err := backoff.Retry(f, opts); err != nil {
-		t.Fatal(err)
-	}
 }
