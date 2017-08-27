@@ -129,10 +129,10 @@ func (mt *ModelType) trainerWorker() error {
 			}
 			return resp.GetWeights(), nil
 		})
-		if err != nil {
-			return err
-		}
 		work := resp.GetWork()
+		if work == nil {
+			return errors.New("expected work")
+		}
 		if err := mt.processWork(ctx, c, work, weights); err != nil {
 			return errors.Wrapf(err, "failure while processing work: %+v", work.Id)
 		}
@@ -164,11 +164,11 @@ func (mt *ModelType) processWork(
 
 	weights, err := tf.LoadWeights(weightsReader)
 	if err != nil {
-		return err
+		return errors.Wrapf(err, "loading weights")
 	}
 
 	if err := model.SetWeights(weights); err != nil {
-		return err
+		return errors.Wrapf(err, "set weights")
 	}
 
 	cache := makeTFOpCache(model)
@@ -303,8 +303,10 @@ func (mt *ModelType) processWork(
 
 	stream, err := c.ReportWork(ctx)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "grpc ReportWork stream open")
 	}
+	defer stream.CloseSend()
+
 	if err := stream.Send(&aggregatorpb.ReportWorkRequest{
 		Type: &aggregatorpb.ReportWorkRequest_Work{
 			&aggregatorpb.Work{
@@ -319,7 +321,7 @@ func (mt *ModelType) processWork(
 			},
 		},
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "stream.Send")
 	}
 
 	w := net.NewModelWeightsWriter(func(chunk aggregatorpb.ModelWeightChunk) error {
@@ -331,14 +333,14 @@ func (mt *ModelType) processWork(
 	})
 
 	if err := model.ExportWeights(w); err != nil {
-		return err
+		return errors.Wrapf(err, "model.ExportWeights")
 	}
 	if err := w.Close(); err != nil {
-		return err
+		return errors.Wrapf(err, "ModelWeightsWriter.Close")
 	}
 
 	if _, err := stream.CloseAndRecv(); err != nil {
-		return err
+		return errors.Wrap(err, "stream.CloseAndRecv")
 	}
 
 	return nil

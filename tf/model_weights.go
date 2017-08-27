@@ -6,6 +6,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
@@ -75,17 +76,17 @@ func (model *Model) WeightsMap() (map[string]*tensorflow.Tensor, error) {
 func (model *Model) ExportWeights(wr io.Writer) error {
 	weights, err := model.WeightsMap()
 	if err != nil {
-		return err
+		return errors.Wrapf(err, "model.WeightsMap")
 	}
 	gzw := gzip.NewWriter(wr)
 	defer gzw.Close()
 
 	enc := gob.NewEncoder(gzw)
 	if err := EncodeTensorMap(enc, weights); err != nil {
-		return err
+		return errors.Wrapf(err, "EncodeTensorMap")
 	}
 	if err := gzw.Close(); err != nil {
-		return err
+		return errors.Wrapf(err, "gzip.Close")
 	}
 	return nil
 }

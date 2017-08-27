@@ -2,6 +2,8 @@ package net
 
 import (
 	"bytes"
+	"compress/gzip"
+	"crypto/rand"
 	"errors"
 	"io"
 	"reflect"
@@ -19,7 +21,6 @@ func TestModelWeightsWriter(t *testing.T) {
 
 	var expect bytes.Buffer
 	w := NewModelWeightsWriter(func(chunk aggregatorpb.ModelWeightChunk) error {
-		chunk.Body = append([]byte{}, chunk.Body...)
 		chunkChan <- &chunk
 		return nil
 	})
@@ -44,9 +45,47 @@ func TestModelWeightsWriter(t *testing.T) {
 
 	mw := io.MultiWriter(w, &expect)
 
-	mw.Write([]byte(`test 1234 ajksdfklajsdfklasdkjflasdf`))
-	mw.Write(make([]byte, 1*units.MB))
-	mw.Write([]byte(`last part of the message`))
+	gw := gzip.NewWriter(mw)
+
+	if _, err := gw.Write([]byte(`first part of the message`)); err != nil {
+		t.Fatal(err)
+	}
+	msg := make([]byte, 1*units.MB)
+	if _, err := rand.Read(msg); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := gw.Write(msg); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := gw.Write([]byte(`middle part of the message`)); err != nil {
+		t.Fatal(err)
+	}
+
+	for i := 0; i < 1000; i++ {
+		msg = make([]byte, 1537*units.B)
+		if _, err := rand.Read(msg); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := gw.Write(msg); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	msg = make([]byte, 1*units.MB)
+	if _, err := rand.Read(msg); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := gw.Write(msg); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := gw.Write([]byte(`last part of the message`)); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := gw.Close(); err != nil {
+		t.Fatal(err)
+	}
 
 	if err := w.Close(); err != nil {
 		t.Fatal(err)

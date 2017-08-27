@@ -1,14 +1,15 @@
 package net
 
 import (
-	"errors"
 	"io"
+
+	"github.com/pkg/errors"
 
 	"github.com/d4l3k/pok/protobuf/aggregatorpb"
 	"github.com/d4l3k/pok/units"
 )
 
-const ModelWeightChunkSize = 100 * units.KB
+const ModelWeightChunkSize = 64 * units.KB
 
 func ReadModelWeights(recv func() (*aggregatorpb.ModelWeightChunk, error)) io.ReadCloser {
 	r, w := io.Pipe()
@@ -61,11 +62,13 @@ func (w *ModelWeightsWriter) Write(b []byte) (int, error) {
 }
 
 func (w *ModelWeightsWriter) sendChunk(more bool) error {
+	body := make([]byte, w.size)
+	copy(body, w.buf[:w.size])
 	if err := w.send(aggregatorpb.ModelWeightChunk{
-		Body: w.buf[:w.size],
+		Body: body,
 		More: more,
 	}); err != nil {
-		return err
+		return errors.Wrapf(err, "sendChunk failed: more = %b", more)
 	}
 	w.size = 0
 	return nil
