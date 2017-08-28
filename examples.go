@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"os"
 	"path"
@@ -289,4 +290,73 @@ func (mt *ModelType) getNExamples(n int64) ([]example, error) {
 	}
 
 	return examples, nil
+}
+
+// getExampleBatch returns a batched set of n examples.
+func (mt *ModelType) getExampleBatch(
+	batchers batcherCache, cache tfOpCache, n int64,
+) ([]example, error) {
+	examples, err := mt.getNExamples(n)
+	if err != nil {
+		return nil, err
+	}
+	if n == 1 {
+		return examples, nil
+	}
+	if int64(len(examples)) < n {
+		log.Printf("don't have enough examples for batching; need %d; have %d", n, len(examples))
+		return examples, nil
+	}
+
+	ex := example{
+		feeds: map[string]*tensorflow.Tensor{},
+	}
+
+	values := map[string][]*tensorflow.Tensor{}
+	for _, example := range examples {
+		for name, val := range example.feeds {
+			_, ok := batchers[name]
+			if !ok {
+				feed, err := cache.resolveFeed(name)
+				if err != nil {
+					return nil, err
+				}
+				shape, err := feed.Shape().ToSlice()
+				if err != nil {
+					return nil, err
+				}
+				batchers[name], err = tf.NewTensorBatcher(int(n), val.DataType(), shape)
+				if err != nil {
+					return nil, errors.Wrapf(err, "feed name %q", name)
+				}
+			}
+			values[name] = append(values[name], val)
+		}
+		ex.fetches = example.fetches
+		ex.targets = example.targets
+	}
+
+	for feed, values := range values {
+		batcher := batchers[feed]
+		out, err := batcher.Batch(values)
+		if err != nil {
+			return nil, errors.Wrapf(err, "feed %q", feed)
+		}
+		ex.feeds[feed] = out
+	}
+	return []example{ex}, nil
+}
+
+type batcherCache map[string]*tf.Batcher
+
+func (c batcherCache) Close() error {
+	for _, batcher := range c {
+		if batcher == nil {
+			continue
+		}
+		if err := batcher.Close(); err != nil {
+			return err
+		}
+	}
+	return nil
 }

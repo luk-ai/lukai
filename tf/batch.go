@@ -12,11 +12,12 @@ import (
 // Batcher takes a fixed number of tensors and concatenates them into one larger
 // tensor. This is mostly used for creating mini-batches of tensors for SGD.
 type Batcher struct {
-	shape  []int64
-	n      int
-	values []tensorflow.Output
-	out    tensorflow.Output
-	graph  *tensorflow.Graph
+	shape   []int64
+	n       int
+	values  []tensorflow.Output
+	out     tensorflow.Output
+	graph   *tensorflow.Graph
+	session *tensorflow.Session
 }
 
 // NewTensorBatcher returns a new Batcher with the specified params. Shape should
@@ -49,18 +50,23 @@ func NewTensorBatcher(n int, dtype tensorflow.DataType, shape []int64) (*Batcher
 	if err != nil {
 		return nil, err
 	}
+	session, err := tensorflow.NewSession(graph, nil)
+	if err != nil {
+		return nil, err
+	}
 	return &Batcher{
-		shape:  shape,
-		n:      n,
-		values: values,
-		out:    output,
-		graph:  graph,
+		shape:   shape,
+		n:       n,
+		values:  values,
+		out:     output,
+		graph:   graph,
+		session: session,
 	}, nil
 }
 
 // Batch takes in a session and values and returns a single output tensor that
 // has all the values concatenated.
-func (m *Batcher) Batch(session *tensorflow.Session, values []*tensorflow.Tensor) (*tensorflow.Tensor, error) {
+func (m *Batcher) Batch(values []*tensorflow.Tensor) (*tensorflow.Tensor, error) {
 	if len(values) != m.n {
 		return nil, errors.Errorf("expected %d values; got %d", m.n, len(values))
 	}
@@ -68,7 +74,7 @@ func (m *Batcher) Batch(session *tensorflow.Session, values []*tensorflow.Tensor
 	for i, val := range values {
 		feeds[m.values[i]] = val
 	}
-	out, err := session.Run(feeds, []tensorflow.Output{m.out}, nil)
+	out, err := m.session.Run(feeds, []tensorflow.Output{m.out}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -78,6 +84,6 @@ func (m *Batcher) Batch(session *tensorflow.Session, values []*tensorflow.Tensor
 	return out[0], nil
 }
 
-func (m *Batcher) Session() (*tensorflow.Session, error) {
-	return tensorflow.NewSession(m.graph, nil)
+func (m *Batcher) Close() error {
+	return m.session.Close()
 }

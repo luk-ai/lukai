@@ -28,11 +28,7 @@ func TestBatcher(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	session, err := batcher.Session()
-	if err != nil {
-		t.Fatal(err)
-	}
-	out, err := batcher.Batch(session, []*tensorflow.Tensor{
+	out, err := batcher.Batch([]*tensorflow.Tensor{
 		makeTensorN(l, 1.0),
 		makeTensorN(l, 2.0),
 		makeTensorN(l, 3.0),

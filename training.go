@@ -214,14 +214,17 @@ func (mt *ModelType) processWork(
 		return err
 	}
 
-	exampleCount := 0
+	exampleCount := int64(0)
+
+	batchers := batcherCache{}
+	defer batchers.Close()
 
 	for i := int64(0); i < work.HyperParams.NumLocalRounds; i++ {
-		examples, err := mt.getNExamples(work.HyperParams.BatchSize)
+		examples, err := mt.getExampleBatch(batchers, cache, work.HyperParams.BatchSize)
 		if err != nil {
 			return err
 		}
-		exampleCount += len(examples)
+		exampleCount += work.HyperParams.BatchSize
 
 		// Compute training metrics first.
 		if len(metricFetches) > 0 {
@@ -321,7 +324,7 @@ func (mt *ModelType) processWork(
 		Type: &aggregatorpb.ReportWorkRequest_Work{
 			&aggregatorpb.Work{
 				Id:          work.Id,
-				NumExamples: int64(exampleCount),
+				NumExamples: exampleCount,
 				NumClients:  1,
 				Epoch:       work.Epoch,
 				// HyperParams isn't needed here since the server already has that info.

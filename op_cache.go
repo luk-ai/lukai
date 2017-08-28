@@ -45,21 +45,32 @@ func (cache tfOpCache) resolve(
 	return feeds, fetches, targets, nil
 }
 
+// resolveFeed returns the tensorflow output for the given name.
+func (cache tfOpCache) resolveFeed(name string) (tensorflow.Output, error) {
+	output, ok := cache.outputs[name]
+	if !ok {
+		var err error
+		output, err = cache.model.Output(name)
+		if err != nil {
+			return tensorflow.Output{}, err
+		}
+		cache.outputs[name] = output
+	}
+	return output, nil
+
+}
+
+// resolveFeeds returns the feed map with the tensorflow outputs instead of
+// string names.
 func (cache tfOpCache) resolveFeeds(feedNames map[string]*tensorflow.Tensor) (
 	map[tensorflow.Output]*tensorflow.Tensor, error,
 ) {
-	var err error
 	feeds := map[tensorflow.Output]*tensorflow.Tensor{}
 	for name, tensor := range feedNames {
-		output, ok := cache.outputs[name]
-		if !ok {
-			output, err = cache.model.Output(name)
-			if err != nil {
-				return nil, err
-			}
-			cache.outputs[name] = output
+		output, err := cache.resolveFeed(name)
+		if err != nil {
+			return nil, err
 		}
-
 		feeds[output] = tensor
 	}
 
