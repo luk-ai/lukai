@@ -61,11 +61,9 @@ func NewTensorBatcher(n int, dtype tensorflow.DataType, shape []int64) (*Batcher
 // Batch takes in a session and values and returns a single output tensor that
 // has all the values concatenated.
 func (m *Batcher) Batch(session *tensorflow.Session, values []*tensorflow.Tensor) (*tensorflow.Tensor, error) {
-	/*
-		if len(values) != m.n {
-			return nil, errors.Errorf("expected %d values; got %d", m.n, len(values))
-		}
-	*/
+	if len(values) != m.n {
+		return nil, errors.Errorf("expected %d values; got %d", m.n, len(values))
+	}
 	feeds := map[tensorflow.Output]*tensorflow.Tensor{}
 	for i, val := range values {
 		feeds[m.values[i]] = val

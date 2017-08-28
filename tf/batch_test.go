@@ -20,6 +20,8 @@ func makeTensorN(n int, val float32) *tensorflow.Tensor {
 }
 
 func TestBatcher(t *testing.T) {
+	t.Parallel()
+
 	l := 2
 	n := 3
 	batcher, err := NewTensorBatcher(n, tensorflow.Float, []int64{-1, int64(l)})
