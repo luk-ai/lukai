@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-import "github.com/d4l3k/pok/protobuf/aggregatorpb/aggregator.proto";
+import "github.com/luk-ai/lukai/protobuf/aggregatorpb/aggregator.proto";
 
 package managerpb;
 
