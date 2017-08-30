@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='clientpb/client.proto',
   package='clientpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x15\x63lientpb/client.proto\x12\x08\x63lientpb\x1a\x1fgoogle/protobuf/timestamp.proto\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\"\x7f\n\x0b\x45xampleFile\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x35\n\x07\x63reated\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x12\n\ntotal_size\x18\x03 \x01(\x03\x12\x17\n\tpositions\x18\x04 \x03(\x05\x42\x04\xc8\xde\x1f\x00\"f\n\x0c\x45xampleIndex\x12\x16\n\x0etotal_examples\x18\x01 \x01(\x03\x12\x12\n\ntotal_size\x18\x02 \x01(\x03\x12*\n\x05\x66iles\x18\x03 \x03(\x0b\x32\x15.clientpb.ExampleFileB\x04\xc8\xde\x1f\x00\"R\n\x06Metric\x12\x12\n\nfetch_name\x18\x01 \x01(\t\x12&\n\x06reduce\x18\x02 \x01(\x0e\x32\x16.clientpb.MetricReduce\x12\x0c\n\x04name\x18\x03 \x01(\t\")\n\x0c\x45ventTargets\x12\x0b\n\x03pre\x18\x01 \x03(\t\x12\x0c\n\x04post\x18\x02 \x03(\t\"\xe5\x01\n\tModelMeta\x12\x1b\n\x13trainable_variables\x18\x01 \x03(\t\x12!\n\x07metrics\x18\x02 \x03(\x0b\x32\x10.clientpb.Metric\x12K\n\revent_targets\x18\x03 \x03(\x0b\x32%.clientpb.ModelMeta.EventTargetsEntryB\r\xc8\xde\x1f\x00\x82\xdf\x1f\x05\x45vent\x1aK\n\x11\x45ventTargetsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.clientpb.EventTargets:\x02\x38\x01*\x82\x02\n\x0cMetricReduce\x12\x12\n\x0eREDUCE_UNKNOWN\x10\x00\x12\x0f\n\x0bREDUCE_MEAN\x10\x01\x12\x0e\n\nREDUCE_MIN\x10\x02\x12\x0e\n\nREDUCE_MAX\x10\x03\x12\x0e\n\nREDUCE_SUM\x10\x04\x12\x0f\n\x0bREDUCE_PROD\x10\x05\x12\r\n\tREDUCE_P1\x10\x06\x12\r\n\tREDUCE_P5\x10\x07\x12\x0e\n\nREDUCE_P10\x10\x08\x12\x0e\n\nREDUCE_P25\x10\t\x12\x0e\n\nREDUCE_P50\x10\n\x12\x0e\n\nREDUCE_P75\x10\x0b\x12\x0e\n\nREDUCE_P90\x10\x0c\x12\x0e\n\nREDUCE_P95\x10\r\x12\x0e\n\nREDUCE_P99\x10\x0e*L\n\x05\x45vent\x12\x11\n\rEVENT_UNKNOWN\x10\x00\x12\x0f\n\x0b\x45VENT_TRAIN\x10\x01\x12\x0f\n\x0b\x45VENT_INFER\x10\x02\x12\x0e\n\nEVENT_EVAL\x10\x03\x62\x06proto3')
+  serialized_pb=_b('\n\x15\x63lientpb/client.proto\x12\x08\x63lientpb\x1a\x1fgoogle/protobuf/timestamp.proto\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\"\x7f\n\x0b\x45xampleFile\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x35\n\x07\x63reated\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x12\n\ntotal_size\x18\x03 \x01(\x03\x12\x17\n\tpositions\x18\x04 \x03(\x05\x42\x04\xc8\xde\x1f\x00\"f\n\x0c\x45xampleIndex\x12\x16\n\x0etotal_examples\x18\x01 \x01(\x03\x12\x12\n\ntotal_size\x18\x02 \x01(\x03\x12*\n\x05\x66iles\x18\x03 \x03(\x0b\x32\x15.clientpb.ExampleFileB\x04\xc8\xde\x1f\x00\"R\n\x06Metric\x12\x12\n\nfetch_name\x18\x01 \x01(\t\x12&\n\x06reduce\x18\x02 \x01(\x0e\x32\x16.clientpb.MetricReduce\x12\x0c\n\x04name\x18\x03 \x01(\t\")\n\x0c\x45ventTargets\x12\x0b\n\x03pre\x18\x01 \x03(\t\x12\x0c\n\x04post\x18\x02 \x03(\t\"\xeb\x01\n\tModelMeta\x12\x1b\n\x13trainable_variables\x18\x01 \x03(\t\x12\'\n\x07metrics\x18\x02 \x03(\x0b\x32\x10.clientpb.MetricB\x04\xc8\xde\x1f\x00\x12K\n\revent_targets\x18\x03 \x03(\x0b\x32%.clientpb.ModelMeta.EventTargetsEntryB\r\xc8\xde\x1f\x00\x82\xdf\x1f\x05\x45vent\x1aK\n\x11\x45ventTargetsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12%\n\x05value\x18\x02 \x01(\x0b\x32\x16.clientpb.EventTargets:\x02\x38\x01*\x82\x02\n\x0cMetricReduce\x12\x12\n\x0eREDUCE_UNKNOWN\x10\x00\x12\x0f\n\x0bREDUCE_MEAN\x10\x01\x12\x0e\n\nREDUCE_MIN\x10\x02\x12\x0e\n\nREDUCE_MAX\x10\x03\x12\x0e\n\nREDUCE_SUM\x10\x04\x12\x0f\n\x0bREDUCE_PROD\x10\x05\x12\r\n\tREDUCE_P1\x10\x06\x12\r\n\tREDUCE_P5\x10\x07\x12\x0e\n\nREDUCE_P10\x10\x08\x12\x0e\n\nREDUCE_P25\x10\t\x12\x0e\n\nREDUCE_P50\x10\n\x12\x0e\n\nREDUCE_P75\x10\x0b\x12\x0e\n\nREDUCE_P90\x10\x0c\x12\x0e\n\nREDUCE_P95\x10\r\x12\x0e\n\nREDUCE_P99\x10\x0e*L\n\x05\x45vent\x12\x11\n\rEVENT_UNKNOWN\x10\x00\x12\x0f\n\x0b\x45VENT_TRAIN\x10\x01\x12\x0f\n\x0b\x45VENT_INFER\x10\x02\x12\x0e\n\nEVENT_EVAL\x10\x03\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -94,8 +94,8 @@ _METRICREDUCE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=708,
-  serialized_end=966,
+  serialized_start=714,
+  serialized_end=972,
 )
 _sym_db.RegisterEnumDescriptor(_METRICREDUCE)
 
@@ -125,8 +125,8 @@ _EVENT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=968,
-  serialized_end=1044,
+  serialized_start=974,
+  serialized_end=1050,
 )
 _sym_db.RegisterEnumDescriptor(_EVENT)
 
@@ -366,8 +366,8 @@ _MODELMETA_EVENTTARGETSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=630,
-  serialized_end=705,
+  serialized_start=636,
+  serialized_end=711,
 )
 
 _MODELMETA = _descriptor.Descriptor(
@@ -390,7 +390,7 @@ _MODELMETA = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
     _descriptor.FieldDescriptor(
       name='event_targets', full_name='clientpb.ModelMeta.event_targets', index=2,
       number=3, type=11, cpp_type=10, label=3,
@@ -411,7 +411,7 @@ _MODELMETA = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=476,
-  serialized_end=705,
+  serialized_end=711,
 )
 
 _EXAMPLEFILE.fields_by_name['created'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
@@ -482,6 +482,8 @@ _EXAMPLEINDEX.fields_by_name['files'].has_options = True
 _EXAMPLEINDEX.fields_by_name['files']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _MODELMETA_EVENTTARGETSENTRY.has_options = True
 _MODELMETA_EVENTTARGETSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
+_MODELMETA.fields_by_name['metrics'].has_options = True
+_MODELMETA.fields_by_name['metrics']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _MODELMETA.fields_by_name['event_targets'].has_options = True
 _MODELMETA.fields_by_name['event_targets']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000\202\337\037\005Event'))
 try:

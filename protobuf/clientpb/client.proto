@@ -58,6 +58,6 @@ message EventTargets {
 
 message ModelMeta {
   repeated string trainable_variables = 1;
-  repeated Metric metrics = 2;
+  repeated Metric metrics = 2 [(gogoproto.nullable) = false];
   map<int32, EventTargets> event_targets = 3 [(gogoproto.nullable) = false, (gogoproto.castkey) = "Event"];
 }
