@@ -18,7 +18,7 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 import _ "github.com/gogo/protobuf/gogoproto"
-import aggregatorpb "github.com/d4l3k/pok/protobuf/aggregatorpb"
+import "github.com/luk-ai/lukai/protobuf/aggregatorpb"
 
 import bytes "bytes"
 

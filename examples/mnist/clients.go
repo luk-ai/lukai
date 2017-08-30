@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/d4l3k/pok"
+	"github.com/luk-ai/lukai"
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )
@@ -144,9 +144,9 @@ func main() {
 		log.Fatal(err)
 	}
 	needData := false
-	var clients []*pok.ModelType
+	var clients []*lukai.ModelType
 	for i := 0; i < *numClients; i++ {
-		mt, err := pok.MakeModelType(*domain, *modelType, path.Join(dataDir, strconv.Itoa(i)))
+		mt, err := lukai.MakeModelType(*domain, *modelType, path.Join(dataDir, strconv.Itoa(i)))
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -1,4 +1,4 @@
-package pok
+package lukai
 
 import (
 	"time"
@@ -9,8 +9,8 @@ import (
 
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
-	"github.com/d4l3k/pok/protobuf/aggregatorpb"
-	"github.com/d4l3k/pok/tf"
+	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
+	"github.com/luk-ai/lukai/tf"
 )
 
 // shouldLoadProdModelRLocked returns whether a new prod model should be loaded.

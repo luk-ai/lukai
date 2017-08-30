@@ -1,4 +1,4 @@
-package pok
+package lukai
 
 import (
 	"context"
@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
-	"github.com/d4l3k/pok/metrics"
-	"github.com/d4l3k/pok/net"
-	"github.com/d4l3k/pok/protobuf/aggregatorpb"
-	"github.com/d4l3k/pok/protobuf/clientpb"
-	"github.com/d4l3k/pok/tf"
-	"github.com/d4l3k/pok/units"
+	"github.com/luk-ai/lukai/metrics"
+	"github.com/luk-ai/lukai/net"
+	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
+	"github.com/luk-ai/lukai/protobuf/clientpb"
+	"github.com/luk-ai/lukai/tf"
+	"github.com/luk-ai/lukai/units"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )

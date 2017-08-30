@@ -1,4 +1,4 @@
-package pok
+package lukai
 
 import (
 	"log"
@@ -9,9 +9,9 @@ import (
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/pkg/errors"
 
-	"github.com/d4l3k/pok/debounce"
-	"github.com/d4l3k/pok/protobuf/clientpb"
-	"github.com/d4l3k/pok/tf"
+	"github.com/luk-ai/lukai/debounce"
+	"github.com/luk-ai/lukai/protobuf/clientpb"
+	"github.com/luk-ai/lukai/tf"
 )
 
 var (

@@ -5,7 +5,7 @@ import (
 
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
-	tensorflowpb "github.com/d4l3k/pok/protobuf/tensorflow"
+	tensorflowpb "github.com/luk-ai/lukai/protobuf/tensorflow"
 )
 
 func RefType(dt tensorflow.DataType) tensorflow.DataType {

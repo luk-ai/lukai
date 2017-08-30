@@ -3,7 +3,7 @@ package metrics
 import (
 	"math"
 
-	"github.com/d4l3k/pok/protobuf/clientpb"
+	"github.com/luk-ai/lukai/protobuf/clientpb"
 	"github.com/streadway/quantile"
 )
 

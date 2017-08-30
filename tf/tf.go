@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/d4l3k/pok/protobuf/clientpb"
-	tensorflowpb "github.com/d4l3k/pok/protobuf/tensorflow"
+	"github.com/luk-ai/lukai/protobuf/clientpb"
+	tensorflowpb "github.com/luk-ai/lukai/protobuf/tensorflow"
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )

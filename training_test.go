@@ -1,4 +1,4 @@
-package pok
+package lukai
 
 import (
 	"io/ioutil"
@@ -13,8 +13,8 @@ import (
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
-	"github.com/d4l3k/pok/protobuf/aggregatorpb"
-	"github.com/d4l3k/pok/testutil"
+	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
+	"github.com/luk-ai/lukai/testutil"
 )
 
 var errNotImplemented = errors.New("not implemented")

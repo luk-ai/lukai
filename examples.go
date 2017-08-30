@@ -1,4 +1,4 @@
-package pok
+package lukai
 
 import (
 	"compress/gzip"
@@ -17,9 +17,9 @@ import (
 	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
-	"github.com/d4l3k/pok/protobuf/clientpb"
-	"github.com/d4l3k/pok/tf"
-	"github.com/d4l3k/pok/units"
+	"github.com/luk-ai/lukai/protobuf/clientpb"
+	"github.com/luk-ai/lukai/tf"
+	"github.com/luk-ai/lukai/units"
 )
 
 var (

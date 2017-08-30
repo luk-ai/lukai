@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/d4l3k/pok/protobuf/clientpb"
+	"github.com/luk-ai/lukai/protobuf/clientpb"
 )
 
 func TestMean(t *testing.T) {

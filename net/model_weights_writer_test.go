@@ -10,9 +10,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/d4l3k/pok/protobuf/aggregatorpb"
-	"github.com/d4l3k/pok/testutil"
-	"github.com/d4l3k/pok/units"
+	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
+	"github.com/luk-ai/lukai/testutil"
+	"github.com/luk-ai/lukai/units"
 )
 
 func TestModelWeightsWriter(t *testing.T) {

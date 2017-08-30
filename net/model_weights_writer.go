@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/d4l3k/pok/protobuf/aggregatorpb"
-	"github.com/d4l3k/pok/units"
+	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
+	"github.com/luk-ai/lukai/units"
 )
 
 const ModelWeightChunkSize = 64 * units.KB

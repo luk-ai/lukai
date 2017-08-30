@@ -1,7 +1,7 @@
-package pok
+package lukai
 
 import (
-	"github.com/d4l3k/pok/tf"
+	"github.com/luk-ai/lukai/tf"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
