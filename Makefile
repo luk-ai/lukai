@@ -68,5 +68,5 @@ clean:
 
 .PHONY: loc
 loc:
-	cloc --3 $(shell find . -type f | sed '/_pb2/d' | sed '/.pb.go/d' | sed '/proto\/tensorflow/d' | sed '/.git/d' | sed '/__pycache__/d' | sed '/.egg-info/d' | sed '/testdata/d')
+	cloc --3 $(shell find . -type f | sed '/_pb2/d' | sed '/.pb.go/d' | sed '/proto\/tensorflow/d' | sed '/.git/d' | sed '/__pycache__/d' | sed '/.egg-info/d' | sed '/testdata/d' | sed '/py\/build/d' | sed '/py\/dist/d')
 
