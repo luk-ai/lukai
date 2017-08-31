@@ -54,6 +54,8 @@ type ModelType struct {
 	modelCache *lru.Cache
 }
 
+// MakeModelType creates a new model type with a specified domain and model type
+// and stores all training data in dataDir.
 func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 	mt := ModelType{
 		Domain:    domain,
