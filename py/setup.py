@@ -8,7 +8,7 @@ packages += ['lukai.proto.{}'.format(pkg) for pkg in next(os.walk('lukai/proto')
 setup(
     name='lukai',
     packages=packages,
-    version='0.1',
+    version='0.2',
     description='Luk.ai management library',
     install_requires=['grpcio', 'six'],
     author='Tristan Rice',
