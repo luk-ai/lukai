@@ -35,7 +35,7 @@ protobuf: protobuf/tensorflow $(PROTO_GO_FILES) fixuppyproto
 current_dir = $(shell pwd)
 tensorflow_dir = "$(current_dir)/../../tensorflow/tensorflow/"
 tensorflow_protobuf_dir = "$(current_dir)/protobuf/tensorflow/"
-python_proto_dir =py/liblukai/proto/
+python_proto_dir =py/lukai/proto/
 
 .PHONY: protobuf/tensorflow
 protobuf/tensorflow:
@@ -56,8 +56,8 @@ fixuppyproto:
 	$(SED_INPLACE) 's/github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
 	$(SED_INPLACE) '/import annotations_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
 	$(SED_INPLACE) 's/google_dot_api_dot_annotations__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
-	$(SED_INPLACE) 's/github.com.d4l3k.pok.protobuf/liblukai.proto/g' $(shell find ${python_proto_dir} -type f -name '*.py')
-	$(SED_INPLACE) -E 's/^from (liblukai.proto.)*/from liblukai.proto./g' $(shell find ${python_proto_dir} -type f -name '*_pb2_grpc.py')
+	$(SED_INPLACE) 's/github.com.luk_ai.lukai.protobuf/lukai.proto/g' $(shell find ${python_proto_dir} -type f -name '*.py')
+	$(SED_INPLACE) -E 's/^from (lukai.proto.)*/from lukai.proto./g' $(shell find ${python_proto_dir} -type f -name '*_pb2_grpc.py')
 
 
 .PHONY: clean

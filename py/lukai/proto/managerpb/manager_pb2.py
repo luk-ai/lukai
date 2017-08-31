@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
-from github.com.luk_ai.lukai.protobuf.aggregatorpb import aggregator_pb2 as github_dot_com_dot_luk__ai_dot_lukai_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2
+from lukai.proto.aggregatorpb import aggregator_pb2 as github_dot_com_dot_luk__ai_dot_lukai_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
