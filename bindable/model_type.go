@@ -10,29 +10,17 @@ package bindable
 import "github.com/luk-ai/lukai"
 
 type ModelType struct {
-	mt *lukai.ModelType
+	*lukai.ModelType
 }
 
-func MakeModelType(domain, modelType, dataDir string) (ModelType, error) {
+func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 	mt, err := lukai.MakeModelType(domain, modelType, dataDir)
 	if err != nil {
-		return ModelType{}, err
+		return nil, err
 	}
-	return ModelType{
-		mt: mt,
+	return &ModelType{
+		ModelType: mt,
 	}, nil
-}
-
-func (mt ModelType) StartTraining() error {
-	return mt.mt.StartTraining()
-}
-
-func (mt ModelType) StopTraining() error {
-	return mt.mt.StopTraining()
-}
-
-func (mt ModelType) TotalExamples() int64 {
-	return mt.mt.TotalExamples()
 }
 
 func (mt ModelType) Log(feeds, targets []byte) error {
