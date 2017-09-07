@@ -11,7 +11,7 @@ import (
 
 const ModelWeightChunkSize = 64 * units.KB
 
-func ReadModelWeights(recv func() (*aggregatorpb.ModelWeightChunk, error)) io.ReadCloser {
+func ReadModelWeights(recv func() (*aggregatorpb.ModelWeightChunk, error)) *io.PipeReader {
 	r, w := io.Pipe()
 	go func() {
 		for {
