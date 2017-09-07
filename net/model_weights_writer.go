@@ -78,7 +78,7 @@ func (w *ModelWeightsWriter) sendChunk(more bool) error {
 		More: more,
 		Id:   w.sent,
 	}); err != nil {
-		return errors.Wrapf(err, "sendChunk failed: more = %b", more)
+		return errors.Wrapf(err, "sendChunk failed: more = %t", more)
 	}
 	w.sent += 1
 	w.size = 0
