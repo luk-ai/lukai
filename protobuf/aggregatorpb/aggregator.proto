@@ -54,6 +54,8 @@ message GetWorkRequest {
 message ModelWeightChunk {
   bytes body = 1;
   bool more = 2;
+  // id is the chunk number.
+  uint64 id = 3;
 }
 
 message GetWorkResponse {

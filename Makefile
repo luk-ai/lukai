@@ -58,6 +58,7 @@ fixuppyproto:
 	$(SED_INPLACE) 's/google_dot_api_dot_annotations__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
 	$(SED_INPLACE) 's/github.com.luk_ai.lukai.protobuf/lukai.proto/g' $(shell find ${python_proto_dir} -type f -name '*.py')
 	$(SED_INPLACE) -E 's/^from (lukai.proto.)*/from lukai.proto./g' $(shell find ${python_proto_dir} -type f -name '*_pb2_grpc.py')
+	find ${python_proto_dir} -type d -exec touch {}/__init__.py \;
 
 
 .PHONY: clean

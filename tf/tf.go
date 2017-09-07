@@ -1,10 +1,10 @@
 package tf
 
 import (
-	"net/http"
 	"strconv"
 	"strings"
 
+	"github.com/luk-ai/lukai/net"
 	"github.com/luk-ai/lukai/protobuf/clientpb"
 	tensorflowpb "github.com/luk-ai/lukai/protobuf/tensorflow"
 	"github.com/pkg/errors"
@@ -68,12 +68,12 @@ func (m *Model) Output(path string) (tensorflow.Output, error) {
 
 // GetModel fetches a model from a URL and loads it.
 func GetModel(url string) (*Model, error) {
-	req, err := http.Get(url)
+	body, err := net.OpenModel(url)
 	if err != nil {
 		return nil, err
 	}
-	defer req.Body.Close()
-	model, err := LoadModel(req.Body)
+	defer body.Close()
+	model, err := LoadModel(body)
 	if err != nil {
 		return nil, err
 	}

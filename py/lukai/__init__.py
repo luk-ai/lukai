@@ -1,10 +1,11 @@
 from __future__ import print_function
+from __future__ import absolute_import
 
-from lukai.proto.aggregatorpb import aggregator_pb2
-from lukai.proto.clientpb import client_pb2
-from lukai.proto.managerpb import manager_pb2
-from lukai.proto.managerpb import manager_pb2_grpc
-from lukai import saver
+from .proto.aggregatorpb import aggregator_pb2
+from .proto.clientpb import client_pb2
+from .proto.managerpb import manager_pb2
+from .proto.managerpb import manager_pb2_grpc
+from . import saver
 
 import tensorflow as tf
 import grpc

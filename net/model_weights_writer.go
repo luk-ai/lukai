@@ -14,6 +14,7 @@ const ModelWeightChunkSize = 64 * units.KB
 func ReadModelWeights(recv func() (*aggregatorpb.ModelWeightChunk, error)) *io.PipeReader {
 	r, w := io.Pipe()
 	go func() {
+		var expecting uint64
 		for {
 			resp, err := recv()
 			if err != nil {
@@ -24,11 +25,16 @@ func ReadModelWeights(recv func() (*aggregatorpb.ModelWeightChunk, error)) *io.P
 				w.CloseWithError(errors.New("received something other than weight chunk"))
 				return
 			}
+			if resp.Id != expecting {
+				w.CloseWithError(errors.Errorf("got chunk id %d; expected %d", resp.Id, expecting))
+				return
+			}
 			w.Write(resp.Body)
 			if !resp.More {
 				w.Close()
 				return
 			}
+			expecting += 1
 		}
 	}()
 	return r
@@ -38,7 +44,10 @@ func ReadModelWeights(recv func() (*aggregatorpb.ModelWeightChunk, error)) *io.P
 type ModelWeightsWriter struct {
 	send func(aggregatorpb.ModelWeightChunk) error
 	buf  [ModelWeightChunkSize]byte
+	// size is the current amount of data in buf.
 	size int
+	// sent is the number of chunks sent.
+	sent uint64
 }
 
 func (w *ModelWeightsWriter) Write(b []byte) (int, error) {
@@ -67,9 +76,11 @@ func (w *ModelWeightsWriter) sendChunk(more bool) error {
 	if err := w.send(aggregatorpb.ModelWeightChunk{
 		Body: body,
 		More: more,
+		Id:   w.sent,
 	}); err != nil {
 		return errors.Wrapf(err, "sendChunk failed: more = %b", more)
 	}
+	w.sent += 1
 	w.size = 0
 	return nil
 }
