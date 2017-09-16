@@ -14,7 +14,7 @@ func OpenModel(url string) (io.ReadCloser, error) {
 		return nil, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.Errorf("expected status %s; got %s", http.StatusOK, resp.StatusCode)
+		return nil, errors.Errorf("expected status %+v; got %+v", http.StatusOK, resp.StatusCode)
 	}
 	return resp.Body, nil
 }

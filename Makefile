@@ -25,6 +25,7 @@ godeps: .tensorflow
 .tensorflow:
 	curl -L "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-1.3.0.tar.gz" | sudo tar -C /usr/local -xz
 	sudo ldconfig
+	sudo cp /usr/local/lib/libtensorflow.so /usr/lib/
 	ln -s /usr/local/lib/libtensorflow.so .
 	ln -s /usr/local/lib/libtensorflow.so ./tf
 	touch .tensorflow
