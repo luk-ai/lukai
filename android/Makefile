@@ -1,3 +1,3 @@
 .PHONY: build
 build:
-	gomobile bind -target=android github.com/luk-ai/lukai/bindable
+	gomobile bind -x -v -target=android -ldflags="-extldflags=-L$(shell pwd)" github.com/luk-ai/lukai/bindable
