@@ -1,0 +1,8 @@
+apply plugin: 'java'
+
+task gomobile {
+  exec {
+    commandLine 'gomobile', 'bind', '-x', '-v', '-target=android', '-javapkg=ai.luk', 'github.com/luk-ai/lukai/bindable'
+  }
+  outputs.file file('bindable.aar')
+}

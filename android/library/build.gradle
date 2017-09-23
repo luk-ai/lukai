@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+apply plugin: 'me.vigi.fat-aar'
+
+android {
+  compileSdkVersion 26
+  buildToolsVersion "26.0.0"
+
+  defaultConfig {
+    minSdkVersion 15
+      targetSdkVersion 26
+      versionCode 1
+      versionName '0.1'
+  }
+
+  buildTypes {
+    debug {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.txt'
+    }
+    /*
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+    */
+  }
+  defaultPublishConfig 'debug'
+}
+
+dependencies {
+  embed project(':bindable')
+}
