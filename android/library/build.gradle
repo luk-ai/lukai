@@ -26,4 +26,5 @@ android {
 
 dependencies {
   compile project(':bindable')
+  testCompile 'junit:junit:4.12'
 }
