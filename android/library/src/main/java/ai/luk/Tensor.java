@@ -43,7 +43,6 @@ import java.util.HashMap;
  * }</pre>
  */
 public final class Tensor implements AutoCloseable {
-
   /**
    * Create a Tensor from a Java object.
    *
@@ -115,7 +114,7 @@ public final class Tensor implements AutoCloseable {
     if (t.dtype != DataType.STRING) {
       int byteSize = elemByteSize(t.dtype) * numElements(t.shapeCopy);
       t.nativeHandle = allocate(t.dtype.c(), t.shapeCopy, byteSize);
-      setValue(t.nativeHandle, obj);
+      t.setValue(t.nativeHandle, obj);
     } else if (t.shapeCopy.length != 0) {
       t.nativeHandle = allocateNonScalarBytes(t.shapeCopy, (Object[]) obj);
     } else {
@@ -214,10 +213,9 @@ public final class Tensor implements AutoCloseable {
     if (dataType != DataType.STRING) {
       int elemBytes = elemByteSize(dataType);
       if (data.remaining() % elemBytes != 0) {
-        throw new IllegalArgumentException(
-            String.format(
-                "ByteBuffer with %d bytes is not compatible with a %s Tensor (%d bytes/element)",
-                data.remaining(), dataType.toString(), elemBytes));
+        throw new IllegalArgumentException(String.format(
+            "ByteBuffer with %d bytes is not compatible with a %s Tensor (%d bytes/element)",
+            data.remaining(), dataType.toString(), elemBytes));
       }
       nremaining = data.remaining() / elemBytes;
     } else {
@@ -258,12 +256,9 @@ public final class Tensor implements AutoCloseable {
    */
   @Override
   public void close() {
-    /*
-    if (nativeHandle != 0) {
-      delete(nativeHandle);
-      nativeHandle = 0;
+    if (nativeHandle != null) {
+      nativeHandle = null;
     }
-    */
   }
 
   /** Returns the {@link DataType} of elements stored in the Tensor. */
@@ -496,7 +491,7 @@ public final class Tensor implements AutoCloseable {
   }
   */
 
-  //private long nativeHandle;
+  // private long nativeHandle;
   private ByteBuffer nativeHandle;
   private DataType dtype;
   private long[] shapeCopy = null;
@@ -504,7 +499,9 @@ public final class Tensor implements AutoCloseable {
   private Tensor() {}
 
   private ByteBuffer buffer() {
-    return nativeHandle.order(ByteOrder.nativeOrder());
+    ByteBuffer buf = nativeHandle.order(ByteOrder.nativeOrder());
+    buf.rewind();
+    return buf;
   }
 
   private static IllegalArgumentException incompatibleBuffer(Buffer buf, DataType dataType) {
@@ -514,8 +511,7 @@ public final class Tensor implements AutoCloseable {
 
   private static IllegalArgumentException incompatibleBuffer(int numElements, long[] shape) {
     return new IllegalArgumentException(
-        String.format(
-            "buffer with %d elements is not compatible with a Tensor with shape %s",
+        String.format("buffer with %d elements is not compatible with a Tensor with shape %s",
             numElements, Arrays.toString(shape)));
   }
 
@@ -643,14 +639,12 @@ public final class Tensor implements AutoCloseable {
     final int rank = numDimensions();
     final int oRank = numDimensions(o, dtype);
     if (oRank != rank) {
-      throw new IllegalArgumentException(
-          String.format(
-              "cannot copy Tensor with %d dimensions into an object with %d", rank, oRank));
+      throw new IllegalArgumentException(String.format(
+          "cannot copy Tensor with %d dimensions into an object with %d", rank, oRank));
     }
     if (!objectCompatWithType(o, dtype)) {
       throw new IllegalArgumentException(
-          String.format(
-              "cannot copy Tensor with DataType %s into an object of type %s",
+          String.format("cannot copy Tensor with DataType %s into an object of type %s",
               dtype.toString(), o.getClass().getName()));
     }
     long[] oShape = new long[rank];
@@ -658,19 +652,18 @@ public final class Tensor implements AutoCloseable {
     for (int i = 0; i < oShape.length; ++i) {
       if (oShape[i] != shape()[i]) {
         throw new IllegalArgumentException(
-            String.format(
-                "cannot copy Tensor with shape %s into object with shape %s",
+            String.format("cannot copy Tensor with shape %s into object with shape %s",
                 Arrays.toString(shape()), Arrays.toString(oShape)));
       }
     }
   }
 
   private static ByteBuffer allocate(int dtype, long[] shape, long byteSize) {
-    return ByteBuffer.allocate((int)byteSize);
+    return ByteBuffer.allocate((int) byteSize).order(ByteOrder.nativeOrder());
   }
 
   private static ByteBuffer allocateScalarBytes(byte[] value) {
-    ByteBuffer buf = ByteBuffer.allocate(value.length);
+    ByteBuffer buf = ByteBuffer.allocate(value.length).order(ByteOrder.nativeOrder());
     buf.put(value);
     return buf;
   }
@@ -680,9 +673,57 @@ public final class Tensor implements AutoCloseable {
     throw new RuntimeException("not implemented");
   }
 
-  private static void setValue(ByteBuffer buf, Object value) {
-    // TODO(d4l3k): implement
-    throw new RuntimeException("not implemented");
+  private void setValue(ByteBuffer buf, Object value) {
+    buf.rewind();
+    Class<?> c = value.getClass();
+    if (c.isArray()) {
+      setValue(buf, value, numDimensions());
+    } else {
+      setValueScalar(buf, value);
+    }
+  }
+
+  private void setValue(ByteBuffer buf, Object value, int dims) {
+    if (dims == 1) {
+      write1DArray(buf, value);
+    } else {
+      final int len = Array.getLength(value);
+      for (int i = 0; i < len; i++) {
+        setValue(buf, Array.get(value, i), dims - 1);
+      }
+    }
+  }
+
+  private void setValueScalar(ByteBuffer buf, Object value) {
+    switch (dtype) {
+      case FLOAT:
+        buf.putFloat((float)value);
+        break;
+      case DOUBLE:
+        buf.putDouble((double)value);
+        break;
+      case INT32:
+        buf.putInt((int)value);
+        break;
+      case INT64:
+        buf.putLong((long)value);
+        break;
+      case UINT8:
+        buf.put((byte)value);
+        break;
+      case BOOL:
+        buf.put((byte)((boolean)value ? 1 : 0));
+        break;
+      default:
+        throw new IllegalArgumentException("got unknown data type");
+    }
+  }
+
+  private void write1DArray(ByteBuffer buf, Object value) {
+    final int len = Array.getLength(value);
+    for (int i = 0; i < len; i++) {
+      setValueScalar(buf, Array.get(value, i));
+    }
   }
 
   private static float scalarFloat(ByteBuffer buf) {
@@ -720,7 +761,7 @@ public final class Tensor implements AutoCloseable {
       read1DArray(buf, value);
     } else {
       final int len = Array.getLength(value);
-      for (int i=0; i<len; i++) {
+      for (int i = 0; i < len; i++) {
         readNDArray(buf, Array.get(value, i), dims - 1);
       }
     }
@@ -728,26 +769,26 @@ public final class Tensor implements AutoCloseable {
 
   private void read1DArray(ByteBuffer buf, Object value) {
     final int len = Array.getLength(value);
-    for (int i=0; i<len; i++) {
+    for (int i = 0; i < len; i++) {
       switch (dtype) {
-      case FLOAT:
-        Array.setFloat(value, i, buf.getFloat());
-        break;
-      case DOUBLE:
-        Array.setDouble(value, i, buf.getDouble());
-        break;
-      case INT32:
-        Array.setInt(value, i, buf.getInt());
-        break;
-      case INT64:
-        Array.setLong(value, i, buf.getLong());
-        break;
-      case UINT8:
-        Array.setByte(value, i, buf.get());
-        break;
-      case BOOL:
-        Array.setBoolean(value, i, buf.get()>0);
-        break;
+        case FLOAT:
+          Array.setFloat(value, i, buf.getFloat());
+          break;
+        case DOUBLE:
+          Array.setDouble(value, i, buf.getDouble());
+          break;
+        case INT32:
+          Array.setInt(value, i, buf.getInt());
+          break;
+        case INT64:
+          Array.setLong(value, i, buf.getLong());
+          break;
+        case UINT8:
+          Array.setByte(value, i, buf.get());
+          break;
+        case BOOL:
+          Array.setBoolean(value, i, buf.get() > 0);
+          break;
       }
     }
   }
