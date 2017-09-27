@@ -1,8 +1,8 @@
 package lukai
 
 import (
+	"bytes"
 	"compress/gzip"
-	"encoding/gob"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -64,17 +64,15 @@ func (ex example) writeTo(w io.Writer) (int, error) {
 	gzw := gzip.NewWriter(&c)
 	defer gzw.Close()
 
-	encoder := gob.NewEncoder(gzw)
-
-	if err := tf.EncodeTensorMap(encoder, ex.feeds); err != nil {
+	if err := tf.EncodeTensorMap(gzw, ex.feeds); err != nil {
 		return 0, err
 	}
 
-	if err := encoder.Encode(ex.fetches); err != nil {
+	if err := tf.EncodeStringArray(gzw, ex.fetches); err != nil {
 		return 0, err
 	}
 
-	if err := encoder.Encode(ex.targets); err != nil {
+	if err := tf.EncodeStringArray(gzw, ex.targets); err != nil {
 		return 0, err
 	}
 
@@ -107,18 +105,27 @@ func (ex *example) readFrom(r io.Reader) (int, error) {
 		return 0, err
 	}
 	defer gzr.Close()
-	decoder := gob.NewDecoder(gzr)
 
-	ex.feeds, err = tf.DecodeTensorMap(decoder)
+	// This is required since there's some strange error occuring without it that
+	// causes an EOF.
+	// TODO(d4l3k): Fix this.
+	var buf bytes.Buffer
+	if _, err := buf.ReadFrom(gzr); err != nil {
+		return 0, err
+	}
+
+	ex.feeds, err = tf.DecodeTensorMap(&buf)
 	if err != nil {
 		return 0, errors.Wrap(err, "feeds")
 	}
 
-	if err := decoder.Decode(&ex.fetches); err != nil {
+	ex.fetches, err = tf.DecodeStringArray(&buf)
+	if err != nil {
 		return 0, errors.Wrap(err, "fetches")
 	}
 
-	if err := decoder.Decode(&ex.targets); err != nil {
+	ex.targets, err = tf.DecodeStringArray(&buf)
+	if err != nil {
 		return 0, errors.Wrap(err, "targets")
 	}
 	return c.n, nil

@@ -56,13 +56,15 @@ func TestImportExportWeights(t *testing.T) {
 	model := loadTestModel(t)
 	var buf bytes.Buffer
 	if err := model.ExportWeights(&buf); err != nil {
-		t.Fatal(err)
+		t.Fatalf("%+v", err)
 	}
+
+	t.Logf("buf len = %d", buf.Len())
 	weights, err := LoadWeights(&buf)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("%+v", err)
 	}
 	if err := model.SetWeights(weights); err != nil {
-		t.Fatal(err)
+		t.Fatalf("%+v", err)
 	}
 }

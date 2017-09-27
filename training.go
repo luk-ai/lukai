@@ -269,8 +269,6 @@ func (mt *ModelType) processWork(
 			}
 		}
 
-		// Actually train the model on the examples.
-
 		if len(preTrainTargets) > 0 {
 			if _, err := model.Session.Run(nil, nil, preTrainTargets); err != nil {
 				return errors.Wrapf(
@@ -279,7 +277,7 @@ func (mt *ModelType) processWork(
 			}
 		}
 
-		// TODO(d4l3k): Implement proper batch training
+		// Actually train the model on the examples.
 		for _, example := range examples {
 			feeds, fetches, targets, err := cache.resolve(example)
 			if err != nil {

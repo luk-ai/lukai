@@ -1,8 +1,8 @@
 package tf
 
 import (
+	"bytes"
 	"compress/gzip"
-	"encoding/gob"
 	"io"
 	"strings"
 
@@ -73,20 +73,15 @@ func (model *Model) WeightsMap() (map[string]*tensorflow.Tensor, error) {
 	return m, nil
 }
 
-func (model *Model) ExportWeights(wr io.Writer) error {
+func (model *Model) ExportWeights(w io.Writer) error {
 	weights, err := model.WeightsMap()
 	if err != nil {
 		return errors.Wrapf(err, "model.WeightsMap")
 	}
-	gzw := gzip.NewWriter(wr)
+	gzw := gzip.NewWriter(w)
 	defer gzw.Close()
-
-	enc := gob.NewEncoder(gzw)
-	if err := EncodeTensorMap(enc, weights); err != nil {
+	if err := EncodeTensorMap(gzw, weights); err != nil {
 		return errors.Wrapf(err, "EncodeTensorMap")
-	}
-	if err := gzw.Close(); err != nil {
-		return errors.Wrapf(err, "gzip.Close")
 	}
 	return nil
 }
@@ -150,8 +145,15 @@ func LoadWeights(r io.Reader) (map[string]*tensorflow.Tensor, error) {
 	}
 	defer gzr.Close()
 
-	decoder := gob.NewDecoder(gzr)
-	m, err := DecodeTensorMap(decoder)
+	// This is required since there's some strange error occuring without it that
+	// causes an EOF.
+	// TODO(d4l3k): Fix this.
+	var buf bytes.Buffer
+	if _, err := buf.ReadFrom(gzr); err != nil {
+		return nil, err
+	}
+
+	m, err := DecodeTensorMap(&buf)
 	if err != nil {
 		return nil, err
 	}
