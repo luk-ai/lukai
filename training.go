@@ -20,6 +20,14 @@ import (
 
 var MaxMsgSize = 100 * units.MB
 
+// IsTraining returns whether or not a job is training.
+func (mt *ModelType) IsTraining() bool {
+	mt.training.Lock()
+	defer mt.training.Unlock()
+
+	return mt.training.running
+}
+
 // StartTraining starts the training worker.
 func (mt *ModelType) StartTraining() error {
 	mt.training.Lock()

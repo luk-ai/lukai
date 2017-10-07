@@ -302,7 +302,7 @@ public final class Tensor implements AutoCloseable {
    * @throws IllegalArgumentException if the Tensor does not represent a float scalar.
    */
   public float floatValue() {
-    return scalarFloat(nativeHandle);
+    return scalarFloat(buffer());
   }
 
   /**
@@ -311,7 +311,7 @@ public final class Tensor implements AutoCloseable {
    * @throws IllegalArgumentException if the Tensor does not represent a double scalar.
    */
   public double doubleValue() {
-    return scalarDouble(nativeHandle);
+    return scalarDouble(buffer());
   }
 
   /**
@@ -320,7 +320,7 @@ public final class Tensor implements AutoCloseable {
    * @throws IllegalArgumentException if the Tensor does not represent a int scalar.
    */
   public int intValue() {
-    return scalarInt(nativeHandle);
+    return scalarInt(buffer());
   }
 
   /**
@@ -329,7 +329,7 @@ public final class Tensor implements AutoCloseable {
    * @throws IllegalArgumentException if the Tensor does not represent a long scalar.
    */
   public long longValue() {
-    return scalarLong(nativeHandle);
+    return scalarLong(buffer());
   }
 
   /**
@@ -338,7 +338,7 @@ public final class Tensor implements AutoCloseable {
    * @throws IllegalArgumentException if the Tensor does not represent a boolean scalar.
    */
   public boolean booleanValue() {
-    return scalarBoolean(nativeHandle);
+    return scalarBoolean(buffer());
   }
 
   /**
@@ -347,7 +347,7 @@ public final class Tensor implements AutoCloseable {
    * @throws IllegalArgumentException if the Tensor does not represent a boolean scalar.
    */
   public byte[] bytesValue() {
-    return scalarBytes(nativeHandle);
+    return scalarBytes(buffer());
   }
 
   /**

@@ -1,7 +1,7 @@
 task gomobile {
   doLast {
     exec {
-      commandLine 'gomobile', 'bind', '-x', '-v', '-target=android', '-javapkg=ai.luk', 'github.com/luk-ai/lukai/bindable'
+      commandLine 'gomobile', 'bind', '-x', '-v', '-target=android', '-javapkg=ai.luk', '-nativelibs=tensorflow', 'github.com/luk-ai/lukai/bindable'
     }
   }
 }

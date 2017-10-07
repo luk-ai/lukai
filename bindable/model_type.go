@@ -16,7 +16,7 @@ import (
 )
 
 type ModelType struct {
-	mt *lukai.ModelType
+	*lukai.ModelType
 }
 
 func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
@@ -25,7 +25,7 @@ func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 		return nil, err
 	}
 	return &ModelType{
-		mt: mt,
+		ModelType: mt,
 	}, nil
 }
 
@@ -40,7 +40,7 @@ func (mt ModelType) Log(feedsBody, targetsBody []byte) error {
 		return err
 	}
 
-	return mt.mt.Log(feeds, targets)
+	return mt.ModelType.Log(feeds, targets)
 }
 
 // Run is a wrapper around ModelType.Run that accepts bytes.
@@ -58,7 +58,7 @@ func (mt ModelType) Run(feedsBody, fetchesBody, targetsBody []byte) ([]byte, err
 		return nil, err
 	}
 
-	tensors, err := mt.mt.Run(feeds, fetches, targets)
+	tensors, err := mt.ModelType.Run(feeds, fetches, targets)
 	if err != nil {
 		return nil, err
 	}
