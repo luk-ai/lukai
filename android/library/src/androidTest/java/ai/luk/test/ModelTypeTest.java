@@ -6,6 +6,7 @@ import ai.luk.Tensor;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -27,6 +28,18 @@ public class ModelTypeTest {
   @Test
   public void log() throws Exception {
     File dir = tempdir.newFolder("lukai-java-test");
-    ModelType mt = ModelType.create("test", "test", dir.getPath());
+    ModelType mt = new ModelType("test", "test", dir.getPath());
+  }
+
+  @Test
+  public void training() throws Exception {
+    /*
+    File dir = tempdir.newFolder("lukai-java-test");
+    ModelType mt = new ModelType("test", "test", dir.getPath());
+    mt.startTraining();
+    assertTrue(mt.isTraining());
+    mt.stopTraining();
+    assertFalse(mt.isTraining());
+    */
   }
 }
