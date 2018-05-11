@@ -15,7 +15,7 @@ func TestMean(t *testing.T) {
 	want := 2.0
 	out := m.Val()
 	if out != want {
-		t.Errorf("got %d; want %d", out, want)
+		t.Errorf("got %f; want %f", out, want)
 	}
 }
 
@@ -27,7 +27,7 @@ func TestMax(t *testing.T) {
 	want := 3.0
 	out := m.Val()
 	if out != want {
-		t.Errorf("got %d; want %d", out, want)
+		t.Errorf("got %f; want %f", out, want)
 	}
 }
 
@@ -39,7 +39,7 @@ func TestMin(t *testing.T) {
 	want := -1.0
 	out := m.Val()
 	if out != want {
-		t.Errorf("got %d; want %d", out, want)
+		t.Errorf("got %f; want %f", out, want)
 	}
 }
 
@@ -51,7 +51,7 @@ func TestSum(t *testing.T) {
 	want := 4.0
 	out := m.Val()
 	if out != want {
-		t.Errorf("got %d; want %d", out, want)
+		t.Errorf("got %f; want %f", out, want)
 	}
 }
 
@@ -63,7 +63,7 @@ func TestProd(t *testing.T) {
 	want := -6.0
 	out := m.Val()
 	if out != want {
-		t.Errorf("got %d; want %d", out, want)
+		t.Errorf("got %f; want %f", out, want)
 	}
 }
 
@@ -90,7 +90,7 @@ func TestP(t *testing.T) {
 		}
 		out := m.Val()
 		if math.Abs(out-c.want) > 0.5 {
-			t.Errorf("%d. got %d; want %d", i, out, c.want)
+			t.Errorf("%d. got %f; want %f", i, out, c.want)
 		}
 	}
 }
