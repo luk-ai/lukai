@@ -1,6 +1,8 @@
 sudo: required
 
 matrix:
+  fast_finish: true
+
   include:
     - language: go
       go: 1.7.x
@@ -20,6 +22,8 @@ matrix:
         - make godeps
       script:
         - make gotest
+
+  allow_failures:
     - language: go
       go: tip
       install:
