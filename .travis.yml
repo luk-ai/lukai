@@ -22,6 +22,12 @@ matrix:
         - make godeps
       script:
         - make gotest
+    - language: go
+      go: 1.10.x
+      install:
+        - make godeps
+      script:
+        - make gotest
 
   allow_failures:
     - language: go
