@@ -16,7 +16,7 @@ import (
 
 var (
 	ErrNotImplemented = errors.New("not implemented")
-	PokEdgeAddress    = "localhost:5003"
+	EdgeAddress       = "localhost:5003"
 
 	// ModelCacheSize controls how many training models are cached between
 	// training iterations.

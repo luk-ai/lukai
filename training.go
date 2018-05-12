@@ -96,7 +96,7 @@ func (mt *ModelType) trainerWorker() error {
 	ctx := context.Background()
 	// TODO(d4l3k): Secure request
 	conn, err := grpc.Dial(
-		PokEdgeAddress, grpc.WithInsecure(),
+		EdgeAddress, grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(
 			grpc.MaxCallRecvMsgSize(MaxMsgSize),
 			grpc.MaxCallSendMsgSize(MaxMsgSize),

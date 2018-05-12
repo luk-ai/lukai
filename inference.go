@@ -34,7 +34,7 @@ func (mt *ModelType) loadProdModelRLocked() error {
 		return nil
 	}
 
-	conn, err := grpc.Dial(PokEdgeAddress, grpc.WithInsecure())
+	conn, err := grpc.Dial(EdgeAddress, grpc.WithInsecure())
 	if err != nil {
 		return err
 	}

@@ -29,7 +29,7 @@ func newTestEdgeServer(t *testing.T) *testEdgeServer {
 	if err != nil {
 		t.Fatal(err)
 	}
-	PokEdgeAddress = lis.Addr().String()
+	EdgeAddress = lis.Addr().String()
 
 	grpcServer := grpc.NewServer()
 	s := &testEdgeServer{
