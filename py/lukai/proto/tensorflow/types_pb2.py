@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='tensorflow/types.proto',
   package='tensorflow',
   syntax='proto3',
-  serialized_pb=_b('\n\x16tensorflow/types.proto\x12\ntensorflow*\xe6\x05\n\x08\x44\x61taType\x12\x0e\n\nDT_INVALID\x10\x00\x12\x0c\n\x08\x44T_FLOAT\x10\x01\x12\r\n\tDT_DOUBLE\x10\x02\x12\x0c\n\x08\x44T_INT32\x10\x03\x12\x0c\n\x08\x44T_UINT8\x10\x04\x12\x0c\n\x08\x44T_INT16\x10\x05\x12\x0b\n\x07\x44T_INT8\x10\x06\x12\r\n\tDT_STRING\x10\x07\x12\x10\n\x0c\x44T_COMPLEX64\x10\x08\x12\x0c\n\x08\x44T_INT64\x10\t\x12\x0b\n\x07\x44T_BOOL\x10\n\x12\x0c\n\x08\x44T_QINT8\x10\x0b\x12\r\n\tDT_QUINT8\x10\x0c\x12\r\n\tDT_QINT32\x10\r\x12\x0f\n\x0b\x44T_BFLOAT16\x10\x0e\x12\r\n\tDT_QINT16\x10\x0f\x12\x0e\n\nDT_QUINT16\x10\x10\x12\r\n\tDT_UINT16\x10\x11\x12\x11\n\rDT_COMPLEX128\x10\x12\x12\x0b\n\x07\x44T_HALF\x10\x13\x12\x0f\n\x0b\x44T_RESOURCE\x10\x14\x12\x0e\n\nDT_VARIANT\x10\x15\x12\x10\n\x0c\x44T_FLOAT_REF\x10\x65\x12\x11\n\rDT_DOUBLE_REF\x10\x66\x12\x10\n\x0c\x44T_INT32_REF\x10g\x12\x10\n\x0c\x44T_UINT8_REF\x10h\x12\x10\n\x0c\x44T_INT16_REF\x10i\x12\x0f\n\x0b\x44T_INT8_REF\x10j\x12\x11\n\rDT_STRING_REF\x10k\x12\x14\n\x10\x44T_COMPLEX64_REF\x10l\x12\x10\n\x0c\x44T_INT64_REF\x10m\x12\x0f\n\x0b\x44T_BOOL_REF\x10n\x12\x10\n\x0c\x44T_QINT8_REF\x10o\x12\x11\n\rDT_QUINT8_REF\x10p\x12\x11\n\rDT_QINT32_REF\x10q\x12\x13\n\x0f\x44T_BFLOAT16_REF\x10r\x12\x11\n\rDT_QINT16_REF\x10s\x12\x12\n\x0e\x44T_QUINT16_REF\x10t\x12\x11\n\rDT_UINT16_REF\x10u\x12\x15\n\x11\x44T_COMPLEX128_REF\x10v\x12\x0f\n\x0b\x44T_HALF_REF\x10w\x12\x13\n\x0f\x44T_RESOURCE_REF\x10x\x12\x12\n\x0e\x44T_VARIANT_REF\x10yB,\n\x18org.tensorflow.frameworkB\x0bTypesProtosP\x01\xf8\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x16tensorflow/types.proto\x12\ntensorflow*\xaa\x06\n\x08\x44\x61taType\x12\x0e\n\nDT_INVALID\x10\x00\x12\x0c\n\x08\x44T_FLOAT\x10\x01\x12\r\n\tDT_DOUBLE\x10\x02\x12\x0c\n\x08\x44T_INT32\x10\x03\x12\x0c\n\x08\x44T_UINT8\x10\x04\x12\x0c\n\x08\x44T_INT16\x10\x05\x12\x0b\n\x07\x44T_INT8\x10\x06\x12\r\n\tDT_STRING\x10\x07\x12\x10\n\x0c\x44T_COMPLEX64\x10\x08\x12\x0c\n\x08\x44T_INT64\x10\t\x12\x0b\n\x07\x44T_BOOL\x10\n\x12\x0c\n\x08\x44T_QINT8\x10\x0b\x12\r\n\tDT_QUINT8\x10\x0c\x12\r\n\tDT_QINT32\x10\r\x12\x0f\n\x0b\x44T_BFLOAT16\x10\x0e\x12\r\n\tDT_QINT16\x10\x0f\x12\x0e\n\nDT_QUINT16\x10\x10\x12\r\n\tDT_UINT16\x10\x11\x12\x11\n\rDT_COMPLEX128\x10\x12\x12\x0b\n\x07\x44T_HALF\x10\x13\x12\x0f\n\x0b\x44T_RESOURCE\x10\x14\x12\x0e\n\nDT_VARIANT\x10\x15\x12\r\n\tDT_UINT32\x10\x16\x12\r\n\tDT_UINT64\x10\x17\x12\x10\n\x0c\x44T_FLOAT_REF\x10\x65\x12\x11\n\rDT_DOUBLE_REF\x10\x66\x12\x10\n\x0c\x44T_INT32_REF\x10g\x12\x10\n\x0c\x44T_UINT8_REF\x10h\x12\x10\n\x0c\x44T_INT16_REF\x10i\x12\x0f\n\x0b\x44T_INT8_REF\x10j\x12\x11\n\rDT_STRING_REF\x10k\x12\x14\n\x10\x44T_COMPLEX64_REF\x10l\x12\x10\n\x0c\x44T_INT64_REF\x10m\x12\x0f\n\x0b\x44T_BOOL_REF\x10n\x12\x10\n\x0c\x44T_QINT8_REF\x10o\x12\x11\n\rDT_QUINT8_REF\x10p\x12\x11\n\rDT_QINT32_REF\x10q\x12\x13\n\x0f\x44T_BFLOAT16_REF\x10r\x12\x11\n\rDT_QINT16_REF\x10s\x12\x12\n\x0e\x44T_QUINT16_REF\x10t\x12\x11\n\rDT_UINT16_REF\x10u\x12\x15\n\x11\x44T_COMPLEX128_REF\x10v\x12\x0f\n\x0b\x44T_HALF_REF\x10w\x12\x13\n\x0f\x44T_RESOURCE_REF\x10x\x12\x12\n\x0e\x44T_VARIANT_REF\x10y\x12\x11\n\rDT_UINT32_REF\x10z\x12\x11\n\rDT_UINT64_REF\x10{Bk\n\x18org.tensorflow.frameworkB\x0bTypesProtosP\x01Z=github.com/tensorflow/tensorflow/tensorflow/go/core/framework\xf8\x01\x01\x62\x06proto3')
 )
 
 _DATATYPE = _descriptor.EnumDescriptor(
@@ -118,94 +118,110 @@ _DATATYPE = _descriptor.EnumDescriptor(
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_FLOAT_REF', index=22, number=101,
+      name='DT_UINT32', index=22, number=22,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_DOUBLE_REF', index=23, number=102,
+      name='DT_UINT64', index=23, number=23,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_INT32_REF', index=24, number=103,
+      name='DT_FLOAT_REF', index=24, number=101,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_UINT8_REF', index=25, number=104,
+      name='DT_DOUBLE_REF', index=25, number=102,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_INT16_REF', index=26, number=105,
+      name='DT_INT32_REF', index=26, number=103,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_INT8_REF', index=27, number=106,
+      name='DT_UINT8_REF', index=27, number=104,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_STRING_REF', index=28, number=107,
+      name='DT_INT16_REF', index=28, number=105,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_COMPLEX64_REF', index=29, number=108,
+      name='DT_INT8_REF', index=29, number=106,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_INT64_REF', index=30, number=109,
+      name='DT_STRING_REF', index=30, number=107,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_BOOL_REF', index=31, number=110,
+      name='DT_COMPLEX64_REF', index=31, number=108,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_QINT8_REF', index=32, number=111,
+      name='DT_INT64_REF', index=32, number=109,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_QUINT8_REF', index=33, number=112,
+      name='DT_BOOL_REF', index=33, number=110,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_QINT32_REF', index=34, number=113,
+      name='DT_QINT8_REF', index=34, number=111,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_BFLOAT16_REF', index=35, number=114,
+      name='DT_QUINT8_REF', index=35, number=112,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_QINT16_REF', index=36, number=115,
+      name='DT_QINT32_REF', index=36, number=113,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_QUINT16_REF', index=37, number=116,
+      name='DT_BFLOAT16_REF', index=37, number=114,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_UINT16_REF', index=38, number=117,
+      name='DT_QINT16_REF', index=38, number=115,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_COMPLEX128_REF', index=39, number=118,
+      name='DT_QUINT16_REF', index=39, number=116,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_HALF_REF', index=40, number=119,
+      name='DT_UINT16_REF', index=40, number=117,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_RESOURCE_REF', index=41, number=120,
+      name='DT_COMPLEX128_REF', index=41, number=118,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='DT_VARIANT_REF', index=42, number=121,
+      name='DT_HALF_REF', index=42, number=119,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DT_RESOURCE_REF', index=43, number=120,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DT_VARIANT_REF', index=44, number=121,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DT_UINT32_REF', index=45, number=122,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DT_UINT64_REF', index=46, number=123,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=39,
-  serialized_end=781,
+  serialized_end=849,
 )
 _sym_db.RegisterEnumDescriptor(_DATATYPE)
 
@@ -232,6 +248,8 @@ DT_COMPLEX128 = 18
 DT_HALF = 19
 DT_RESOURCE = 20
 DT_VARIANT = 21
+DT_UINT32 = 22
+DT_UINT64 = 23
 DT_FLOAT_REF = 101
 DT_DOUBLE_REF = 102
 DT_INT32_REF = 103
@@ -253,6 +271,8 @@ DT_COMPLEX128_REF = 118
 DT_HALF_REF = 119
 DT_RESOURCE_REF = 120
 DT_VARIANT_REF = 121
+DT_UINT32_REF = 122
+DT_UINT64_REF = 123
 
 
 DESCRIPTOR.enum_types_by_name['DataType'] = _DATATYPE
@@ -260,15 +280,5 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 DESCRIPTOR.has_options = True
-DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\030org.tensorflow.frameworkB\013TypesProtosP\001\370\001\001'))
-try:
-  # THESE ELEMENTS WILL BE DEPRECATED.
-  # Please use the generated *_pb2_grpc.py files instead.
-  import grpc
-  from grpc.beta import implementations as beta_implementations
-  from grpc.beta import interfaces as beta_interfaces
-  from grpc.framework.common import cardinality
-  from grpc.framework.interfaces.face import utilities as face_utilities
-except ImportError:
-  pass
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\030org.tensorflow.frameworkB\013TypesProtosP\001Z=github.com/tensorflow/tensorflow/tensorflow/go/core/framework\370\001\001'))
 # @@protoc_insertion_point(module_scope)
