@@ -63,6 +63,12 @@ func (mt *ModelType) StartTraining() error {
 			if err := mt.trainerWorker(); err != nil {
 				// TODO(d4l3k): Reconnect on network failure.
 				log.Printf("Training error (try #%d). Will retry: %+v", retryCount, err)
+
+				mt.training.Lock()
+				defer mt.training.Unlock()
+
+				mt.training.err = err
+
 				return err
 			}
 			return nil

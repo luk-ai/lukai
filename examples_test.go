@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
+	"go.uber.org/goleak"
 )
 
 type exampleVal struct {
@@ -41,6 +42,8 @@ func newTensor(v interface{}) *tensorflow.Tensor {
 }
 
 func TestExamplesSerialization(t *testing.T) {
+	defer goleak.VerifyNoLeaks(t)
+
 	/*
 			All TF types
 
@@ -199,6 +202,8 @@ func TestExamplesSerialization(t *testing.T) {
 }
 
 func TestLog(t *testing.T) {
+	defer goleak.VerifyNoLeaks(t)
+
 	dir, err := ioutil.TempDir("", "pok-server-TestLog")
 	if err != nil {
 		t.Fatalf("%+v", err)
@@ -263,5 +268,13 @@ func TestLog(t *testing.T) {
 			"failed to get all examples from getNExamples after %d examples. Seen: %+v",
 			count, seen,
 		)
+	}
+
+	if err := mt.ExamplesError(); err != nil {
+		t.Error(err)
+	}
+
+	if err := mt.TrainingError(); err != nil {
+		t.Error(err)
 	}
 }

@@ -41,6 +41,8 @@ type ModelType struct {
 
 		running bool
 		stop    chan struct{}
+
+		err error
 	}
 
 	examplesMeta struct {
@@ -49,6 +51,8 @@ type ModelType struct {
 		index     clientpb.ExampleIndex
 		saveIndex func()
 		stop      func()
+
+		err error
 	}
 
 	modelCache *lru.Cache
@@ -72,8 +76,13 @@ func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 		300*time.Millisecond,
 		func() {
 			if err := mt.saveExamplesMeta(); err != nil {
-				// TODO(d4l3k): Better error handling.
 				log.Printf("saveExamplesMeta error: %+v", err)
+
+				mt.examplesMeta.Lock()
+				defer mt.examplesMeta.Unlock()
+
+				mt.examplesMeta.err = err
+				return
 			}
 		},
 	)

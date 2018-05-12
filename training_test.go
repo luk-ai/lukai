@@ -121,4 +121,12 @@ func TestModelTraining(t *testing.T) {
 		}
 		return nil
 	})
+
+	if err := mt.ExamplesError(); err != nil {
+		t.Error(err)
+	}
+
+	if err := mt.TrainingError(); err != nil {
+		t.Error(err)
+	}
 }
