@@ -91,7 +91,8 @@ func TestModelTraining(t *testing.T) {
 	mt, stop := newTestModelType(t)
 	defer stop()
 
-	mt.StartTraining()
+	ctx := context.Background()
+	mt.StartTraining(ctx)
 	mt.training.Lock()
 	if mt.training.running {
 		t.Fatalf("ModelType shouldn't be training due to no examples")
@@ -104,7 +105,7 @@ func TestModelTraining(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	mt.StartTraining()
+	mt.StartTraining(ctx)
 	mt.training.Lock()
 	if !mt.training.running {
 		t.Fatalf("ModelType should be training")

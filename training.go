@@ -29,7 +29,7 @@ func (mt *ModelType) IsTraining() bool {
 }
 
 // StartTraining starts the training worker.
-func (mt *ModelType) StartTraining() error {
+func (mt *ModelType) StartTraining(ctx context.Context) error {
 	mt.training.Lock()
 	defer mt.training.Unlock()
 
@@ -42,6 +42,9 @@ func (mt *ModelType) StartTraining() error {
 		return nil
 	}
 
+	ctx, cancel := context.WithCancel(ctx)
+	mt.training.stop = cancel
+
 	mt.training.running = true
 	go func() {
 		backoffOptions := backoff.NewExponentialBackOff()
@@ -53,14 +56,14 @@ func (mt *ModelType) StartTraining() error {
 
 		backoff.Retry(func() error {
 			select {
-			case <-mt.training.stop:
+			case <-ctx.Done():
 				return nil
 			default:
 			}
 
 			retryCount += 1
 
-			if err := mt.trainerWorker(); err != nil {
+			if err := mt.trainerWorker(ctx); err != nil {
 				// TODO(d4l3k): Reconnect on network failure.
 				log.Printf("Training error (try #%d). Will retry: %+v", retryCount, err)
 
@@ -91,17 +94,17 @@ func (mt *ModelType) StopTraining() error {
 		return nil
 	}
 
-	mt.training.stop <- struct{}{}
+	mt.training.stop()
 
 	mt.modelCache.Purge()
 
 	return nil
 }
 
-func (mt *ModelType) trainerWorker() error {
-	ctx := context.Background()
+func (mt *ModelType) trainerWorker(ctx context.Context) error {
 	// TODO(d4l3k): Secure request
-	conn, err := grpc.Dial(
+	conn, err := grpc.DialContext(
+		ctx,
 		EdgeAddress, grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(
 			grpc.MaxCallRecvMsgSize(MaxMsgSize),
@@ -126,7 +129,7 @@ func (mt *ModelType) trainerWorker() error {
 
 	for {
 		select {
-		case <-mt.training.stop:
+		case <-ctx.Done():
 			return nil
 		default:
 		}
@@ -234,6 +237,12 @@ func (mt *ModelType) processWork(
 	defer batchers.Close()
 
 	for i := int64(0); i < work.HyperParams.NumLocalRounds; i++ {
+		select {
+		case <-ctx.Done():
+			return context.Canceled
+		default:
+		}
+
 		examples, err := mt.getExampleBatch(batchers, cache, work.HyperParams.BatchSize)
 		if err != nil {
 			return err

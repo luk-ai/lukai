@@ -1,6 +1,7 @@
 package lukai
 
 import (
+	"context"
 	"log"
 	"os"
 	"sync"
@@ -40,7 +41,7 @@ type ModelType struct {
 		sync.Mutex
 
 		running bool
-		stop    chan struct{}
+		stop    context.CancelFunc
 
 		err error
 	}
@@ -71,7 +72,6 @@ func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 		return nil, err
 	}
 
-	mt.training.stop = make(chan struct{}, 1)
 	mt.examplesMeta.saveIndex, mt.examplesMeta.stop = debounce.Debounce(
 		300*time.Millisecond,
 		func() {
