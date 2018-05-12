@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"go.uber.org/goleak"
 	"golang.org/x/net/context"
 
 	"google.golang.org/grpc"
@@ -74,11 +75,16 @@ func newTestModelType(t *testing.T) (*ModelType, func()) {
 	}
 
 	return mt, func() {
+		if err := mt.Close(); err != nil {
+			t.Error(err)
+		}
 		os.RemoveAll(dir)
 	}
 }
 
 func TestModelTraining(t *testing.T) {
+	defer goleak.VerifyNoLeaks(t)
+
 	s := newTestEdgeServer(t)
 	defer s.stop()
 

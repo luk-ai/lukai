@@ -92,3 +92,11 @@ func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 
 	return &mt, nil
 }
+
+func (mt *ModelType) Close() error {
+	mt.examplesMeta.stop()
+	if err := mt.saveExamplesMeta(); err != nil {
+		return err
+	}
+	return nil
+}
