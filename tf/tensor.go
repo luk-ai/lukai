@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"io"
-	"log"
 	"reflect"
 	"sort"
 
@@ -101,7 +100,6 @@ func EncodeTensor(w io.Writer, val *tensorflow.Tensor) error {
 	if n != length {
 		return errors.Errorf("expected to write %d bytes; only wrote %d", length, n)
 	}
-	log.Printf("datatype %+v, shape %+v, length %d", dataType, shape, length)
 	return nil
 }
 
