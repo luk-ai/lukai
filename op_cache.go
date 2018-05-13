@@ -2,6 +2,7 @@ package lukai
 
 import (
 	"github.com/luk-ai/lukai/tf"
+	"github.com/pkg/errors"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
@@ -53,6 +54,9 @@ func (cache tfOpCache) resolveFeed(name string) (tensorflow.Output, error) {
 		output, err = cache.model.Output(name)
 		if err != nil {
 			return tensorflow.Output{}, err
+		}
+		if output.Index < 0 {
+			return tensorflow.Output{}, errors.Errorf("invalid index in output: %q, %+v", name, output)
 		}
 		cache.outputs[name] = output
 	}
