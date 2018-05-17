@@ -79,6 +79,12 @@ func (mt *ModelType) Run(
 	mt.prod.RLock()
 	defer mt.prod.RUnlock()
 
+	if mt.prod.model == nil {
+		if err := mt.loadProdModelRLocked(); err != nil {
+			return nil, err
+		}
+	}
+
 	feedsResolved, fetchesResolved, targetsResolved, err := mt.prod.cache.resolve(
 		example{
 			feeds:   feeds,
