@@ -2,6 +2,7 @@ package lukai
 
 import (
 	"context"
+	"crypto/tls"
 	"io"
 	"log"
 	"runtime"
@@ -16,9 +17,16 @@ import (
 	"github.com/luk-ai/lukai/units"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
-var MaxMsgSize = 100 * units.MB
+var (
+	MaxMsgSize = 100 * units.MB
+
+	// TLSConfig is the tls.Config to use for dialing GRPC endpoints. Mostly used
+	// for testing purposes.
+	TLSConfig *tls.Config
+)
 
 // IsTraining returns whether or not a job is training.
 func (mt *ModelType) IsTraining() bool {
@@ -101,11 +109,17 @@ func (mt *ModelType) StopTraining() error {
 	return nil
 }
 
+func dial(ctx context.Context, addr string, opts ...grpc.DialOption) (*grpc.ClientConn, error) {
+	if TLSConfig != nil {
+		opts = append(opts, grpc.WithTransportCredentials(credentials.NewTLS(TLSConfig)))
+	}
+	return grpc.DialContext(ctx, addr, opts...)
+}
+
 func (mt *ModelType) trainerWorker(ctx context.Context) error {
-	// TODO(d4l3k): Secure request
-	conn, err := grpc.DialContext(
+	conn, err := dial(
 		ctx,
-		EdgeAddress, grpc.WithInsecure(),
+		EdgeAddress,
 		grpc.WithDefaultCallOptions(
 			grpc.MaxCallRecvMsgSize(MaxMsgSize),
 			grpc.MaxCallSendMsgSize(MaxMsgSize),

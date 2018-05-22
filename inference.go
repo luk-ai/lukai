@@ -5,8 +5,6 @@ import (
 
 	context "golang.org/x/net/context"
 
-	"google.golang.org/grpc"
-
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 
 	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
@@ -34,7 +32,7 @@ func (mt *ModelType) loadProdModelRLocked() error {
 		return nil
 	}
 
-	conn, err := grpc.Dial(EdgeAddress, grpc.WithInsecure())
+	conn, err := dial(context.TODO(), EdgeAddress)
 	if err != nil {
 		return err
 	}
