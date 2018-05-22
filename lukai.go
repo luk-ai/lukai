@@ -17,12 +17,13 @@ import (
 
 var (
 	ErrNotImplemented = errors.New("not implemented")
-	EdgeAddress       = "localhost:5003"
+	EdgeAddress       = "edge.luk.ai"
 
 	// ModelCacheSize controls how many training models are cached between
 	// training iterations.
 	ModelCacheSize = 3
 
+	DialTimeout           = 60 * time.Second
 	outOfDateModelTimeout = 24 * time.Hour
 )
 
@@ -66,6 +67,16 @@ func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 		Domain:    domain,
 		ModelType: modelType,
 		DataDir:   dataDir,
+	}
+
+	if domain == "" {
+		return nil, errors.Errorf("domain required")
+	}
+	if modelType == "" {
+		return nil, errors.Errorf("modelType required")
+	}
+	if dataDir == "" {
+		return nil, errors.Errorf("dataDir required")
 	}
 
 	if err := os.MkdirAll(dataDir, DirPerm); err != nil {

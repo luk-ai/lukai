@@ -9,15 +9,17 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
+	"github.com/pkg/errors"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/naming"
+
 	"github.com/luk-ai/lukai/metrics"
 	"github.com/luk-ai/lukai/net"
 	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
 	"github.com/luk-ai/lukai/protobuf/clientpb"
 	"github.com/luk-ai/lukai/tf"
 	"github.com/luk-ai/lukai/units"
-	"github.com/pkg/errors"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 )
 
 var (
@@ -110,10 +112,24 @@ func (mt *ModelType) StopTraining() error {
 }
 
 func dial(ctx context.Context, addr string, opts ...grpc.DialOption) (*grpc.ClientConn, error) {
-	if TLSConfig != nil {
-		opts = append(opts, grpc.WithTransportCredentials(credentials.NewTLS(TLSConfig)))
+	ctx, cancel := context.WithTimeout(ctx, DialTimeout)
+	defer cancel()
+
+	resolver, err := naming.NewDNSResolver()
+	if err != nil {
+		return nil, err
 	}
-	return grpc.DialContext(ctx, addr, opts...)
+	opts = append(
+		opts,
+		grpc.WithTransportCredentials(credentials.NewTLS(TLSConfig)),
+		grpc.WithBalancer(grpc.RoundRobin(resolver)),
+		grpc.WithBlock(),
+	)
+	conn, err := grpc.DialContext(ctx, addr, opts...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "dialing %q", addr)
+	}
+	return conn, nil
 }
 
 func (mt *ModelType) trainerWorker(ctx context.Context) error {
@@ -131,14 +147,15 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 	defer conn.Close()
 
 	c := aggregatorpb.NewEdgeClient(conn)
-	stream, err := c.GetWork(ctx, &aggregatorpb.GetWorkRequest{
+	req := aggregatorpb.GetWorkRequest{
 		Id: aggregatorpb.ModelID{
 			Domain:    mt.Domain,
 			ModelType: mt.ModelType,
 		},
-	})
+	}
+	stream, err := c.GetWork(ctx, &req)
 	if err != nil {
-		return err
+		return errors.Wrapf(err, "GetWork(%+v)", req)
 	}
 
 	for {
@@ -153,7 +170,7 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 			break
 		}
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "stream.Recv")
 		}
 		weights := net.ReadModelWeights(func() (*aggregatorpb.ModelWeightChunk, error) {
 			resp, err := stream.Recv()
