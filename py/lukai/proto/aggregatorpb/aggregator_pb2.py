@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='aggregatorpb/aggregator.proto',
   package='aggregatorpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x1d\x61ggregatorpb/aggregator.proto\x12\x0c\x61ggregatorpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9d\x01\n\x0bHyperParams\x12\x1a\n\x12proportion_clients\x18\x01 \x01(\x01\x12\x12\n\nbatch_size\x18\x02 \x01(\x03\x12\x12\n\nnum_rounds\x18\x03 \x01(\x03\x12\x15\n\rlearning_rate\x18\x04 \x01(\x01\x12\x18\n\x10num_local_rounds\x18\x05 \x01(\x03\x12\x19\n\x11quantized_updates\x18\x06 \x01(\x08\"\x8f\x02\n\x04Work\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x14\n\x0cnum_examples\x18\x02 \x01(\x03\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x03\x12\r\n\x05\x65poch\x18\x04 \x01(\x03\x12\x11\n\tmodel_url\x18\n \x01(\t\x12\x35\n\x0chyper_params\x18\x07 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x12\n\ntime_taken\x18\x08 \x01(\x01\x12\x35\n\x07started\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x0f\n\x07metrics\x18\t \x03(\x01\"9\n\x07ModelID\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x04\"9\n\x0eGetWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\":\n\x10ModelWeightChunk\x12\x0c\n\x04\x62ody\x18\x01 \x01(\x0c\x12\x0c\n\x04more\x18\x02 \x01(\x08\x12\n\n\x02id\x18\x03 \x01(\x04\"p\n\x0fGetWorkResponse\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"r\n\x11ReportWorkRequest\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"\x14\n\x12ReportWorkResponse\";\n\x10ProdModelRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"&\n\x11ProdModelResponse\x12\x11\n\tmodel_url\x18\x02 \x01(\t\"T\n\x13ModelTypeAllocation\x12/\n\nmodel_type\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x0c\n\x04\x61\x64\x64r\x18\x02 \x01(\t\"8\n\rNotifyRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x10\n\x0eNotifyResponse\"E\n\x1a\x43\x61ncelModelTrainingRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1d\n\x1b\x43\x61ncelModelTrainingResponse*V\n\x0eTrainingStatus\x12\r\n\tSCHEDULED\x10\x00\x12\x0c\n\x08TRAINING\x10\x01\x12\r\n\tSUCCEEDED\x10\x02\x12\n\n\x06\x46\x41ILED\x10\x03\x12\x0c\n\x08\x43\x41NCELED\x10\x04\x32\xe2\x02\n\nAggregator\x12J\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x1d.aggregatorpb.GetWorkResponse\"\x00\x30\x01\x12S\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00(\x01\x12\x45\n\x06Notify\x12\x1b.aggregatorpb.NotifyRequest\x1a\x1c.aggregatorpb.NotifyResponse\"\x00\x12l\n\x13\x43\x61ncelModelTraining\x12(.aggregatorpb.CancelModelTrainingRequest\x1a).aggregatorpb.CancelModelTrainingResponse\"\x00\x32\xf7\x01\n\x04\x45\x64ge\x12J\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x1d.aggregatorpb.GetWorkResponse\"\x00\x30\x01\x12S\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00(\x01\x12N\n\tProdModel\x12\x1e.aggregatorpb.ProdModelRequest\x1a\x1f.aggregatorpb.ProdModelResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x1d\x61ggregatorpb/aggregator.proto\x12\x0c\x61ggregatorpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9d\x01\n\x0bHyperParams\x12\x1a\n\x12proportion_clients\x18\x01 \x01(\x01\x12\x12\n\nbatch_size\x18\x02 \x01(\x03\x12\x12\n\nnum_rounds\x18\x03 \x01(\x03\x12\x15\n\rlearning_rate\x18\x04 \x01(\x01\x12\x18\n\x10num_local_rounds\x18\x05 \x01(\x03\x12\x19\n\x11quantized_updates\x18\x06 \x01(\x08\"k\n\x0eSchedulingInfo\x12\x33\n\tscheduled\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x04\x90\xdf\x1f\x01\x12$\n\x06repeat\x18\x02 \x01(\x0e\x32\x14.aggregatorpb.Repeat\"\x8f\x02\n\x04Work\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x14\n\x0cnum_examples\x18\x02 \x01(\x03\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x03\x12\r\n\x05\x65poch\x18\x04 \x01(\x03\x12\x11\n\tmodel_url\x18\n \x01(\t\x12\x35\n\x0chyper_params\x18\x07 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x12\n\ntime_taken\x18\x08 \x01(\x01\x12\x35\n\x07started\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x0f\n\x07metrics\x18\t \x03(\x01\"9\n\x07ModelID\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x04\"9\n\x0eGetWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\":\n\x10ModelWeightChunk\x12\x0c\n\x04\x62ody\x18\x01 \x01(\x0c\x12\x0c\n\x04more\x18\x02 \x01(\x08\x12\n\n\x02id\x18\x03 \x01(\x04\"p\n\x0fGetWorkResponse\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"r\n\x11ReportWorkRequest\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"\x14\n\x12ReportWorkResponse\";\n\x10ProdModelRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"&\n\x11ProdModelResponse\x12\x11\n\tmodel_url\x18\x02 \x01(\t\"T\n\x13ModelTypeAllocation\x12/\n\nmodel_type\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x0c\n\x04\x61\x64\x64r\x18\x02 \x01(\t\"8\n\rNotifyRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x10\n\x0eNotifyResponse\"E\n\x1a\x43\x61ncelModelTrainingRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1d\n\x1b\x43\x61ncelModelTrainingResponse*V\n\x0eTrainingStatus\x12\r\n\tSCHEDULED\x10\x00\x12\x0c\n\x08TRAINING\x10\x01\x12\r\n\tSUCCEEDED\x10\x02\x12\n\n\x06\x46\x41ILED\x10\x03\x12\x0c\n\x08\x43\x41NCELED\x10\x04*C\n\x06Repeat\x12\t\n\x05NEVER\x10\x00\x12\n\n\x06HOURLY\x10\x01\x12\t\n\x05\x44\x41ILY\x10\x02\x12\n\n\x06WEEKLY\x10\x03\x12\x0b\n\x07MONTHLY\x10\x04\x32\xe2\x02\n\nAggregator\x12J\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x1d.aggregatorpb.GetWorkResponse\"\x00\x30\x01\x12S\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00(\x01\x12\x45\n\x06Notify\x12\x1b.aggregatorpb.NotifyRequest\x1a\x1c.aggregatorpb.NotifyResponse\"\x00\x12l\n\x13\x43\x61ncelModelTraining\x12(.aggregatorpb.CancelModelTrainingRequest\x1a).aggregatorpb.CancelModelTrainingResponse\"\x00\x32\xf7\x01\n\x04\x45\x64ge\x12J\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x1d.aggregatorpb.GetWorkResponse\"\x00\x30\x01\x12S\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00(\x01\x12N\n\tProdModel\x12\x1e.aggregatorpb.ProdModelRequest\x1a\x1f.aggregatorpb.ProdModelResponse\"\x00\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -54,17 +54,57 @@ _TRAININGSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1356,
-  serialized_end=1442,
+  serialized_start=1465,
+  serialized_end=1551,
 )
 _sym_db.RegisterEnumDescriptor(_TRAININGSTATUS)
 
 TrainingStatus = enum_type_wrapper.EnumTypeWrapper(_TRAININGSTATUS)
+_REPEAT = _descriptor.EnumDescriptor(
+  name='Repeat',
+  full_name='aggregatorpb.Repeat',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='NEVER', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='HOURLY', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DAILY', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='WEEKLY', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='MONTHLY', index=4, number=4,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=1553,
+  serialized_end=1620,
+)
+_sym_db.RegisterEnumDescriptor(_REPEAT)
+
+Repeat = enum_type_wrapper.EnumTypeWrapper(_REPEAT)
 SCHEDULED = 0
 TRAINING = 1
 SUCCEEDED = 2
 FAILED = 3
 CANCELED = 4
+NEVER = 0
+HOURLY = 1
+DAILY = 2
+WEEKLY = 3
+MONTHLY = 4
 
 
 
@@ -81,42 +121,42 @@ _HYPERPARAMS = _descriptor.Descriptor(
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='batch_size', full_name='aggregatorpb.HyperParams.batch_size', index=1,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='num_rounds', full_name='aggregatorpb.HyperParams.num_rounds', index=2,
       number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='learning_rate', full_name='aggregatorpb.HyperParams.learning_rate', index=3,
       number=4, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='num_local_rounds', full_name='aggregatorpb.HyperParams.num_local_rounds', index=4,
       number=5, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='quantized_updates', full_name='aggregatorpb.HyperParams.quantized_updates', index=5,
       number=6, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -134,6 +174,44 @@ _HYPERPARAMS = _descriptor.Descriptor(
 )
 
 
+_SCHEDULINGINFO = _descriptor.Descriptor(
+  name='SchedulingInfo',
+  full_name='aggregatorpb.SchedulingInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='scheduled', full_name='aggregatorpb.SchedulingInfo.scheduled', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001')), file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='repeat', full_name='aggregatorpb.SchedulingInfo.repeat', index=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=287,
+  serialized_end=394,
+)
+
+
 _WORK = _descriptor.Descriptor(
   name='Work',
   full_name='aggregatorpb.Work',
@@ -147,63 +225,63 @@ _WORK = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='num_examples', full_name='aggregatorpb.Work.num_examples', index=1,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='num_clients', full_name='aggregatorpb.Work.num_clients', index=2,
       number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='epoch', full_name='aggregatorpb.Work.epoch', index=3,
       number=4, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='model_url', full_name='aggregatorpb.Work.model_url', index=4,
       number=10, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='hyper_params', full_name='aggregatorpb.Work.hyper_params', index=5,
       number=7, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='time_taken', full_name='aggregatorpb.Work.time_taken', index=6,
       number=8, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='started', full_name='aggregatorpb.Work.started', index=7,
       number=11, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001\310\336\037\000'))),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001\310\336\037\000')), file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='metrics', full_name='aggregatorpb.Work.metrics', index=8,
       number=9, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -216,8 +294,8 @@ _WORK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=288,
-  serialized_end=559,
+  serialized_start=397,
+  serialized_end=668,
 )
 
 
@@ -234,21 +312,21 @@ _MODELID = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='model_type', full_name='aggregatorpb.ModelID.model_type', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='id', full_name='aggregatorpb.ModelID.id', index=2,
       number=3, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -261,8 +339,8 @@ _MODELID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=561,
-  serialized_end=618,
+  serialized_start=670,
+  serialized_end=727,
 )
 
 
@@ -279,7 +357,7 @@ _GETWORKREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -292,8 +370,8 @@ _GETWORKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=620,
-  serialized_end=677,
+  serialized_start=729,
+  serialized_end=786,
 )
 
 
@@ -310,21 +388,21 @@ _MODELWEIGHTCHUNK = _descriptor.Descriptor(
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='more', full_name='aggregatorpb.ModelWeightChunk.more', index=1,
       number=2, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='id', full_name='aggregatorpb.ModelWeightChunk.id', index=2,
       number=3, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -337,8 +415,8 @@ _MODELWEIGHTCHUNK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=679,
-  serialized_end=737,
+  serialized_start=788,
+  serialized_end=846,
 )
 
 
@@ -355,14 +433,14 @@ _GETWORKRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='weights', full_name='aggregatorpb.GetWorkResponse.weights', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -378,8 +456,8 @@ _GETWORKRESPONSE = _descriptor.Descriptor(
       name='type', full_name='aggregatorpb.GetWorkResponse.type',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=739,
-  serialized_end=851,
+  serialized_start=848,
+  serialized_end=960,
 )
 
 
@@ -396,14 +474,14 @@ _REPORTWORKREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='weights', full_name='aggregatorpb.ReportWorkRequest.weights', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -419,8 +497,8 @@ _REPORTWORKREQUEST = _descriptor.Descriptor(
       name='type', full_name='aggregatorpb.ReportWorkRequest.type',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=853,
-  serialized_end=967,
+  serialized_start=962,
+  serialized_end=1076,
 )
 
 
@@ -443,8 +521,8 @@ _REPORTWORKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=969,
-  serialized_end=989,
+  serialized_start=1078,
+  serialized_end=1098,
 )
 
 
@@ -461,7 +539,7 @@ _PRODMODELREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -474,8 +552,8 @@ _PRODMODELREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=991,
-  serialized_end=1050,
+  serialized_start=1100,
+  serialized_end=1159,
 )
 
 
@@ -492,7 +570,7 @@ _PRODMODELRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -505,8 +583,8 @@ _PRODMODELRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1052,
-  serialized_end=1090,
+  serialized_start=1161,
+  serialized_end=1199,
 )
 
 
@@ -523,14 +601,14 @@ _MODELTYPEALLOCATION = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='addr', full_name='aggregatorpb.ModelTypeAllocation.addr', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -543,8 +621,8 @@ _MODELTYPEALLOCATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1092,
-  serialized_end=1176,
+  serialized_start=1201,
+  serialized_end=1285,
 )
 
 
@@ -561,7 +639,7 @@ _NOTIFYREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -574,8 +652,8 @@ _NOTIFYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1178,
-  serialized_end=1234,
+  serialized_start=1287,
+  serialized_end=1343,
 )
 
 
@@ -598,8 +676,8 @@ _NOTIFYRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1236,
-  serialized_end=1252,
+  serialized_start=1345,
+  serialized_end=1361,
 )
 
 
@@ -616,7 +694,7 @@ _CANCELMODELTRAININGREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))),
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -629,8 +707,8 @@ _CANCELMODELTRAININGREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1254,
-  serialized_end=1323,
+  serialized_start=1363,
+  serialized_end=1432,
 )
 
 
@@ -653,10 +731,12 @@ _CANCELMODELTRAININGRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1325,
-  serialized_end=1354,
+  serialized_start=1434,
+  serialized_end=1463,
 )
 
+_SCHEDULINGINFO.fields_by_name['scheduled'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_SCHEDULINGINFO.fields_by_name['repeat'].enum_type = _REPEAT
 _WORK.fields_by_name['id'].message_type = _MODELID
 _WORK.fields_by_name['hyper_params'].message_type = _HYPERPARAMS
 _WORK.fields_by_name['started'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
@@ -682,6 +762,7 @@ _MODELTYPEALLOCATION.fields_by_name['model_type'].message_type = _MODELID
 _NOTIFYREQUEST.fields_by_name['id'].message_type = _MODELID
 _CANCELMODELTRAININGREQUEST.fields_by_name['id'].message_type = _MODELID
 DESCRIPTOR.message_types_by_name['HyperParams'] = _HYPERPARAMS
+DESCRIPTOR.message_types_by_name['SchedulingInfo'] = _SCHEDULINGINFO
 DESCRIPTOR.message_types_by_name['Work'] = _WORK
 DESCRIPTOR.message_types_by_name['ModelID'] = _MODELID
 DESCRIPTOR.message_types_by_name['GetWorkRequest'] = _GETWORKREQUEST
@@ -697,6 +778,7 @@ DESCRIPTOR.message_types_by_name['NotifyResponse'] = _NOTIFYRESPONSE
 DESCRIPTOR.message_types_by_name['CancelModelTrainingRequest'] = _CANCELMODELTRAININGREQUEST
 DESCRIPTOR.message_types_by_name['CancelModelTrainingResponse'] = _CANCELMODELTRAININGRESPONSE
 DESCRIPTOR.enum_types_by_name['TrainingStatus'] = _TRAININGSTATUS
+DESCRIPTOR.enum_types_by_name['Repeat'] = _REPEAT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 HyperParams = _reflection.GeneratedProtocolMessageType('HyperParams', (_message.Message,), dict(
@@ -705,6 +787,13 @@ HyperParams = _reflection.GeneratedProtocolMessageType('HyperParams', (_message.
   # @@protoc_insertion_point(class_scope:aggregatorpb.HyperParams)
   ))
 _sym_db.RegisterMessage(HyperParams)
+
+SchedulingInfo = _reflection.GeneratedProtocolMessageType('SchedulingInfo', (_message.Message,), dict(
+  DESCRIPTOR = _SCHEDULINGINFO,
+  __module__ = 'aggregatorpb.aggregator_pb2'
+  # @@protoc_insertion_point(class_scope:aggregatorpb.SchedulingInfo)
+  ))
+_sym_db.RegisterMessage(SchedulingInfo)
 
 Work = _reflection.GeneratedProtocolMessageType('Work', (_message.Message,), dict(
   DESCRIPTOR = _WORK,
@@ -805,6 +894,8 @@ CancelModelTrainingResponse = _reflection.GeneratedProtocolMessageType('CancelMo
 _sym_db.RegisterMessage(CancelModelTrainingResponse)
 
 
+_SCHEDULINGINFO.fields_by_name['scheduled'].has_options = True
+_SCHEDULINGINFO.fields_by_name['scheduled']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001'))
 _WORK.fields_by_name['id'].has_options = True
 _WORK.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _WORK.fields_by_name['hyper_params'].has_options = True
@@ -821,390 +912,97 @@ _NOTIFYREQUEST.fields_by_name['id'].has_options = True
 _NOTIFYREQUEST.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _CANCELMODELTRAININGREQUEST.fields_by_name['id'].has_options = True
 _CANCELMODELTRAININGREQUEST.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
-try:
-  # THESE ELEMENTS WILL BE DEPRECATED.
-  # Please use the generated *_pb2_grpc.py files instead.
-  import grpc
-  from grpc.beta import implementations as beta_implementations
-  from grpc.beta import interfaces as beta_interfaces
-  from grpc.framework.common import cardinality
-  from grpc.framework.interfaces.face import utilities as face_utilities
+
+_AGGREGATOR = _descriptor.ServiceDescriptor(
+  name='Aggregator',
+  full_name='aggregatorpb.Aggregator',
+  file=DESCRIPTOR,
+  index=0,
+  options=None,
+  serialized_start=1623,
+  serialized_end=1977,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='GetWork',
+    full_name='aggregatorpb.Aggregator.GetWork',
+    index=0,
+    containing_service=None,
+    input_type=_GETWORKREQUEST,
+    output_type=_GETWORKRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ReportWork',
+    full_name='aggregatorpb.Aggregator.ReportWork',
+    index=1,
+    containing_service=None,
+    input_type=_REPORTWORKREQUEST,
+    output_type=_REPORTWORKRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='Notify',
+    full_name='aggregatorpb.Aggregator.Notify',
+    index=2,
+    containing_service=None,
+    input_type=_NOTIFYREQUEST,
+    output_type=_NOTIFYRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CancelModelTraining',
+    full_name='aggregatorpb.Aggregator.CancelModelTraining',
+    index=3,
+    containing_service=None,
+    input_type=_CANCELMODELTRAININGREQUEST,
+    output_type=_CANCELMODELTRAININGRESPONSE,
+    options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_AGGREGATOR)
+
+DESCRIPTOR.services_by_name['Aggregator'] = _AGGREGATOR
 
 
-  class AggregatorStub(object):
-    # missing associated documentation comment in .proto file
-    pass
+_EDGE = _descriptor.ServiceDescriptor(
+  name='Edge',
+  full_name='aggregatorpb.Edge',
+  file=DESCRIPTOR,
+  index=1,
+  options=None,
+  serialized_start=1980,
+  serialized_end=2227,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='GetWork',
+    full_name='aggregatorpb.Edge.GetWork',
+    index=0,
+    containing_service=None,
+    input_type=_GETWORKREQUEST,
+    output_type=_GETWORKRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ReportWork',
+    full_name='aggregatorpb.Edge.ReportWork',
+    index=1,
+    containing_service=None,
+    input_type=_REPORTWORKREQUEST,
+    output_type=_REPORTWORKRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ProdModel',
+    full_name='aggregatorpb.Edge.ProdModel',
+    index=2,
+    containing_service=None,
+    input_type=_PRODMODELREQUEST,
+    output_type=_PRODMODELRESPONSE,
+    options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_EDGE)
 
-    def __init__(self, channel):
-      """Constructor.
+DESCRIPTOR.services_by_name['Edge'] = _EDGE
 
-      Args:
-        channel: A grpc.Channel.
-      """
-      self.GetWork = channel.unary_stream(
-          '/aggregatorpb.Aggregator/GetWork',
-          request_serializer=GetWorkRequest.SerializeToString,
-          response_deserializer=GetWorkResponse.FromString,
-          )
-      self.ReportWork = channel.stream_unary(
-          '/aggregatorpb.Aggregator/ReportWork',
-          request_serializer=ReportWorkRequest.SerializeToString,
-          response_deserializer=ReportWorkResponse.FromString,
-          )
-      self.Notify = channel.unary_unary(
-          '/aggregatorpb.Aggregator/Notify',
-          request_serializer=NotifyRequest.SerializeToString,
-          response_deserializer=NotifyResponse.FromString,
-          )
-      self.CancelModelTraining = channel.unary_unary(
-          '/aggregatorpb.Aggregator/CancelModelTraining',
-          request_serializer=CancelModelTrainingRequest.SerializeToString,
-          response_deserializer=CancelModelTrainingResponse.FromString,
-          )
-
-
-  class AggregatorServicer(object):
-    # missing associated documentation comment in .proto file
-    pass
-
-    def GetWork(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-    def ReportWork(self, request_iterator, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-    def Notify(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-    def CancelModelTraining(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-
-  def add_AggregatorServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-        'GetWork': grpc.unary_stream_rpc_method_handler(
-            servicer.GetWork,
-            request_deserializer=GetWorkRequest.FromString,
-            response_serializer=GetWorkResponse.SerializeToString,
-        ),
-        'ReportWork': grpc.stream_unary_rpc_method_handler(
-            servicer.ReportWork,
-            request_deserializer=ReportWorkRequest.FromString,
-            response_serializer=ReportWorkResponse.SerializeToString,
-        ),
-        'Notify': grpc.unary_unary_rpc_method_handler(
-            servicer.Notify,
-            request_deserializer=NotifyRequest.FromString,
-            response_serializer=NotifyResponse.SerializeToString,
-        ),
-        'CancelModelTraining': grpc.unary_unary_rpc_method_handler(
-            servicer.CancelModelTraining,
-            request_deserializer=CancelModelTrainingRequest.FromString,
-            response_serializer=CancelModelTrainingResponse.SerializeToString,
-        ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-        'aggregatorpb.Aggregator', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
-  class EdgeStub(object):
-    # missing associated documentation comment in .proto file
-    pass
-
-    def __init__(self, channel):
-      """Constructor.
-
-      Args:
-        channel: A grpc.Channel.
-      """
-      self.GetWork = channel.unary_stream(
-          '/aggregatorpb.Edge/GetWork',
-          request_serializer=GetWorkRequest.SerializeToString,
-          response_deserializer=GetWorkResponse.FromString,
-          )
-      self.ReportWork = channel.stream_unary(
-          '/aggregatorpb.Edge/ReportWork',
-          request_serializer=ReportWorkRequest.SerializeToString,
-          response_deserializer=ReportWorkResponse.FromString,
-          )
-      self.ProdModel = channel.unary_unary(
-          '/aggregatorpb.Edge/ProdModel',
-          request_serializer=ProdModelRequest.SerializeToString,
-          response_deserializer=ProdModelResponse.FromString,
-          )
-
-
-  class EdgeServicer(object):
-    # missing associated documentation comment in .proto file
-    pass
-
-    def GetWork(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-    def ReportWork(self, request_iterator, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-    def ProdModel(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-
-  def add_EdgeServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-        'GetWork': grpc.unary_stream_rpc_method_handler(
-            servicer.GetWork,
-            request_deserializer=GetWorkRequest.FromString,
-            response_serializer=GetWorkResponse.SerializeToString,
-        ),
-        'ReportWork': grpc.stream_unary_rpc_method_handler(
-            servicer.ReportWork,
-            request_deserializer=ReportWorkRequest.FromString,
-            response_serializer=ReportWorkResponse.SerializeToString,
-        ),
-        'ProdModel': grpc.unary_unary_rpc_method_handler(
-            servicer.ProdModel,
-            request_deserializer=ProdModelRequest.FromString,
-            response_serializer=ProdModelResponse.SerializeToString,
-        ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-        'aggregatorpb.Edge', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
-  class BetaAggregatorServicer(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    # missing associated documentation comment in .proto file
-    pass
-    def GetWork(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-    def ReportWork(self, request_iterator, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-    def Notify(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-    def CancelModelTraining(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-
-
-  class BetaAggregatorStub(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    # missing associated documentation comment in .proto file
-    pass
-    def GetWork(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    def ReportWork(self, request_iterator, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    ReportWork.future = None
-    def Notify(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    Notify.future = None
-    def CancelModelTraining(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    CancelModelTraining.future = None
-
-
-  def beta_create_Aggregator_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_deserializers = {
-      ('aggregatorpb.Aggregator', 'CancelModelTraining'): CancelModelTrainingRequest.FromString,
-      ('aggregatorpb.Aggregator', 'GetWork'): GetWorkRequest.FromString,
-      ('aggregatorpb.Aggregator', 'Notify'): NotifyRequest.FromString,
-      ('aggregatorpb.Aggregator', 'ReportWork'): ReportWorkRequest.FromString,
-    }
-    response_serializers = {
-      ('aggregatorpb.Aggregator', 'CancelModelTraining'): CancelModelTrainingResponse.SerializeToString,
-      ('aggregatorpb.Aggregator', 'GetWork'): GetWorkResponse.SerializeToString,
-      ('aggregatorpb.Aggregator', 'Notify'): NotifyResponse.SerializeToString,
-      ('aggregatorpb.Aggregator', 'ReportWork'): ReportWorkResponse.SerializeToString,
-    }
-    method_implementations = {
-      ('aggregatorpb.Aggregator', 'CancelModelTraining'): face_utilities.unary_unary_inline(servicer.CancelModelTraining),
-      ('aggregatorpb.Aggregator', 'GetWork'): face_utilities.unary_stream_inline(servicer.GetWork),
-      ('aggregatorpb.Aggregator', 'Notify'): face_utilities.unary_unary_inline(servicer.Notify),
-      ('aggregatorpb.Aggregator', 'ReportWork'): face_utilities.stream_unary_inline(servicer.ReportWork),
-    }
-    server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
-    return beta_implementations.server(method_implementations, options=server_options)
-
-
-  def beta_create_Aggregator_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_serializers = {
-      ('aggregatorpb.Aggregator', 'CancelModelTraining'): CancelModelTrainingRequest.SerializeToString,
-      ('aggregatorpb.Aggregator', 'GetWork'): GetWorkRequest.SerializeToString,
-      ('aggregatorpb.Aggregator', 'Notify'): NotifyRequest.SerializeToString,
-      ('aggregatorpb.Aggregator', 'ReportWork'): ReportWorkRequest.SerializeToString,
-    }
-    response_deserializers = {
-      ('aggregatorpb.Aggregator', 'CancelModelTraining'): CancelModelTrainingResponse.FromString,
-      ('aggregatorpb.Aggregator', 'GetWork'): GetWorkResponse.FromString,
-      ('aggregatorpb.Aggregator', 'Notify'): NotifyResponse.FromString,
-      ('aggregatorpb.Aggregator', 'ReportWork'): ReportWorkResponse.FromString,
-    }
-    cardinalities = {
-      'CancelModelTraining': cardinality.Cardinality.UNARY_UNARY,
-      'GetWork': cardinality.Cardinality.UNARY_STREAM,
-      'Notify': cardinality.Cardinality.UNARY_UNARY,
-      'ReportWork': cardinality.Cardinality.STREAM_UNARY,
-    }
-    stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
-    return beta_implementations.dynamic_stub(channel, 'aggregatorpb.Aggregator', cardinalities, options=stub_options)
-
-
-  class BetaEdgeServicer(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    # missing associated documentation comment in .proto file
-    pass
-    def GetWork(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-    def ReportWork(self, request_iterator, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-    def ProdModel(self, request, context):
-      # missing associated documentation comment in .proto file
-      pass
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-
-
-  class BetaEdgeStub(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    # missing associated documentation comment in .proto file
-    pass
-    def GetWork(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    def ReportWork(self, request_iterator, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    ReportWork.future = None
-    def ProdModel(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      # missing associated documentation comment in .proto file
-      pass
-      raise NotImplementedError()
-    ProdModel.future = None
-
-
-  def beta_create_Edge_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_deserializers = {
-      ('aggregatorpb.Edge', 'GetWork'): GetWorkRequest.FromString,
-      ('aggregatorpb.Edge', 'ProdModel'): ProdModelRequest.FromString,
-      ('aggregatorpb.Edge', 'ReportWork'): ReportWorkRequest.FromString,
-    }
-    response_serializers = {
-      ('aggregatorpb.Edge', 'GetWork'): GetWorkResponse.SerializeToString,
-      ('aggregatorpb.Edge', 'ProdModel'): ProdModelResponse.SerializeToString,
-      ('aggregatorpb.Edge', 'ReportWork'): ReportWorkResponse.SerializeToString,
-    }
-    method_implementations = {
-      ('aggregatorpb.Edge', 'GetWork'): face_utilities.unary_stream_inline(servicer.GetWork),
-      ('aggregatorpb.Edge', 'ProdModel'): face_utilities.unary_unary_inline(servicer.ProdModel),
-      ('aggregatorpb.Edge', 'ReportWork'): face_utilities.stream_unary_inline(servicer.ReportWork),
-    }
-    server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
-    return beta_implementations.server(method_implementations, options=server_options)
-
-
-  def beta_create_Edge_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_serializers = {
-      ('aggregatorpb.Edge', 'GetWork'): GetWorkRequest.SerializeToString,
-      ('aggregatorpb.Edge', 'ProdModel'): ProdModelRequest.SerializeToString,
-      ('aggregatorpb.Edge', 'ReportWork'): ReportWorkRequest.SerializeToString,
-    }
-    response_deserializers = {
-      ('aggregatorpb.Edge', 'GetWork'): GetWorkResponse.FromString,
-      ('aggregatorpb.Edge', 'ProdModel'): ProdModelResponse.FromString,
-      ('aggregatorpb.Edge', 'ReportWork'): ReportWorkResponse.FromString,
-    }
-    cardinalities = {
-      'GetWork': cardinality.Cardinality.UNARY_STREAM,
-      'ProdModel': cardinality.Cardinality.UNARY_UNARY,
-      'ReportWork': cardinality.Cardinality.STREAM_UNARY,
-    }
-    stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
-    return beta_implementations.dynamic_stub(channel, 'aggregatorpb.Edge', cardinalities, options=stub_options)
-except ImportError:
-  pass
 # @@protoc_insertion_point(module_scope)

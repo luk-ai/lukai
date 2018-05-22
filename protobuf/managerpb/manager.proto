@@ -17,6 +17,7 @@ message Model {
 message UploadModelRequest {
   Model meta = 1 [(gogoproto.nullable) = false];
   bytes model = 2;
+  string model_url = 3;
 }
 
 message UploadModelResponse {

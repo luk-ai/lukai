@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='managerpb/manager.proto',
   package='managerpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x17managerpb/manager.proto\x12\tmanagerpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a>github.com/luk-ai/lukai/protobuf/aggregatorpb/aggregator.proto\"\x85\x01\n\x05Model\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\"I\n\x12UploadModelRequest\x12$\n\x04meta\x18\x01 \x01(\x0b\x32\x10.managerpb.ModelB\x04\xc8\xde\x1f\x00\x12\r\n\x05model\x18\x02 \x01(\x0c\":\n\x13UploadModelResponse\x12\x10\n\x08model_id\x18\x01 \x01(\x04\x12\x11\n\tmodel_url\x18\x02 \x01(\t2Y\n\x07Manager\x12N\n\x0bUploadModel\x12\x1d.managerpb.UploadModelRequest\x1a\x1e.managerpb.UploadModelResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x17managerpb/manager.proto\x12\tmanagerpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a>github.com/luk-ai/lukai/protobuf/aggregatorpb/aggregator.proto\"\x85\x01\n\x05Model\x12\x0e\n\x06\x64omain\x18\x02 \x01(\t\x12\x12\n\nmodel_type\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x35\n\x0chyper_params\x18\x08 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\"\\\n\x12UploadModelRequest\x12$\n\x04meta\x18\x01 \x01(\x0b\x32\x10.managerpb.ModelB\x04\xc8\xde\x1f\x00\x12\r\n\x05model\x18\x02 \x01(\x0c\x12\x11\n\tmodel_url\x18\x03 \x01(\t\":\n\x13UploadModelResponse\x12\x10\n\x08model_id\x18\x01 \x01(\x04\x12\x11\n\tmodel_url\x18\x02 \x01(\t2Y\n\x07Manager\x12N\n\x0bUploadModel\x12\x1d.managerpb.UploadModelRequest\x1a\x1e.managerpb.UploadModelResponse\"\x00\x62\x06proto3')
   ,
   dependencies=[github_dot_com_dot_luk__ai_dot_lukai_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2.DESCRIPTOR,])
 
@@ -107,6 +107,13 @@ _UPLOADMODELREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='model_url', full_name='managerpb.UploadModelRequest.model_url', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -120,7 +127,7 @@ _UPLOADMODELREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=285,
-  serialized_end=358,
+  serialized_end=377,
 )
 
 
@@ -157,8 +164,8 @@ _UPLOADMODELRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=360,
-  serialized_end=418,
+  serialized_start=379,
+  serialized_end=437,
 )
 
 _MODEL.fields_by_name['hyper_params'].message_type = github_dot_com_dot_luk__ai_dot_lukai_dot_protobuf_dot_aggregatorpb_dot_aggregator__pb2._HYPERPARAMS
@@ -201,8 +208,8 @@ _MANAGER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=420,
-  serialized_end=509,
+  serialized_start=439,
+  serialized_end=528,
   methods=[
   _descriptor.MethodDescriptor(
     name='UploadModel',
