@@ -64,6 +64,14 @@ message GetWorkRequest {
   ModelID id = 1 [(gogoproto.nullable) = false];
 }
 
+message FindWorkRequest {
+  ModelID id = 1 [(gogoproto.nullable) = false];
+}
+
+message FindWorkResponse {
+  string aggregator_addr = 1;
+}
+
 message ModelWeightChunk {
   bytes body = 1;
   bool more = 2;
@@ -113,15 +121,29 @@ message CancelModelTrainingResponse {}
 
 
 service Aggregator {
+  // GetWork sends work to clients to process.
   rpc GetWork (GetWorkRequest) returns (stream GetWorkResponse) {}
+  // ReportWork is used to report the trained model/work to the server.
   rpc ReportWork(stream ReportWorkRequest) returns (ReportWorkResponse) {}
 
+  // Internal RPCs.
   rpc Notify(NotifyRequest) returns (NotifyResponse) {}
   rpc CancelModelTraining(CancelModelTrainingRequest) returns (CancelModelTrainingResponse) {}
 }
 
 service Edge {
-  rpc GetWork (GetWorkRequest) returns (stream GetWorkResponse) {}
-  rpc ReportWork(stream ReportWorkRequest) returns (ReportWorkResponse) {}
+  // ProdModel returns the current production model.
   rpc ProdModel(ProdModelRequest) returns (ProdModelResponse) {}
+  // FindWork returns an address of the aggregator that the client should
+  // request work from.
+  rpc FindWork (FindWorkRequest) returns (FindWorkResponse) {}
+
+  // These methods are deprecated. Should call FindWork and then talk directly
+  // to the aggregator itself.
+  rpc GetWork (GetWorkRequest) returns (stream GetWorkResponse) {
+    option deprecated = true;
+  }
+  rpc ReportWork(stream ReportWorkRequest) returns (ReportWorkResponse) {
+    option deprecated = true;
+  }
 }
