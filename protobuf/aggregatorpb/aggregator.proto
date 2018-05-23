@@ -140,10 +140,12 @@ service Edge {
 
   // These methods are deprecated. Should call FindWork and then talk directly
   // to the aggregator itself.
+  /*
   rpc GetWork (GetWorkRequest) returns (stream GetWorkResponse) {
     option deprecated = true;
   }
   rpc ReportWork(stream ReportWorkRequest) returns (ReportWorkResponse) {
     option deprecated = true;
   }
+  */
 }

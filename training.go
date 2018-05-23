@@ -133,7 +133,7 @@ func dial(ctx context.Context, addr string, opts ...grpc.DialOption) (*grpc.Clie
 }
 
 func (mt *ModelType) trainerWorker(ctx context.Context) error {
-	conn, err := dial(
+	edgeConn, err := dial(
 		ctx,
 		EdgeAddress,
 		grpc.WithDefaultCallOptions(
@@ -144,14 +144,37 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	defer edgeConn.Close()
+
+	edge := aggregatorpb.NewEdgeClient(edgeConn)
+	id := aggregatorpb.ModelID{
+		Domain:    mt.Domain,
+		ModelType: mt.ModelType,
+	}
+	resp, err := edge.FindWork(ctx, &aggregatorpb.FindWorkRequest{
+		Id: id,
+	})
+	if err != nil {
+		return err
+	}
+
+	conn, err := dial(
+		ctx,
+		resp.AggregatorAddr,
+		grpc.WithDefaultCallOptions(
+			grpc.MaxCallRecvMsgSize(MaxMsgSize),
+			grpc.MaxCallSendMsgSize(MaxMsgSize),
+		),
+	)
+	if err != nil {
+		return err
+	}
 	defer conn.Close()
 
-	c := aggregatorpb.NewEdgeClient(conn)
+	c := aggregatorpb.NewAggregatorClient(conn)
+
 	req := aggregatorpb.GetWorkRequest{
-		Id: aggregatorpb.ModelID{
-			Domain:    mt.Domain,
-			ModelType: mt.ModelType,
-		},
+		Id: id,
 	}
 	stream, err := c.GetWork(ctx, &req)
 	if err != nil {
@@ -196,7 +219,7 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 
 func (mt *ModelType) processWork(
 	ctx context.Context,
-	c aggregatorpb.EdgeClient,
+	c aggregatorpb.AggregatorClient,
 	work *aggregatorpb.Work,
 	weightsReader io.ReadCloser,
 ) error {

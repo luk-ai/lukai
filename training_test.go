@@ -18,9 +18,10 @@ import (
 	"github.com/luk-ai/lukai/testutil"
 )
 
-var errNotImplemented = errors.New("not implemented")
-
 type testEdgeServer struct {
+	aggregatorpb.EdgeServer
+	aggregatorpb.AggregatorServer
+
 	grpc *grpc.Server
 }
 
@@ -36,6 +37,7 @@ func newTestEdgeServer(t *testing.T) *testEdgeServer {
 		grpc: grpcServer,
 	}
 	aggregatorpb.RegisterEdgeServer(grpcServer, s)
+	aggregatorpb.RegisterAggregatorServer(grpcServer, s)
 	go func() {
 		if err := grpcServer.Serve(lis); err != nil {
 			t.Log(err)
@@ -49,18 +51,18 @@ func (s *testEdgeServer) stop() {
 }
 
 func (s *testEdgeServer) ProdModel(ctx context.Context, in *aggregatorpb.ProdModelRequest) (*aggregatorpb.ProdModelResponse, error) {
-	return nil, errNotImplemented
+	return nil, ErrNotImplemented
 }
 
 func (s *testEdgeServer) GetWork(
 	req *aggregatorpb.GetWorkRequest,
-	stream aggregatorpb.Edge_GetWorkServer,
+	stream aggregatorpb.Aggregator_GetWorkServer,
 ) error {
-	return errNotImplemented
+	return ErrNotImplemented
 }
 
-func (s *testEdgeServer) ReportWork(stream aggregatorpb.Edge_ReportWorkServer) error {
-	return errNotImplemented
+func (s *testEdgeServer) ReportWork(stream aggregatorpb.Aggregator_ReportWorkServer) error {
+	return ErrNotImplemented
 }
 
 func newTestModelType(t *testing.T) (*ModelType, func()) {
