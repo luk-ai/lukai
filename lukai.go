@@ -11,6 +11,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/luk-ai/lukai/debounce"
+	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
 	"github.com/luk-ai/lukai/protobuf/clientpb"
 	"github.com/luk-ai/lukai/tf"
 )
@@ -33,6 +34,7 @@ type ModelType struct {
 	prod struct {
 		sync.RWMutex
 
+		modelID    aggregatorpb.ModelID
 		model      *tf.Model
 		cache      tfOpCache
 		lastUpdate time.Time

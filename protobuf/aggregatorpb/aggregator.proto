@@ -40,7 +40,6 @@ message Work {
   int64 num_examples = 2;
   int64 num_clients = 3;
   int64 epoch = 4;
-  string model_url = 10;
 
   // TODO(d4l3k): consider sending a link to GCS instead of the raw model.
   HyperParams hyper_params = 7 [(gogoproto.nullable) = false];
@@ -100,7 +99,7 @@ message ProdModelRequest {
 }
 
 message ProdModelResponse {
-  string model_url = 2;
+  ModelID id = 3 [(gogoproto.nullable) = false];
 }
 
 message ModelTypeAllocation {
@@ -119,6 +118,12 @@ message CancelModelTrainingRequest {
 
 message CancelModelTrainingResponse {}
 
+message ModelURLRequest {
+  ModelID id = 1 [(gogoproto.nullable) = false];
+}
+message ModelURLResponse {
+  string url = 1;
+}
 
 service Aggregator {
   // GetWork sends work to clients to process.
@@ -134,9 +139,14 @@ service Aggregator {
 service Edge {
   // ProdModel returns the current production model.
   rpc ProdModel(ProdModelRequest) returns (ProdModelResponse) {}
+
   // FindWork returns an address of the aggregator that the client should
   // request work from.
   rpc FindWork (FindWorkRequest) returns (FindWorkResponse) {}
+
+  // ModelURL returns a URL that can be used to download the model. For billing
+  // purposes, hitting this endpoint will count as one download of the model.
+  rpc ModelURL (ModelURLRequest) returns (ModelURLResponse) {}
 
   // These methods are deprecated. Should call FindWork and then talk directly
   // to the aggregator itself.

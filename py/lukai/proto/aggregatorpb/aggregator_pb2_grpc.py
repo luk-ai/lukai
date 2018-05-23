@@ -117,6 +117,11 @@ class EdgeStub(object):
         request_serializer=aggregatorpb_dot_aggregator__pb2.FindWorkRequest.SerializeToString,
         response_deserializer=aggregatorpb_dot_aggregator__pb2.FindWorkResponse.FromString,
         )
+    self.ModelURL = channel.unary_unary(
+        '/aggregatorpb.Edge/ModelURL',
+        request_serializer=aggregatorpb_dot_aggregator__pb2.ModelURLRequest.SerializeToString,
+        response_deserializer=aggregatorpb_dot_aggregator__pb2.ModelURLResponse.FromString,
+        )
 
 
 class EdgeServicer(object):
@@ -138,6 +143,14 @@ class EdgeServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def ModelURL(self, request, context):
+    """ModelURL returns a URL that can be used to download the model. For billing
+    purposes, hitting this endpoint will count as one download of the model.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_EdgeServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -150,6 +163,11 @@ def add_EdgeServicer_to_server(servicer, server):
           servicer.FindWork,
           request_deserializer=aggregatorpb_dot_aggregator__pb2.FindWorkRequest.FromString,
           response_serializer=aggregatorpb_dot_aggregator__pb2.FindWorkResponse.SerializeToString,
+      ),
+      'ModelURL': grpc.unary_unary_rpc_method_handler(
+          servicer.ModelURL,
+          request_deserializer=aggregatorpb_dot_aggregator__pb2.ModelURLRequest.FromString,
+          response_serializer=aggregatorpb_dot_aggregator__pb2.ModelURLResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

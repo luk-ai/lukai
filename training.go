@@ -74,7 +74,6 @@ func (mt *ModelType) StartTraining(ctx context.Context) error {
 			retryCount += 1
 
 			if err := mt.trainerWorker(ctx); err != nil {
-				// TODO(d4l3k): Reconnect on network failure.
 				log.Printf("Training error (try #%d). Will retry: %+v", retryCount, err)
 
 				mt.training.Lock()
@@ -206,7 +205,7 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 		if work == nil {
 			return errors.New("expected work")
 		}
-		if err := mt.processWork(ctx, c, work, weights); err != nil {
+		if err := mt.processWork(ctx, c, edge, work, weights); err != nil {
 			return errors.Wrapf(err, "failure while processing work: %+v", work.Id)
 		}
 		// Tensorflow doesn't free memory until the finalizer runs, and GC doesn't
@@ -220,6 +219,7 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 func (mt *ModelType) processWork(
 	ctx context.Context,
 	c aggregatorpb.AggregatorClient,
+	edge aggregatorpb.EdgeClient,
 	work *aggregatorpb.Work,
 	weightsReader io.ReadCloser,
 ) error {
@@ -228,17 +228,23 @@ func (mt *ModelType) processWork(
 	log.Printf("Training %+v", work.Id)
 	start := time.Now()
 	var model *tf.Model
-	modelI, ok := mt.modelCache.Get(work.ModelUrl)
+	modelI, ok := mt.modelCache.Get(work.Id)
 	if ok {
 		log.Printf("Model from cache")
 		model = modelI.(*tf.Model)
 	} else {
-		var err error
-		model, err = tf.GetModel(work.ModelUrl)
+		resp, err := edge.ModelURL(ctx, &aggregatorpb.ModelURLRequest{
+			Id: work.Id,
+		})
 		if err != nil {
 			return err
 		}
-		mt.modelCache.Add(work.ModelUrl, model)
+
+		model, err = tf.GetModel(resp.Url)
+		if err != nil {
+			return err
+		}
+		mt.modelCache.Add(work.Id, model)
 
 		log.Printf("Fetching model took %s", time.Since(start))
 	}

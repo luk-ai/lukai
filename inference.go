@@ -49,16 +49,31 @@ func (mt *ModelType) loadProdModelRLocked() error {
 		return err
 	}
 
+	if resp.Id == mt.prod.modelID {
+		mt.prod.lastUpdate = time.Now()
+		return nil
+	}
+
 	if mt.prod.model != nil {
 		if err := mt.prod.model.Close(); err != nil {
 			return err
 		}
+		mt.prod.model = nil
+		mt.prod.modelID = aggregatorpb.ModelID{}
 	}
 
-	mt.prod.model, err = tf.GetModel(resp.ModelUrl)
+	modelResp, err := c.ModelURL(context.TODO(), &aggregatorpb.ModelURLRequest{
+		Id: resp.Id,
+	})
 	if err != nil {
 		return err
 	}
+
+	mt.prod.model, err = tf.GetModel(modelResp.Url)
+	if err != nil {
+		return err
+	}
+	mt.prod.modelID = resp.Id
 	mt.prod.lastUpdate = time.Now()
 	mt.prod.cache = makeTFOpCache(mt.prod.model)
 
