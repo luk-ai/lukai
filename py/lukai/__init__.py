@@ -10,10 +10,12 @@ from . import saver
 import tensorflow as tf
 import grpc
 import six
+import srvlookup
 
 import tempfile
 import shutil
 from os import path
+import random
 
 HyperParams = aggregator_pb2.HyperParams
 
@@ -25,8 +27,11 @@ for k, v in client_pb2.MetricReduce.items():
 for k, v in client_pb2.Event.items():
     globals()[k] = v
 
-def get_client():
-    channel = grpc.insecure_channel('localhost:5002')
+def get_client(domain='manager.luk.ai'):
+    records = srvlookup.lookup('grpclb', domain=domain)
+    server = random.choice(records)
+    addr = '{}:{}'.format(server.hostname, server.port)
+    channel = grpc.secure_channel(addr, grpc.ssl_channel_credentials())
     return manager_pb2_grpc.ManagerStub(channel)
 
 api_token = None
