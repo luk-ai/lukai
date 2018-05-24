@@ -23,8 +23,8 @@ lukai.upload(
     session=sess,
     domain='<your domain>',
     model_type='<your model type>',
-    name=FLAGS.name,
-    description=FLAGS.description,
+    name='Hello World',
+    description='This is the first model I've uploaded!',
     hyper_params=lukai.HyperParams(
         proportion_clients = 0.1,
         batch_size = 10,
