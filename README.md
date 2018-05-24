@@ -5,4 +5,4 @@ This contains all the client libraries for Luk.ai.
 See Also: [Luk.ai Documentation](https://github.com/luk-ai/docs)
 
 * Go - Located at root.
-* [Python](py/lukai/)
+* [Python](py/)
