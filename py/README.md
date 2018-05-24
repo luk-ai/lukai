@@ -1,5 +1,7 @@
 # Luk.ai Python Management Library
 
+[![PyPI](https://img.shields.io/pypi/v/lukai.svg)](https://pypi.org/project/lukai/)
+
 This is a library for uploading machine learning models to
 [Luk.ai](https://luk.ai).
 
