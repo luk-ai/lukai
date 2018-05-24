@@ -1,5 +1,7 @@
 from setuptools import setup, find_packages
-import os
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setup(
     name='lukai',
@@ -9,7 +11,14 @@ setup(
     install_requires=['grpcio', 'six', 'srvlookup'],
     author='Tristan Rice',
     author_email='rice@fn.lc',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://github.com/luk-ai/lukai/tree/master/py',
     keywords=['ml','machine learning','lukai'],
-    classifiers=[],
+    classifiers=(
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ),
 )
