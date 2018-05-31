@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='aggregatorpb/aggregator.proto',
   package='aggregatorpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x1d\x61ggregatorpb/aggregator.proto\x12\x0c\x61ggregatorpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9d\x01\n\x0bHyperParams\x12\x1a\n\x12proportion_clients\x18\x01 \x01(\x01\x12\x12\n\nbatch_size\x18\x02 \x01(\x03\x12\x12\n\nnum_rounds\x18\x03 \x01(\x03\x12\x15\n\rlearning_rate\x18\x04 \x01(\x01\x12\x18\n\x10num_local_rounds\x18\x05 \x01(\x03\x12\x19\n\x11quantized_updates\x18\x06 \x01(\x08\"k\n\x0eSchedulingInfo\x12\x33\n\tscheduled\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x04\x90\xdf\x1f\x01\x12$\n\x06repeat\x18\x02 \x01(\x0e\x32\x14.aggregatorpb.Repeat\"\xfc\x01\n\x04Work\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x14\n\x0cnum_examples\x18\x02 \x01(\x03\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x03\x12\r\n\x05\x65poch\x18\x04 \x01(\x03\x12\x35\n\x0chyper_params\x18\x07 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x12\n\ntime_taken\x18\x08 \x01(\x01\x12\x35\n\x07started\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x0f\n\x07metrics\x18\t \x03(\x01\"9\n\x07ModelID\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x04\"9\n\x0eGetWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\":\n\x0f\x46indWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"+\n\x10\x46indWorkResponse\x12\x17\n\x0f\x61ggregator_addr\x18\x01 \x01(\t\":\n\x10ModelWeightChunk\x12\x0c\n\x04\x62ody\x18\x01 \x01(\x0c\x12\x0c\n\x04more\x18\x02 \x01(\x08\x12\n\n\x02id\x18\x03 \x01(\x04\"p\n\x0fGetWorkResponse\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"r\n\x11ReportWorkRequest\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"\x14\n\x12ReportWorkResponse\";\n\x10ProdModelRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"<\n\x11ProdModelResponse\x12\'\n\x02id\x18\x03 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"T\n\x13ModelTypeAllocation\x12/\n\nmodel_type\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x0c\n\x04\x61\x64\x64r\x18\x02 \x01(\t\"8\n\rNotifyRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x10\n\x0eNotifyResponse\"E\n\x1a\x43\x61ncelModelTrainingRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1d\n\x1b\x43\x61ncelModelTrainingResponse\":\n\x0fModelURLRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1f\n\x10ModelURLResponse\x12\x0b\n\x03url\x18\x01 \x01(\t*V\n\x0eTrainingStatus\x12\r\n\tSCHEDULED\x10\x00\x12\x0c\n\x08TRAINING\x10\x01\x12\r\n\tSUCCEEDED\x10\x02\x12\n\n\x06\x46\x41ILED\x10\x03\x12\x0c\n\x08\x43\x41NCELED\x10\x04*C\n\x06Repeat\x12\t\n\x05NEVER\x10\x00\x12\n\n\x06HOURLY\x10\x01\x12\t\n\x05\x44\x41ILY\x10\x02\x12\n\n\x06WEEKLY\x10\x03\x12\x0b\n\x07MONTHLY\x10\x04\x32\xe2\x02\n\nAggregator\x12J\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x1d.aggregatorpb.GetWorkResponse\"\x00\x30\x01\x12S\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00(\x01\x12\x45\n\x06Notify\x12\x1b.aggregatorpb.NotifyRequest\x1a\x1c.aggregatorpb.NotifyResponse\"\x00\x12l\n\x13\x43\x61ncelModelTraining\x12(.aggregatorpb.CancelModelTrainingRequest\x1a).aggregatorpb.CancelModelTrainingResponse\"\x00\x32\xf0\x01\n\x04\x45\x64ge\x12N\n\tProdModel\x12\x1e.aggregatorpb.ProdModelRequest\x1a\x1f.aggregatorpb.ProdModelResponse\"\x00\x12K\n\x08\x46indWork\x12\x1d.aggregatorpb.FindWorkRequest\x1a\x1e.aggregatorpb.FindWorkResponse\"\x00\x12K\n\x08ModelURL\x12\x1d.aggregatorpb.ModelURLRequest\x1a\x1e.aggregatorpb.ModelURLResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x1d\x61ggregatorpb/aggregator.proto\x12\x0c\x61ggregatorpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x01\n\x0bHyperParams\x12\x12\n\nbatch_size\x18\x02 \x01(\x03\x12\x12\n\nnum_rounds\x18\x03 \x01(\x03\x12\x15\n\rlearning_rate\x18\x04 \x01(\x01\x12\x18\n\x10num_local_rounds\x18\x05 \x01(\x03\x12\x19\n\x11quantized_updates\x18\x06 \x01(\x08\x12\x13\n\x0bnum_clients\x18\x07 \x01(\x03\"k\n\x0eSchedulingInfo\x12\x33\n\tscheduled\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x04\x90\xdf\x1f\x01\x12$\n\x06repeat\x18\x02 \x01(\x0e\x32\x14.aggregatorpb.Repeat\"\xfc\x01\n\x04Work\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x14\n\x0cnum_examples\x18\x02 \x01(\x03\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x03\x12\r\n\x05\x65poch\x18\x04 \x01(\x03\x12\x35\n\x0chyper_params\x18\x07 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x12\n\ntime_taken\x18\x08 \x01(\x01\x12\x35\n\x07started\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x0f\n\x07metrics\x18\t \x03(\x01\"9\n\x07ModelID\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x04\"9\n\x0eGetWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\":\n\x0f\x46indWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"+\n\x10\x46indWorkResponse\x12\x17\n\x0f\x61ggregator_addr\x18\x01 \x01(\t\":\n\x10ModelWeightChunk\x12\x0c\n\x04\x62ody\x18\x01 \x01(\x0c\x12\x0c\n\x04more\x18\x02 \x01(\x08\x12\n\n\x02id\x18\x03 \x01(\x04\"p\n\x0fGetWorkResponse\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"r\n\x11ReportWorkRequest\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"\x14\n\x12ReportWorkResponse\";\n\x10ProdModelRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"<\n\x11ProdModelResponse\x12\'\n\x02id\x18\x03 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"T\n\x13ModelTypeAllocation\x12/\n\nmodel_type\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x0c\n\x04\x61\x64\x64r\x18\x02 \x01(\t\"8\n\rNotifyRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x10\n\x0eNotifyResponse\"E\n\x1a\x43\x61ncelModelTrainingRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1d\n\x1b\x43\x61ncelModelTrainingResponse\":\n\x0fModelURLRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1f\n\x10ModelURLResponse\x12\x0b\n\x03url\x18\x01 \x01(\t*V\n\x0eTrainingStatus\x12\r\n\tSCHEDULED\x10\x00\x12\x0c\n\x08TRAINING\x10\x01\x12\r\n\tSUCCEEDED\x10\x02\x12\n\n\x06\x46\x41ILED\x10\x03\x12\x0c\n\x08\x43\x41NCELED\x10\x04*C\n\x06Repeat\x12\t\n\x05NEVER\x10\x00\x12\n\n\x06HOURLY\x10\x01\x12\t\n\x05\x44\x41ILY\x10\x02\x12\n\n\x06WEEKLY\x10\x03\x12\x0b\n\x07MONTHLY\x10\x04\x32\xe2\x02\n\nAggregator\x12J\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x1d.aggregatorpb.GetWorkResponse\"\x00\x30\x01\x12S\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00(\x01\x12\x45\n\x06Notify\x12\x1b.aggregatorpb.NotifyRequest\x1a\x1c.aggregatorpb.NotifyResponse\"\x00\x12l\n\x13\x43\x61ncelModelTraining\x12(.aggregatorpb.CancelModelTrainingRequest\x1a).aggregatorpb.CancelModelTrainingResponse\"\x00\x32\xf0\x01\n\x04\x45\x64ge\x12N\n\tProdModel\x12\x1e.aggregatorpb.ProdModelRequest\x1a\x1f.aggregatorpb.ProdModelResponse\"\x00\x12K\n\x08\x46indWork\x12\x1d.aggregatorpb.FindWorkRequest\x1a\x1e.aggregatorpb.FindWorkResponse\"\x00\x12K\n\x08ModelURL\x12\x1d.aggregatorpb.ModelURLRequest\x1a\x1e.aggregatorpb.ModelURLResponse\"\x00\x42\x04\xe0\xe2\x1e\x01\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -54,8 +54,8 @@ _TRAININGSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1666,
-  serialized_end=1752,
+  serialized_start=1659,
+  serialized_end=1745,
 )
 _sym_db.RegisterEnumDescriptor(_TRAININGSTATUS)
 
@@ -89,8 +89,8 @@ _REPEAT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1754,
-  serialized_end=1821,
+  serialized_start=1747,
+  serialized_end=1814,
 )
 _sym_db.RegisterEnumDescriptor(_REPEAT)
 
@@ -116,44 +116,44 @@ _HYPERPARAMS = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='proportion_clients', full_name='aggregatorpb.HyperParams.proportion_clients', index=0,
-      number=1, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='batch_size', full_name='aggregatorpb.HyperParams.batch_size', index=1,
+      name='batch_size', full_name='aggregatorpb.HyperParams.batch_size', index=0,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='num_rounds', full_name='aggregatorpb.HyperParams.num_rounds', index=2,
+      name='num_rounds', full_name='aggregatorpb.HyperParams.num_rounds', index=1,
       number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='learning_rate', full_name='aggregatorpb.HyperParams.learning_rate', index=3,
+      name='learning_rate', full_name='aggregatorpb.HyperParams.learning_rate', index=2,
       number=4, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='num_local_rounds', full_name='aggregatorpb.HyperParams.num_local_rounds', index=4,
+      name='num_local_rounds', full_name='aggregatorpb.HyperParams.num_local_rounds', index=3,
       number=5, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='quantized_updates', full_name='aggregatorpb.HyperParams.quantized_updates', index=5,
+      name='quantized_updates', full_name='aggregatorpb.HyperParams.quantized_updates', index=4,
       number=6, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='num_clients', full_name='aggregatorpb.HyperParams.num_clients', index=5,
+      number=7, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
@@ -170,7 +170,7 @@ _HYPERPARAMS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=128,
-  serialized_end=285,
+  serialized_end=278,
 )
 
 
@@ -207,8 +207,8 @@ _SCHEDULINGINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=287,
-  serialized_end=394,
+  serialized_start=280,
+  serialized_end=387,
 )
 
 
@@ -287,8 +287,8 @@ _WORK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=397,
-  serialized_end=649,
+  serialized_start=390,
+  serialized_end=642,
 )
 
 
@@ -332,8 +332,8 @@ _MODELID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=651,
-  serialized_end=708,
+  serialized_start=644,
+  serialized_end=701,
 )
 
 
@@ -363,8 +363,8 @@ _GETWORKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=710,
-  serialized_end=767,
+  serialized_start=703,
+  serialized_end=760,
 )
 
 
@@ -394,8 +394,8 @@ _FINDWORKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=769,
-  serialized_end=827,
+  serialized_start=762,
+  serialized_end=820,
 )
 
 
@@ -425,8 +425,8 @@ _FINDWORKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=829,
-  serialized_end=872,
+  serialized_start=822,
+  serialized_end=865,
 )
 
 
@@ -470,8 +470,8 @@ _MODELWEIGHTCHUNK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=874,
-  serialized_end=932,
+  serialized_start=867,
+  serialized_end=925,
 )
 
 
@@ -511,8 +511,8 @@ _GETWORKRESPONSE = _descriptor.Descriptor(
       name='type', full_name='aggregatorpb.GetWorkResponse.type',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=934,
-  serialized_end=1046,
+  serialized_start=927,
+  serialized_end=1039,
 )
 
 
@@ -552,8 +552,8 @@ _REPORTWORKREQUEST = _descriptor.Descriptor(
       name='type', full_name='aggregatorpb.ReportWorkRequest.type',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1048,
-  serialized_end=1162,
+  serialized_start=1041,
+  serialized_end=1155,
 )
 
 
@@ -576,8 +576,8 @@ _REPORTWORKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1164,
-  serialized_end=1184,
+  serialized_start=1157,
+  serialized_end=1177,
 )
 
 
@@ -607,8 +607,8 @@ _PRODMODELREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1186,
-  serialized_end=1245,
+  serialized_start=1179,
+  serialized_end=1238,
 )
 
 
@@ -638,8 +638,8 @@ _PRODMODELRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1247,
-  serialized_end=1307,
+  serialized_start=1240,
+  serialized_end=1300,
 )
 
 
@@ -676,8 +676,8 @@ _MODELTYPEALLOCATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1309,
-  serialized_end=1393,
+  serialized_start=1302,
+  serialized_end=1386,
 )
 
 
@@ -707,8 +707,8 @@ _NOTIFYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1395,
-  serialized_end=1451,
+  serialized_start=1388,
+  serialized_end=1444,
 )
 
 
@@ -731,8 +731,8 @@ _NOTIFYRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1453,
-  serialized_end=1469,
+  serialized_start=1446,
+  serialized_end=1462,
 )
 
 
@@ -762,8 +762,8 @@ _CANCELMODELTRAININGREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1471,
-  serialized_end=1540,
+  serialized_start=1464,
+  serialized_end=1533,
 )
 
 
@@ -786,8 +786,8 @@ _CANCELMODELTRAININGRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1542,
-  serialized_end=1571,
+  serialized_start=1535,
+  serialized_end=1564,
 )
 
 
@@ -817,8 +817,8 @@ _MODELURLREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1573,
-  serialized_end=1631,
+  serialized_start=1566,
+  serialized_end=1624,
 )
 
 
@@ -848,8 +848,8 @@ _MODELURLRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1633,
-  serialized_end=1664,
+  serialized_start=1626,
+  serialized_end=1657,
 )
 
 _SCHEDULINGINFO.fields_by_name['scheduled'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
@@ -1046,6 +1046,8 @@ ModelURLResponse = _reflection.GeneratedProtocolMessageType('ModelURLResponse', 
 _sym_db.RegisterMessage(ModelURLResponse)
 
 
+DESCRIPTOR.has_options = True
+DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\340\342\036\001'))
 _SCHEDULINGINFO.fields_by_name['scheduled'].has_options = True
 _SCHEDULINGINFO.fields_by_name['scheduled']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\220\337\037\001'))
 _WORK.fields_by_name['id'].has_options = True
@@ -1077,8 +1079,8 @@ _AGGREGATOR = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=1824,
-  serialized_end=2178,
+  serialized_start=1817,
+  serialized_end=2171,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetWork',
@@ -1128,8 +1130,8 @@ _EDGE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   options=None,
-  serialized_start=2181,
-  serialized_end=2421,
+  serialized_start=2174,
+  serialized_end=2414,
   methods=[
   _descriptor.MethodDescriptor(
     name='ProdModel',

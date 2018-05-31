@@ -53,7 +53,7 @@ type ModelWeightsWriter struct {
 func (w *ModelWeightsWriter) Write(b []byte) (int, error) {
 	bLen := len(b)
 	for len(b) > 0 {
-		numRead := ModelWeightChunkSize - w.size
+		numRead := int(ModelWeightChunkSize) - w.size
 		if numRead > len(b) {
 			numRead = len(b)
 		}
@@ -61,7 +61,7 @@ func (w *ModelWeightsWriter) Write(b []byte) (int, error) {
 		w.size += numRead
 		b = b[numRead:]
 
-		if w.size == ModelWeightChunkSize {
+		if w.size == int(ModelWeightChunkSize) {
 			if err := w.sendChunk(true); err != nil {
 				return 0, err
 			}

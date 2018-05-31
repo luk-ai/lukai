@@ -135,10 +135,6 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 	edgeConn, err := dial(
 		ctx,
 		EdgeAddress,
-		grpc.WithDefaultCallOptions(
-			grpc.MaxCallRecvMsgSize(MaxMsgSize),
-			grpc.MaxCallSendMsgSize(MaxMsgSize),
-		),
 	)
 	if err != nil {
 		return err
@@ -161,8 +157,8 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 		ctx,
 		resp.AggregatorAddr,
 		grpc.WithDefaultCallOptions(
-			grpc.MaxCallRecvMsgSize(MaxMsgSize),
-			grpc.MaxCallSendMsgSize(MaxMsgSize),
+			grpc.MaxCallRecvMsgSize(int(MaxMsgSize)),
+			grpc.MaxCallSendMsgSize(int(MaxMsgSize)),
 		),
 	)
 	if err != nil {
