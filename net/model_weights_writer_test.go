@@ -5,7 +5,9 @@ import (
 	"compress/gzip"
 	"crypto/rand"
 	"errors"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"reflect"
 	"sync"
 	"testing"
@@ -105,5 +107,45 @@ func TestModelWeightsWriter(t *testing.T) {
 	out := buf.Bytes()
 	if !reflect.DeepEqual(want, out) {
 		t.Fatalf("got '%s' (len %d); want '%s' (len %d)", out, len(out), want, len(want))
+	}
+}
+
+var sizes = []int{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000}
+
+func BenchmarkModelChunkMarshal(b *testing.B) {
+	for _, size := range sizes {
+		b.Run(fmt.Sprintf("%dB", size), func(b *testing.B) {
+			in := make([]byte, size)
+			for i := 0; i < b.N; i++ {
+				chunk := aggregatorpb.ModelWeightChunk{
+					Body: in,
+				}
+				bytes, err := chunk.Marshal()
+				if err != nil {
+					b.Fatal(err)
+				}
+				chunk2 := aggregatorpb.ModelWeightChunk{}
+				if err := chunk2.Unmarshal(bytes); err != nil {
+					b.Fatal(err)
+				}
+			}
+		})
+	}
+}
+
+func BenchmarkBufWrite(b *testing.B) {
+	for _, size := range sizes {
+		b.Run(fmt.Sprintf("%dB", size), func(b *testing.B) {
+			in := make([]byte, size)
+			for i := 0; i < b.N; i++ {
+				var buf bytes.Buffer
+				if _, err := buf.Write(in); err != nil {
+					b.Fatal(err)
+				}
+				if _, err := ioutil.ReadAll(&buf); err != nil {
+					b.Fatal(err)
+				}
+			}
+		})
 	}
 }
