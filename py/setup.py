@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name='lukai',
     packages=find_packages('.'),
-    version='0.4',
+    version='0.5',
     description='Luk.ai management library',
     install_requires=['grpcio', 'six', 'srvlookup'],
     author='Tristan Rice',
