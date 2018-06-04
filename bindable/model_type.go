@@ -9,6 +9,7 @@ package bindable
 
 import (
 	"bytes"
+	"context"
 
 	"github.com/luk-ai/lukai"
 	"github.com/luk-ai/lukai/tf"
@@ -58,7 +59,7 @@ func (mt ModelType) Run(feedsBody, fetchesBody, targetsBody []byte) ([]byte, err
 		return nil, err
 	}
 
-	tensors, err := mt.ModelType.Run(feeds, fetches, targets)
+	tensors, err := mt.ModelType.Run(context.TODO(), feeds, fetches, targets)
 	if err != nil {
 		return nil, err
 	}

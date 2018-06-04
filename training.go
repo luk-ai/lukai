@@ -12,7 +12,6 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/naming"
 
 	"github.com/luk-ai/lukai/metrics"
 	"github.com/luk-ai/lukai/net"
@@ -114,14 +113,9 @@ func dial(ctx context.Context, addr string, opts ...grpc.DialOption) (*grpc.Clie
 	ctx, cancel := context.WithTimeout(ctx, DialTimeout)
 	defer cancel()
 
-	resolver, err := naming.NewDNSResolver()
-	if err != nil {
-		return nil, err
-	}
 	opts = append(
 		opts,
 		grpc.WithTransportCredentials(credentials.NewTLS(TLSConfig)),
-		grpc.WithBalancer(grpc.RoundRobin(resolver)),
 		grpc.WithBlock(),
 	)
 	conn, err := grpc.DialContext(ctx, addr, opts...)

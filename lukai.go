@@ -18,7 +18,7 @@ import (
 
 var (
 	ErrNotImplemented = errors.New("not implemented")
-	EdgeAddress       = "edge.luk.ai"
+	EdgeAddress       = "dns://edge.luk.ai"
 
 	// ModelCacheSize controls how many training models are cached between
 	// training iterations.

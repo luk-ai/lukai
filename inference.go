@@ -17,7 +17,7 @@ func (mt *ModelType) shouldLoadProdModelRLocked() bool {
 }
 
 // loadProdModelRLocked loads the prod model if it isn't present or is out of date.
-func (mt *ModelType) loadProdModelRLocked() error {
+func (mt *ModelType) loadProdModelRLocked(ctx context.Context) error {
 	if !mt.shouldLoadProdModelRLocked() {
 		return nil
 	}
@@ -32,14 +32,14 @@ func (mt *ModelType) loadProdModelRLocked() error {
 		return nil
 	}
 
-	conn, err := dial(context.TODO(), EdgeAddress)
+	conn, err := dial(ctx, EdgeAddress)
 	if err != nil {
 		return err
 	}
 	defer conn.Close()
 
 	c := aggregatorpb.NewEdgeClient(conn)
-	resp, err := c.ProdModel(context.TODO(), &aggregatorpb.ProdModelRequest{
+	resp, err := c.ProdModel(ctx, &aggregatorpb.ProdModelRequest{
 		Id: aggregatorpb.ModelID{
 			Domain:    mt.Domain,
 			ModelType: mt.ModelType,
@@ -62,7 +62,7 @@ func (mt *ModelType) loadProdModelRLocked() error {
 		mt.prod.modelID = aggregatorpb.ModelID{}
 	}
 
-	modelResp, err := c.ModelURL(context.TODO(), &aggregatorpb.ModelURLRequest{
+	modelResp, err := c.ModelURL(ctx, &aggregatorpb.ModelURLRequest{
 		Id: resp.Id,
 	})
 	if err != nil {
@@ -87,13 +87,13 @@ func (mt *ModelType) loadProdModelRLocked() error {
 // The key for feeds, and fetches should be in the form "name:#", and the
 // targets in the form "name".
 func (mt *ModelType) Run(
-	feeds map[string]*tensorflow.Tensor, fetches []string, targets []string,
+	ctx context.Context, feeds map[string]*tensorflow.Tensor, fetches []string, targets []string,
 ) ([]*tensorflow.Tensor, error) {
 	mt.prod.RLock()
 	defer mt.prod.RUnlock()
 
 	if mt.prod.model == nil {
-		if err := mt.loadProdModelRLocked(); err != nil {
+		if err := mt.loadProdModelRLocked(ctx); err != nil {
 			return nil, err
 		}
 	}
