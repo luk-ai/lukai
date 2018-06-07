@@ -37,8 +37,8 @@ Commands to build Android dependencies:
 ```
 bazel build --config=android_arm //tensorflow/contrib/android:libtensorflow_inference.so  --cxxopt='--std=c++11'
 mkdir -p $GOPATH/pkg/gomobile/lib/arm
-cp $ANDROID_NDK_HOME/platforms/android-23/arch-arm/usr/lib/* $GOPATH/pkg/gomobile/lib/arm64/
-cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm64/libtensorflow.so
+cp $ANDROID_NDK_HOME/platforms/android-23/arch-arm/usr/lib/* $GOPATH/pkg/gomobile/lib/arm/
+cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm/libtensorflow.so
 ```
 
 ### Arm64
