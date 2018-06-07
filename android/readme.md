@@ -6,7 +6,7 @@ via gomobile.
 ## Dependencies
 
 * android-sdk (and related tools)
-* android-ndk-r14b
+* android-ndk-r15c
 * android-platform-23
 
 To build you need to install android and build
@@ -15,6 +15,30 @@ You'll need to use the
 [luk-ai/tensorflow fork](https://github.com/luk-ai/tensorflow)
 and then run the commands below. Other versions of the NDK may work, but are
 untested.
+
+ENV variables:
+
+```
+export ANDROID_HOME=/opt/android-sdk
+export ANDROID_SDK=$ANDROID_HOME
+export ANDROID_SDK_HOME=$ANDROID_HOME
+export ANDROID_SDK_API_LEVEL=23
+export ANDROID_NDK_HOME=$HOME/Developer/android-ndk-r15c
+export ANDROID_NDK_API_LEVEL=23
+export ANDROID_BUILD_TOOLS_VERSION=27.0.3
+```
+
+Run `./configure` to apply those envariables. Make sure to manually configure android in case it missed anything.
+
+Commands to build Android dependencies:
+
+### Arm64
+
+```
+bazel build --config=android_arm64 //tensorflow/contrib/android:libtensorflow_inference.so --fat_apk_cpu=arm64-v8a  --cxxopt='--std=c++11'
+```
+
+## Old
 
 Commands to build Android dependencies:
 
