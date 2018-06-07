@@ -32,10 +32,40 @@ Run `./configure` to apply those envariables. Make sure to manually configure an
 
 Commands to build Android dependencies:
 
+### Arm
+
+```
+bazel build --config=android_arm //tensorflow/contrib/android:libtensorflow_inference.so  --cxxopt='--std=c++11'
+mkdir -p $GOPATH/pkg/gomobile/lib/arm
+cp $ANDROID_NDK_HOME/platforms/android-23/arch-arm/usr/lib/* $GOPATH/pkg/gomobile/lib/arm64/
+cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm64/libtensorflow.so
+```
+
 ### Arm64
 
 ```
-bazel build --config=android_arm64 //tensorflow/contrib/android:libtensorflow_inference.so --fat_apk_cpu=arm64-v8a  --cxxopt='--std=c++11'
+bazel build --config=android_arm64 //tensorflow/contrib/android:libtensorflow_inference.so  --cxxopt='--std=c++11'
+mkdir -p $GOPATH/pkg/gomobile/lib/arm64
+cp $ANDROID_NDK_HOME/platforms/android-23/arch-arm64/usr/lib/* $GOPATH/pkg/gomobile/lib/arm64/
+cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm64/libtensorflow.so
+```
+
+### x86
+
+```
+bazel build --config=android //tensorflow/contrib/android:libtensorflow_inference.so  --cxxopt='--std=c++11' --cpu=x86 --fat_apk_cpu=x86
+mkdir -p $GOPATH/pkg/gomobile/lib/386
+cp $ANDROID_NDK_HOME/platforms/android-23/arch-x86/usr/lib/* $GOPATH/pkg/gomobile/lib/386/
+cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/386/libtensorflow.so
+```
+
+### x86_64
+
+```
+bazel build --config=android //tensorflow/contrib/android:libtensorflow_inference.so --cpu=x86_64 --fat_apk_cpu=x86_64  --cxxopt='--std=c++11'
+mkdir -p $GOPATH/pkg/gomobile/lib/amd64
+cp $ANDROID_NDK_HOME/platforms/android-23/arch-x86_64/usr/lib/* $GOPATH/pkg/gomobile/lib/amd64/
+cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/amd64/libtensorflow.so
 ```
 
 ## Old
