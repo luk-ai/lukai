@@ -9,6 +9,7 @@ import (
 
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/pkg/errors"
+	"golang.org/x/time/rate"
 
 	"github.com/luk-ai/lukai/debounce"
 	"github.com/luk-ai/lukai/protobuf/aggregatorpb"
@@ -26,6 +27,13 @@ var (
 
 	DialTimeout           = 60 * time.Second
 	outOfDateModelTimeout = 24 * time.Hour
+
+	// ErrorRateLimit controls how often the client should report errors to the
+	// server.
+	ErrorRateLimit = 1 * time.Minute
+	// MaxQueuedErrors controls how many errors can be queued before they start
+	// getting discarded.
+	MaxQueuedErrors = 10
 )
 
 type ModelType struct {
@@ -60,15 +68,23 @@ type ModelType struct {
 	}
 
 	modelCache *lru.Cache
+
+	errorLimiter *rate.Limiter
+	errors       struct {
+		sync.Mutex
+
+		errors []aggregatorpb.Error
+	}
 }
 
 // MakeModelType creates a new model type with a specified domain and model type
 // and stores all training data in dataDir.
 func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 	mt := ModelType{
-		Domain:    domain,
-		ModelType: modelType,
-		DataDir:   dataDir,
+		Domain:       domain,
+		ModelType:    modelType,
+		DataDir:      dataDir,
+		errorLimiter: rate.NewLimiter(rate.Every(ErrorRateLimit), 1),
 	}
 
 	if domain == "" {

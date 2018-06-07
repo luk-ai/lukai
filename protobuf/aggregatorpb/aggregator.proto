@@ -124,9 +124,28 @@ message CancelModelTrainingResponse {}
 message ModelURLRequest {
   ModelID id = 1 [(gogoproto.nullable) = false];
 }
+
 message ModelURLResponse {
   string url = 1;
 }
+
+enum ErrorType {
+  ERROR_UNKNOWN = 0;
+  ERROR_TRAINING = 1;
+  ERROR_INFERENCE = 2;
+}
+
+message Error {
+  ModelID id = 1 [(gogoproto.nullable) = false];
+  ErrorType type = 2;
+  string error = 3;
+}
+
+message ReportErrorRequest {
+  repeated Error errors = 1 [(gogoproto.nullable) = false];
+}
+
+message ReportErrorResponse {}
 
 service Aggregator {
   // GetWork sends work to clients to process.
@@ -150,6 +169,10 @@ service Edge {
   // ModelURL returns a URL that can be used to download the model. For billing
   // purposes, hitting this endpoint will count as one download of the model.
   rpc ModelURL (ModelURLRequest) returns (ModelURLResponse) {}
+
+  // ReportError reports an error to the server so the developers can later view
+  // them.
+  rpc ReportError (ReportErrorRequest) returns (ReportErrorResponse) {}
 
   // These methods are deprecated. Should call FindWork and then talk directly
   // to the aggregator itself.

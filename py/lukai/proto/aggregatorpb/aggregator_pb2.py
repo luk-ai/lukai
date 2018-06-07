@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='aggregatorpb/aggregator.proto',
   package='aggregatorpb',
   syntax='proto3',
-  serialized_pb=_b('\n\x1d\x61ggregatorpb/aggregator.proto\x12\x0c\x61ggregatorpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x01\n\x0bHyperParams\x12\x12\n\nbatch_size\x18\x02 \x01(\x03\x12\x12\n\nnum_rounds\x18\x03 \x01(\x03\x12\x15\n\rlearning_rate\x18\x04 \x01(\x01\x12\x18\n\x10num_local_rounds\x18\x05 \x01(\x03\x12\x19\n\x11quantized_updates\x18\x06 \x01(\x08\x12\x13\n\x0bnum_clients\x18\x07 \x01(\x03\"k\n\x0eSchedulingInfo\x12\x33\n\tscheduled\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x04\x90\xdf\x1f\x01\x12$\n\x06repeat\x18\x02 \x01(\x0e\x32\x14.aggregatorpb.Repeat\"\xfc\x01\n\x04Work\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x14\n\x0cnum_examples\x18\x02 \x01(\x03\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x03\x12\r\n\x05\x65poch\x18\x04 \x01(\x03\x12\x35\n\x0chyper_params\x18\x07 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x12\n\ntime_taken\x18\x08 \x01(\x01\x12\x35\n\x07started\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x0f\n\x07metrics\x18\t \x03(\x01\"9\n\x07ModelID\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x04\"9\n\x0eGetWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\":\n\x0f\x46indWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"+\n\x10\x46indWorkResponse\x12\x17\n\x0f\x61ggregator_addr\x18\x01 \x01(\t\":\n\x10ModelWeightChunk\x12\x0c\n\x04\x62ody\x18\x01 \x01(\x0c\x12\x0c\n\x04more\x18\x02 \x01(\x08\x12\n\n\x02id\x18\x03 \x01(\x04\"p\n\x0fGetWorkResponse\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"r\n\x11ReportWorkRequest\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"\x14\n\x12ReportWorkResponse\";\n\x10ProdModelRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"<\n\x11ProdModelResponse\x12\'\n\x02id\x18\x03 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"T\n\x13ModelTypeAllocation\x12/\n\nmodel_type\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x0c\n\x04\x61\x64\x64r\x18\x02 \x01(\t\"8\n\rNotifyRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x10\n\x0eNotifyResponse\"E\n\x1a\x43\x61ncelModelTrainingRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1d\n\x1b\x43\x61ncelModelTrainingResponse\":\n\x0fModelURLRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1f\n\x10ModelURLResponse\x12\x0b\n\x03url\x18\x01 \x01(\t*V\n\x0eTrainingStatus\x12\r\n\tSCHEDULED\x10\x00\x12\x0c\n\x08TRAINING\x10\x01\x12\r\n\tSUCCEEDED\x10\x02\x12\n\n\x06\x46\x41ILED\x10\x03\x12\x0c\n\x08\x43\x41NCELED\x10\x04*C\n\x06Repeat\x12\t\n\x05NEVER\x10\x00\x12\n\n\x06HOURLY\x10\x01\x12\t\n\x05\x44\x41ILY\x10\x02\x12\n\n\x06WEEKLY\x10\x03\x12\x0b\n\x07MONTHLY\x10\x04\x32\xe2\x02\n\nAggregator\x12J\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x1d.aggregatorpb.GetWorkResponse\"\x00\x30\x01\x12S\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00(\x01\x12\x45\n\x06Notify\x12\x1b.aggregatorpb.NotifyRequest\x1a\x1c.aggregatorpb.NotifyResponse\"\x00\x12l\n\x13\x43\x61ncelModelTraining\x12(.aggregatorpb.CancelModelTrainingRequest\x1a).aggregatorpb.CancelModelTrainingResponse\"\x00\x32\xf0\x01\n\x04\x45\x64ge\x12N\n\tProdModel\x12\x1e.aggregatorpb.ProdModelRequest\x1a\x1f.aggregatorpb.ProdModelResponse\"\x00\x12K\n\x08\x46indWork\x12\x1d.aggregatorpb.FindWorkRequest\x1a\x1e.aggregatorpb.FindWorkResponse\"\x00\x12K\n\x08ModelURL\x12\x1d.aggregatorpb.ModelURLRequest\x1a\x1e.aggregatorpb.ModelURLResponse\"\x00\x42\x04\xe0\xe2\x1e\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x1d\x61ggregatorpb/aggregator.proto\x12\x0c\x61ggregatorpb\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x01\n\x0bHyperParams\x12\x12\n\nbatch_size\x18\x02 \x01(\x03\x12\x12\n\nnum_rounds\x18\x03 \x01(\x03\x12\x15\n\rlearning_rate\x18\x04 \x01(\x01\x12\x18\n\x10num_local_rounds\x18\x05 \x01(\x03\x12\x19\n\x11quantized_updates\x18\x06 \x01(\x08\x12\x13\n\x0bnum_clients\x18\x07 \x01(\x03\"k\n\x0eSchedulingInfo\x12\x33\n\tscheduled\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x04\x90\xdf\x1f\x01\x12$\n\x06repeat\x18\x02 \x01(\x0e\x32\x14.aggregatorpb.Repeat\"\xfc\x01\n\x04Work\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x14\n\x0cnum_examples\x18\x02 \x01(\x03\x12\x13\n\x0bnum_clients\x18\x03 \x01(\x03\x12\r\n\x05\x65poch\x18\x04 \x01(\x03\x12\x35\n\x0chyper_params\x18\x07 \x01(\x0b\x32\x19.aggregatorpb.HyperParamsB\x04\xc8\xde\x1f\x00\x12\x12\n\ntime_taken\x18\x08 \x01(\x01\x12\x35\n\x07started\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x08\x90\xdf\x1f\x01\xc8\xde\x1f\x00\x12\x0f\n\x07metrics\x18\t \x03(\x01\"9\n\x07ModelID\x12\x0e\n\x06\x64omain\x18\x01 \x01(\t\x12\x12\n\nmodel_type\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x04\"9\n\x0eGetWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\":\n\x0f\x46indWorkRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"+\n\x10\x46indWorkResponse\x12\x17\n\x0f\x61ggregator_addr\x18\x01 \x01(\t\":\n\x10ModelWeightChunk\x12\x0c\n\x04\x62ody\x18\x01 \x01(\x0c\x12\x0c\n\x04more\x18\x02 \x01(\x08\x12\n\n\x02id\x18\x03 \x01(\x04\"p\n\x0fGetWorkResponse\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"r\n\x11ReportWorkRequest\x12\"\n\x04work\x18\x01 \x01(\x0b\x32\x12.aggregatorpb.WorkH\x00\x12\x31\n\x07weights\x18\x02 \x01(\x0b\x32\x1e.aggregatorpb.ModelWeightChunkH\x00\x42\x06\n\x04type\"\x14\n\x12ReportWorkResponse\";\n\x10ProdModelRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"<\n\x11ProdModelResponse\x12\'\n\x02id\x18\x03 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"T\n\x13ModelTypeAllocation\x12/\n\nmodel_type\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12\x0c\n\x04\x61\x64\x64r\x18\x02 \x01(\t\"8\n\rNotifyRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x10\n\x0eNotifyResponse\"E\n\x1a\x43\x61ncelModelTrainingRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1d\n\x1b\x43\x61ncelModelTrainingResponse\":\n\x0fModelURLRequest\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\"\x1f\n\x10ModelURLResponse\x12\x0b\n\x03url\x18\x01 \x01(\t\"f\n\x05\x45rror\x12\'\n\x02id\x18\x01 \x01(\x0b\x32\x15.aggregatorpb.ModelIDB\x04\xc8\xde\x1f\x00\x12%\n\x04type\x18\x02 \x01(\x0e\x32\x17.aggregatorpb.ErrorType\x12\r\n\x05\x65rror\x18\x03 \x01(\t\"?\n\x12ReportErrorRequest\x12)\n\x06\x65rrors\x18\x01 \x03(\x0b\x32\x13.aggregatorpb.ErrorB\x04\xc8\xde\x1f\x00\"\x15\n\x13ReportErrorResponse*V\n\x0eTrainingStatus\x12\r\n\tSCHEDULED\x10\x00\x12\x0c\n\x08TRAINING\x10\x01\x12\r\n\tSUCCEEDED\x10\x02\x12\n\n\x06\x46\x41ILED\x10\x03\x12\x0c\n\x08\x43\x41NCELED\x10\x04*C\n\x06Repeat\x12\t\n\x05NEVER\x10\x00\x12\n\n\x06HOURLY\x10\x01\x12\t\n\x05\x44\x41ILY\x10\x02\x12\n\n\x06WEEKLY\x10\x03\x12\x0b\n\x07MONTHLY\x10\x04*G\n\tErrorType\x12\x11\n\rERROR_UNKNOWN\x10\x00\x12\x12\n\x0e\x45RROR_TRAINING\x10\x01\x12\x13\n\x0f\x45RROR_INFERENCE\x10\x02\x32\xe2\x02\n\nAggregator\x12J\n\x07GetWork\x12\x1c.aggregatorpb.GetWorkRequest\x1a\x1d.aggregatorpb.GetWorkResponse\"\x00\x30\x01\x12S\n\nReportWork\x12\x1f.aggregatorpb.ReportWorkRequest\x1a .aggregatorpb.ReportWorkResponse\"\x00(\x01\x12\x45\n\x06Notify\x12\x1b.aggregatorpb.NotifyRequest\x1a\x1c.aggregatorpb.NotifyResponse\"\x00\x12l\n\x13\x43\x61ncelModelTraining\x12(.aggregatorpb.CancelModelTrainingRequest\x1a).aggregatorpb.CancelModelTrainingResponse\"\x00\x32\xc6\x02\n\x04\x45\x64ge\x12N\n\tProdModel\x12\x1e.aggregatorpb.ProdModelRequest\x1a\x1f.aggregatorpb.ProdModelResponse\"\x00\x12K\n\x08\x46indWork\x12\x1d.aggregatorpb.FindWorkRequest\x1a\x1e.aggregatorpb.FindWorkResponse\"\x00\x12K\n\x08ModelURL\x12\x1d.aggregatorpb.ModelURLRequest\x1a\x1e.aggregatorpb.ModelURLResponse\"\x00\x12T\n\x0bReportError\x12 .aggregatorpb.ReportErrorRequest\x1a!.aggregatorpb.ReportErrorResponse\"\x00\x42\x04\xe0\xe2\x1e\x01\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -54,8 +54,8 @@ _TRAININGSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1659,
-  serialized_end=1745,
+  serialized_start=1851,
+  serialized_end=1937,
 )
 _sym_db.RegisterEnumDescriptor(_TRAININGSTATUS)
 
@@ -89,12 +89,39 @@ _REPEAT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1747,
-  serialized_end=1814,
+  serialized_start=1939,
+  serialized_end=2006,
 )
 _sym_db.RegisterEnumDescriptor(_REPEAT)
 
 Repeat = enum_type_wrapper.EnumTypeWrapper(_REPEAT)
+_ERRORTYPE = _descriptor.EnumDescriptor(
+  name='ErrorType',
+  full_name='aggregatorpb.ErrorType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='ERROR_UNKNOWN', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ERROR_TRAINING', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ERROR_INFERENCE', index=2, number=2,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=2008,
+  serialized_end=2079,
+)
+_sym_db.RegisterEnumDescriptor(_ERRORTYPE)
+
+ErrorType = enum_type_wrapper.EnumTypeWrapper(_ERRORTYPE)
 SCHEDULED = 0
 TRAINING = 1
 SUCCEEDED = 2
@@ -105,6 +132,9 @@ HOURLY = 1
 DAILY = 2
 WEEKLY = 3
 MONTHLY = 4
+ERROR_UNKNOWN = 0
+ERROR_TRAINING = 1
+ERROR_INFERENCE = 2
 
 
 
@@ -852,6 +882,106 @@ _MODELURLRESPONSE = _descriptor.Descriptor(
   serialized_end=1657,
 )
 
+
+_ERROR = _descriptor.Descriptor(
+  name='Error',
+  full_name='aggregatorpb.Error',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='id', full_name='aggregatorpb.Error.id', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='type', full_name='aggregatorpb.Error.type', index=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='error', full_name='aggregatorpb.Error.error', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1659,
+  serialized_end=1761,
+)
+
+
+_REPORTERRORREQUEST = _descriptor.Descriptor(
+  name='ReportErrorRequest',
+  full_name='aggregatorpb.ReportErrorRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='errors', full_name='aggregatorpb.ReportErrorRequest.errors', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1763,
+  serialized_end=1826,
+)
+
+
+_REPORTERRORRESPONSE = _descriptor.Descriptor(
+  name='ReportErrorResponse',
+  full_name='aggregatorpb.ReportErrorResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1828,
+  serialized_end=1849,
+)
+
 _SCHEDULINGINFO.fields_by_name['scheduled'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _SCHEDULINGINFO.fields_by_name['repeat'].enum_type = _REPEAT
 _WORK.fields_by_name['id'].message_type = _MODELID
@@ -881,6 +1011,9 @@ _MODELTYPEALLOCATION.fields_by_name['model_type'].message_type = _MODELID
 _NOTIFYREQUEST.fields_by_name['id'].message_type = _MODELID
 _CANCELMODELTRAININGREQUEST.fields_by_name['id'].message_type = _MODELID
 _MODELURLREQUEST.fields_by_name['id'].message_type = _MODELID
+_ERROR.fields_by_name['id'].message_type = _MODELID
+_ERROR.fields_by_name['type'].enum_type = _ERRORTYPE
+_REPORTERRORREQUEST.fields_by_name['errors'].message_type = _ERROR
 DESCRIPTOR.message_types_by_name['HyperParams'] = _HYPERPARAMS
 DESCRIPTOR.message_types_by_name['SchedulingInfo'] = _SCHEDULINGINFO
 DESCRIPTOR.message_types_by_name['Work'] = _WORK
@@ -901,8 +1034,12 @@ DESCRIPTOR.message_types_by_name['CancelModelTrainingRequest'] = _CANCELMODELTRA
 DESCRIPTOR.message_types_by_name['CancelModelTrainingResponse'] = _CANCELMODELTRAININGRESPONSE
 DESCRIPTOR.message_types_by_name['ModelURLRequest'] = _MODELURLREQUEST
 DESCRIPTOR.message_types_by_name['ModelURLResponse'] = _MODELURLRESPONSE
+DESCRIPTOR.message_types_by_name['Error'] = _ERROR
+DESCRIPTOR.message_types_by_name['ReportErrorRequest'] = _REPORTERRORREQUEST
+DESCRIPTOR.message_types_by_name['ReportErrorResponse'] = _REPORTERRORRESPONSE
 DESCRIPTOR.enum_types_by_name['TrainingStatus'] = _TRAININGSTATUS
 DESCRIPTOR.enum_types_by_name['Repeat'] = _REPEAT
+DESCRIPTOR.enum_types_by_name['ErrorType'] = _ERRORTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 HyperParams = _reflection.GeneratedProtocolMessageType('HyperParams', (_message.Message,), dict(
@@ -1045,6 +1182,27 @@ ModelURLResponse = _reflection.GeneratedProtocolMessageType('ModelURLResponse', 
   ))
 _sym_db.RegisterMessage(ModelURLResponse)
 
+Error = _reflection.GeneratedProtocolMessageType('Error', (_message.Message,), dict(
+  DESCRIPTOR = _ERROR,
+  __module__ = 'aggregatorpb.aggregator_pb2'
+  # @@protoc_insertion_point(class_scope:aggregatorpb.Error)
+  ))
+_sym_db.RegisterMessage(Error)
+
+ReportErrorRequest = _reflection.GeneratedProtocolMessageType('ReportErrorRequest', (_message.Message,), dict(
+  DESCRIPTOR = _REPORTERRORREQUEST,
+  __module__ = 'aggregatorpb.aggregator_pb2'
+  # @@protoc_insertion_point(class_scope:aggregatorpb.ReportErrorRequest)
+  ))
+_sym_db.RegisterMessage(ReportErrorRequest)
+
+ReportErrorResponse = _reflection.GeneratedProtocolMessageType('ReportErrorResponse', (_message.Message,), dict(
+  DESCRIPTOR = _REPORTERRORRESPONSE,
+  __module__ = 'aggregatorpb.aggregator_pb2'
+  # @@protoc_insertion_point(class_scope:aggregatorpb.ReportErrorResponse)
+  ))
+_sym_db.RegisterMessage(ReportErrorResponse)
+
 
 DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\340\342\036\001'))
@@ -1072,6 +1230,10 @@ _CANCELMODELTRAININGREQUEST.fields_by_name['id'].has_options = True
 _CANCELMODELTRAININGREQUEST.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _MODELURLREQUEST.fields_by_name['id'].has_options = True
 _MODELURLREQUEST.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
+_ERROR.fields_by_name['id'].has_options = True
+_ERROR.fields_by_name['id']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
+_REPORTERRORREQUEST.fields_by_name['errors'].has_options = True
+_REPORTERRORREQUEST.fields_by_name['errors']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 
 _AGGREGATOR = _descriptor.ServiceDescriptor(
   name='Aggregator',
@@ -1079,8 +1241,8 @@ _AGGREGATOR = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=1817,
-  serialized_end=2171,
+  serialized_start=2082,
+  serialized_end=2436,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetWork',
@@ -1130,8 +1292,8 @@ _EDGE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   options=None,
-  serialized_start=2174,
-  serialized_end=2414,
+  serialized_start=2439,
+  serialized_end=2765,
   methods=[
   _descriptor.MethodDescriptor(
     name='ProdModel',
@@ -1158,6 +1320,15 @@ _EDGE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_MODELURLREQUEST,
     output_type=_MODELURLRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ReportError',
+    full_name='aggregatorpb.Edge.ReportError',
+    index=3,
+    containing_service=None,
+    input_type=_REPORTERRORREQUEST,
+    output_type=_REPORTERRORRESPONSE,
     options=None,
   ),
 ])

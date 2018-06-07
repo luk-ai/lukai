@@ -83,10 +83,40 @@ func (mt *ModelType) loadProdModelRLocked(ctx context.Context) error {
 	return nil
 }
 
+// ID returns the current model ID. If there a production model loaded it
+// returns the production model ID, otherwise, the ID field will be blank and
+// just have the domain and model type.
+func (mt *ModelType) ID() aggregatorpb.ModelID {
+	mt.prod.Lock()
+	defer mt.prod.Unlock()
+
+	if (mt.prod.modelID != aggregatorpb.ModelID{}) {
+		return mt.prod.modelID
+	}
+
+	return aggregatorpb.ModelID{
+		Domain:    mt.Domain,
+		ModelType: mt.ModelType,
+	}
+}
+
 // Run runs the model with the provided tensorflow feeds, fetches and targets.
 // The key for feeds, and fetches should be in the form "name:#", and the
 // targets in the form "name".
 func (mt *ModelType) Run(
+	ctx context.Context, feeds map[string]*tensorflow.Tensor, fetches []string, targets []string,
+) ([]*tensorflow.Tensor, error) {
+	tensors, err := mt.runInternal(ctx, feeds, fetches, targets)
+	if err != nil {
+		if err := mt.reportErrorDial(ctx, mt.ID(), aggregatorpb.ERROR_INFERENCE, err); err != nil {
+			return nil, err
+		}
+		return nil, err
+	}
+	return tensors, nil
+}
+
+func (mt *ModelType) runInternal(
 	ctx context.Context, feeds map[string]*tensorflow.Tensor, fetches []string, targets []string,
 ) ([]*tensorflow.Tensor, error) {
 	mt.prod.RLock()

@@ -147,9 +147,18 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 		return err
 	}
 
+	if err := mt.doWork(ctx, edge, resp.AggregatorAddr, &id); err != nil {
+		if err := mt.reportError(ctx, edge, id, aggregatorpb.ERROR_TRAINING, err); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (mt *ModelType) doWork(ctx context.Context, edge aggregatorpb.EdgeClient, aggregatorAddr string, id *aggregatorpb.ModelID) error {
 	conn, err := dial(
 		ctx,
-		resp.AggregatorAddr,
+		aggregatorAddr,
 		grpc.WithDefaultCallOptions(
 			grpc.MaxCallRecvMsgSize(int(MaxMsgSize)),
 			grpc.MaxCallSendMsgSize(int(MaxMsgSize)),
@@ -163,7 +172,7 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 	c := aggregatorpb.NewAggregatorClient(conn)
 
 	req := aggregatorpb.GetWorkRequest{
-		Id: id,
+		Id: *id,
 	}
 	stream, err := c.GetWork(ctx, &req)
 	if err != nil {
@@ -195,6 +204,10 @@ func (mt *ModelType) trainerWorker(ctx context.Context) error {
 		if work == nil {
 			return errors.New("expected work")
 		}
+
+		// Update id for reporting errors.
+		*id = work.Id
+
 		if err := mt.processWork(ctx, c, edge, work, weights); err != nil {
 			return errors.Wrapf(err, "failure while processing work: %+v", work.Id)
 		}
