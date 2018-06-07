@@ -35,36 +35,40 @@ Commands to build Android dependencies:
 ### Arm
 
 ```
+sed -i 's/API_LEVEL="21"/API_LEVEL="15"/g' .tf_configure.bazelrc
 bazel build --config=android_arm //tensorflow/contrib/android:libtensorflow_inference.so  --cxxopt='--std=c++11'
 mkdir -p $GOPATH/pkg/gomobile/lib/arm
-cp $ANDROID_NDK_HOME/platforms/android-23/arch-arm/usr/lib/* $GOPATH/pkg/gomobile/lib/arm/
+cp $ANDROID_NDK_HOME/platforms/android-15/arch-arm/usr/lib/* $GOPATH/pkg/gomobile/lib/arm/
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm/libtensorflow.so
 ```
 
 ### Arm64
 
 ```
+sed -i 's/API_LEVEL="15"/API_LEVEL="21"/g' .tf_configure.bazelrc
 bazel build --config=android_arm64 //tensorflow/contrib/android:libtensorflow_inference.so  --cxxopt='--std=c++11'
 mkdir -p $GOPATH/pkg/gomobile/lib/arm64
-cp $ANDROID_NDK_HOME/platforms/android-23/arch-arm64/usr/lib/* $GOPATH/pkg/gomobile/lib/arm64/
+cp $ANDROID_NDK_HOME/platforms/android-21/arch-arm64/usr/lib/* $GOPATH/pkg/gomobile/lib/arm64/
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm64/libtensorflow.so
 ```
 
 ### x86
 
 ```
+sed -i 's/API_LEVEL="21"/API_LEVEL="15"/g' .tf_configure.bazelrc
 bazel build --config=android //tensorflow/contrib/android:libtensorflow_inference.so  --cxxopt='--std=c++11' --cpu=x86 --fat_apk_cpu=x86
 mkdir -p $GOPATH/pkg/gomobile/lib/386
-cp $ANDROID_NDK_HOME/platforms/android-23/arch-x86/usr/lib/* $GOPATH/pkg/gomobile/lib/386/
+cp $ANDROID_NDK_HOME/platforms/android-15/arch-x86/usr/lib/* $GOPATH/pkg/gomobile/lib/386/
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/386/libtensorflow.so
 ```
 
 ### x86_64
 
 ```
+sed -i 's/API_LEVEL="15"/API_LEVEL="21"/g' .tf_configure.bazelrc
 bazel build --config=android //tensorflow/contrib/android:libtensorflow_inference.so --cpu=x86_64 --fat_apk_cpu=x86_64  --cxxopt='--std=c++11'
 mkdir -p $GOPATH/pkg/gomobile/lib/amd64
-cp $ANDROID_NDK_HOME/platforms/android-23/arch-x86_64/usr/lib/* $GOPATH/pkg/gomobile/lib/amd64/
+cp $ANDROID_NDK_HOME/platforms/android-21/arch-x86_64/usr/lib/* $GOPATH/pkg/gomobile/lib/amd64/
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/amd64/libtensorflow.so
 ```
 
