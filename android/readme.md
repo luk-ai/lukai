@@ -1,13 +1,64 @@
 # Android Client Library
 
-This is the home of the android client library. It's mostly generated bindings
-via gomobile.
+This is the home of the android client library. It's a combination of Tensorflow C for Android, the Go client library, and an easy to use Java wrapper around them.
 
-## Dependencies
+## Get Started
+
+Download `bindable.aar` and `library-release.aar` from the [releases page](https://godoc.org/golang.org/x/mobile/cmd/gomobile) and include them in your android project.
+
+```java
+package ai.luk.example;
+
+import ai.luk.ModelType;
+import ai.luk.Tensor;
+import ai.luk.DataType;
+
+class App {
+  public void train() {
+    ModelType mt = new ModelType("domain", "mnist", "./mnist-files/");
+    
+    // Run the production model.
+    feeds = new HashMap<String, Tensor>();
+    feeds.put("Placeholder:0", Tensor.create(1.0f, DataType.FLOAT));
+    Map<String, Tensor> outputs = mt.run(feeds, 
+      Arrays.asList("Placeholder_1:0"), 
+      Arrays.asList("extra inference target (optional)"));
+    
+    
+    // Log some training examples.
+    // Typically you'll pair the inputs to mt.run above with the true value and then log them. 
+    // That way it creates a feedback loop to improve your model over time.
+    Map<String, Tensor> feeds = new HashMap<String, Tensor>();
+    feeds.put("Placeholder:0", Tensor.create(1.0f, DataType.FLOAT)); // Data type is optional
+    feeds.put("Placeholder_1:0", Tensor.create(1.0f, DataType.FLOAT));
+    mt.log(feeds, Arrays.asList("training_target"));
+
+
+    // You will need to handle when to start and stop training. 
+    // Should train when the user isn't using their phone (screen off), while charging and connected to WiFi.
+    mt.startTraining();
+    mt.stopTraining();
+   
+    // Check if there were any training or example errors.
+    mt.trainingError();
+    mt.examplesError();
+    
+    // Close the model.
+    mt.close(); 
+  }
+}
+```
+
+## Build from Source
+
+### Dependencies
 
 * android-sdk (and related tools)
 * android-ndk-r15c
-* android-platform-23
+* android-platform-21
+* Bazel
+* Go
+* [gomobile](https://godoc.org/golang.org/x/mobile/cmd/gomobile)
 
 To build you need to install android and build
 [Tensorflow for android](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/android).
@@ -30,9 +81,9 @@ export ANDROID_BUILD_TOOLS_VERSION=27.0.3
 
 Run `./configure` to apply those envariables. Make sure to manually configure android in case it missed anything.
 
-Commands to build Android dependencies:
+### Building Tensorflow for Android
 
-### Arm
+#### Arm
 
 ```
 sed -i 's/API_LEVEL="21"/API_LEVEL="15"/g' .tf_configure.bazelrc
@@ -42,7 +93,7 @@ cp $ANDROID_NDK_HOME/platforms/android-15/arch-arm/usr/lib/* $GOPATH/pkg/gomobil
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm/libtensorflow.so
 ```
 
-### Arm64
+#### Arm64
 
 ```
 sed -i 's/API_LEVEL="15"/API_LEVEL="21"/g' .tf_configure.bazelrc
@@ -52,7 +103,7 @@ cp $ANDROID_NDK_HOME/platforms/android-21/arch-arm64/usr/lib/* $GOPATH/pkg/gomob
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm64/libtensorflow.so
 ```
 
-### x86
+#### x86
 
 ```
 sed -i 's/API_LEVEL="21"/API_LEVEL="15"/g' .tf_configure.bazelrc
@@ -62,7 +113,7 @@ cp $ANDROID_NDK_HOME/platforms/android-15/arch-x86/usr/lib/* $GOPATH/pkg/gomobil
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/386/libtensorflow.so
 ```
 
-### x86_64
+#### x86_64
 
 ```
 sed -i 's/API_LEVEL="15"/API_LEVEL="21"/g' .tf_configure.bazelrc
@@ -72,11 +123,36 @@ cp $ANDROID_NDK_HOME/platforms/android-21/arch-x86_64/usr/lib/* $GOPATH/pkg/gomo
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/amd64/libtensorflow.so
 ```
 
-## Old
+### Build bindable.aar (Tensorflow + Go Client Library)
+
+Once you've built Tensorflow for all of the various architectures you have to build the Go wrapper and package it all up into one AAR file.
+
+```
+cd android
+make
+```
+
+Final AAR file will be at `android/bindable/bindable.aar`
+
+### Build Java client library
+
+Once you've built `bindable.aar` you need to build the Java client library.
+
+```
+# Run tests
+gradle :library:test :library:connectedDebugAndroidTest --stacktrace --info
+# Build
+gradle :library:assemble --stacktrace --info
+```
+
+Final AAR file is found at `android/library/build/outputs/aar/library-release.aar` you need to include this and `bindable.aar` in the final application. 
+
+
+### Old way to build Tensorflow For Android
 
 Commands to build Android dependencies:
 
-### Arm
+#### Arm
 ```
 sed -i 's/api_level=21,/api_level=15,/g' WORKSPACE
 bazel build -c opt --verbose_failures //tensorflow/contrib/android:libtensorflow_inference.so --crosstool_top=//external:android/crosstool --host_crosstool_top=@bazel_tools//tools/cpp:toolchain --cpu=armeabi-v7a
@@ -85,7 +161,7 @@ cp $ANDROID_NDK_HOME/platforms/android-15/arch-arm/usr/lib/* $GOPATH/pkg/gomobil
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm/libtensorflow.so
 ```
 
-### Arm64
+#### Arm64
 ```
 sed -i 's/api_level=15,/api_level=21,/g' WORKSPACE
 bazel build -c opt --verbose_failures //tensorflow/contrib/android:libtensorflow_inference.so --crosstool_top=//external:android/crosstool --host_crosstool_top=@bazel_tools//tools/cpp:toolchain --cpu=arm64-v8a
@@ -94,7 +170,7 @@ cp $ANDROID_NDK_HOME/platforms/android-21/arch-arm64/usr/lib/* $GOPATH/pkg/gomob
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/arm64/libtensorflow.so
 ```
 
-### x86
+#### x86
 ```
 sed -i 's/api_level=21,/api_level=15,/g' WORKSPACE
 bazel build -c opt --verbose_failures //tensorflow/contrib/android:libtensorflow_inference.so --crosstool_top=//external:android/crosstool --host_crosstool_top=@bazel_tools//tools/cpp:toolchain --cpu=x86
@@ -103,7 +179,7 @@ cp $ANDROID_NDK_HOME/platforms/android-15/arch-x86/usr/lib/* $GOPATH/pkg/gomobil
 cp -f bazel-bin/tensorflow/contrib/android/libtensorflow_inference.so $GOPATH/pkg/gomobile/lib/386/libtensorflow.so
 ```
 
-### x86_64
+#### x86_64
 ```
 sed -i 's/api_level=15,/api_level=21,/g' WORKSPACE
 bazel build -c opt --verbose_failures //tensorflow/contrib/android:libtensorflow_inference.so --crosstool_top=//external:android/crosstool --host_crosstool_top=@bazel_tools//tools/cpp:toolchain --cpu=x86_64
