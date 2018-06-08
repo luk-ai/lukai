@@ -33,6 +33,7 @@ public class ModelTypeTest {
   public void log() throws Exception {
     File dir = tempdir.newFolder("lukai-java-test");
     ModelType mt = new ModelType("test", "test", dir.getPath());
+    mt.close();
   }
 
   @Test
@@ -44,9 +45,14 @@ public class ModelTypeTest {
     feeds.put("Placeholder:0", Tensor.create(1.0f, DataType.FLOAT));
     feeds.put("Placeholder_1:0", Tensor.create(1.0f, DataType.FLOAT));
     mt.log(feeds, Arrays.asList("adam_optimizer/Adam"));
+    assertEquals(mt.totalExamples(), 1);
     mt.startTraining();
     assertTrue(mt.isTraining());
     mt.stopTraining();
-    assertFalse(mt.isTraining());
+
+    mt.trainingError();
+    mt.examplesError();
+
+    mt.close();
   }
 }

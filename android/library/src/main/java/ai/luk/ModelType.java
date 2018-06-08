@@ -27,6 +27,18 @@ public class ModelType {
     mt.stopTraining();
   }
 
+  public void close() throws Exception {
+    mt.close();
+  }
+
+  public void examplesError() throws Exception {
+    mt.examplesError();
+  }
+
+  public void trainingError() throws Exception {
+    mt.trainingError();
+  }
+
   public long totalExamples() {
     return mt.totalExamples();
   }
