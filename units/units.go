@@ -2,8 +2,8 @@ package units
 
 import "time"
 
-type Bytes int
-type Bitsps int
+type Bytes int64
+type Bitsps int64
 
 const (
 	B  Bytes = 1

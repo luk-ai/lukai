@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion 21
-  buildToolsVersion "26.0.0"
+  buildToolsVersion "27.0.3"
 
   defaultConfig {
     minSdkVersion 15
@@ -35,11 +35,11 @@ android {
 }
 
 dependencies {
-  compile project(':bindable')
+  implementation project(':bindable')
 
-  testCompile 'junit:junit:4.12'
+  testImplementation 'junit:junit:4.12'
 
-  androidTestCompile 'com.android.support:support-annotations:24.0.0'
-  androidTestCompile 'com.android.support.test:runner:0.5'
-  androidTestCompile 'com.android.support.test:rules:0.5'
+  androidTestImplementation 'com.android.support:support-annotations:24.0.0'
+  androidTestImplementation 'com.android.support.test:runner:0.5'
+  androidTestImplementation 'com.android.support.test:rules:0.5'
 }

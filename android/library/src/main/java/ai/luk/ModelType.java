@@ -6,9 +6,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.lang.String;
 
 public class ModelType {
-  private ai.luk.bindable.ModelType mt;
+  public ai.luk.bindable.ModelType mt;
 
   public ModelType(String domain, String modelType, String dataDir) throws Exception {
     mt = ai.luk.bindable.Bindable.makeModelType(domain, modelType, dataDir);
@@ -39,21 +40,68 @@ public class ModelType {
     return unserializeMap(mt.run(serialize(feeds), serialize(fetches), serialize(targets)));
   }
 
-  private static void serializeTo(ByteArrayOutputStream w, long n) {
+  public static void serializeTo(ByteArrayOutputStream w, long n) {
     ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).order(ByteOrder.nativeOrder());
     buffer.putLong(n);
     byte[] body = buffer.array();
     w.write(body, 0, body.length);
   };
 
-  private static void serializeTo(ByteArrayOutputStream w, String str)
-      throws UnsupportedEncodingException {
-    byte[] body = str.getBytes("UTF-8");
-    serializeTo(w, (long) body.length);
+  public static void serializeTo(ByteArrayOutputStream w, float n) {
+    ByteBuffer buffer = ByteBuffer.allocate(Float.SIZE / Byte.SIZE).order(ByteOrder.nativeOrder());
+    buffer.putFloat(n);
+    byte[] body = buffer.array();
     w.write(body, 0, body.length);
+  };
+
+  public static void serializeTo(ByteArrayOutputStream w, double n) {
+    ByteBuffer buffer = ByteBuffer.allocate(Double.SIZE / Byte.SIZE).order(ByteOrder.nativeOrder());
+    buffer.putDouble(n);
+    byte[] body = buffer.array();
+    w.write(body, 0, body.length);
+  };
+
+  public static void serializeTo(ByteArrayOutputStream w, int n) {
+    ByteBuffer buffer = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE).order(ByteOrder.nativeOrder());
+    buffer.putInt(n);
+    byte[] body = buffer.array();
+    w.write(body, 0, body.length);
+  };
+
+  public static void serializeTo(ByteArrayOutputStream w, Integer n) {
+    serializeTo(w, (int)n);
+  };
+
+  public static void serializeTo(ByteArrayOutputStream w, Float n) {
+    serializeTo(w, (float)n);
+  };
+
+  public static void serializeTo(ByteArrayOutputStream w, Long n) {
+    serializeTo(w, (long)n);
+  };
+
+  public static void serializeTo(ByteArrayOutputStream w, Double n) {
+    serializeTo(w, (double)n);
+  };
+
+  public static void serializeTo(ByteArrayOutputStream w, long[] arr) {
+    serializeTo(w, (long) arr.length);
+    for (long item : arr) {
+      serializeTo(w, item);
+    }
+  };
+
+  public static void serializeTo(ByteArrayOutputStream w, String str) {
+    try {
+      byte[] body = str.getBytes("UTF-8");
+      serializeTo(w, (long) body.length);
+      w.write(body, 0, body.length);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  private static void serializeTo(ByteArrayOutputStream w, Tensor t) {
+  public static void serializeTo(ByteArrayOutputStream w, Tensor t) {
     serializeTo(w, (long) t.dataType().c());
     serializeTo(w, t.shape());
     byte[] body = t.bytesValue();
@@ -61,24 +109,38 @@ public class ModelType {
     w.write(body, 0, body.length);
   }
 
-  private static <T> void serializeTo(ByteArrayOutputStream w, List<T> list) {
+  public static <T> void serializeTo(ByteArrayOutputStream w, List<T> list) {
     serializeTo(w, (long) list.size());
     for (T item : list) {
       serializeTo(w, item);
     }
   }
 
-  private static void serializeTo(ByteArrayOutputStream w, Object unknown) {
-    throw new RuntimeException("unknown type!");
+  public static void serializeTo(ByteArrayOutputStream w, Object unknown) {
+    if (unknown instanceof String) {
+      serializeTo(w, (String)unknown);
+    } else if (unknown instanceof List) {
+      serializeTo(w, (List)unknown);
+    } else if (unknown instanceof Integer) {
+      serializeTo(w, (Integer)unknown);
+    } else if (unknown instanceof Long) {
+      serializeTo(w, (Long)unknown);
+    } else if (unknown instanceof Float) {
+      serializeTo(w, (Float)unknown);
+    } else if (unknown instanceof Double) {
+      serializeTo(w, (Double)unknown);
+    } else {
+      throw new RuntimeException("unknown type serialize: " + unknown.getClass().getName());
+    }
   }
 
-  private static <T> byte[] serialize(List<T> list) {
+  public static byte[] serialize(List<?> list) {
     ByteArrayOutputStream w = new ByteArrayOutputStream();
     serializeTo(w, list);
     return w.toByteArray();
   }
 
-  private static byte[] serialize(Map<String, Tensor> list) throws UnsupportedEncodingException {
+  public static byte[] serialize(Map<String, Tensor> list) throws UnsupportedEncodingException {
     ByteArrayOutputStream w = new ByteArrayOutputStream();
     serializeTo(w, (long) list.size());
     for (Map.Entry<String, Tensor> entry : list.entrySet()) {
@@ -88,7 +150,7 @@ public class ModelType {
     return w.toByteArray();
   }
 
-  private static Map<String, Tensor> unserializeMap(byte[] body) {
+  public static Map<String, Tensor> unserializeMap(byte[] body) {
     return null;
   }
 }

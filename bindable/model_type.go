@@ -74,3 +74,8 @@ func (mt ModelType) Run(feedsBody, fetchesBody, targetsBody []byte) ([]byte, err
 	}
 	return buf.Bytes(), nil
 }
+
+// StartTraining is a wrapper around ModelType that doesn't take a context.
+func (mt ModelType) StartTraining() error {
+	return mt.ModelType.StartTraining(context.TODO())
+}
