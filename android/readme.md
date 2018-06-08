@@ -20,7 +20,9 @@ class App {
     // Run the production model.
     feeds = new HashMap<String, Tensor>();
     feeds.put("Placeholder:0", Tensor.create(1.0f, DataType.FLOAT));
-    Map<String, Tensor> outputs = mt.run(feeds, Arrays.asList("Placeholder_1:0"), Arrays.asList("extra inference target (optional)"));
+    Map<String, Tensor> outputs = mt.run(feeds, 
+      Arrays.asList("Placeholder_1:0"), 
+      Arrays.asList("extra inference target (optional)"));
     
     
     // Log some training examples.
@@ -32,7 +34,8 @@ class App {
     mt.log(feeds, Arrays.asList("training_target"));
 
 
-    // You will need to handle when to start and stop training. Should train when the user isn't using their phone (screen off), while charging and connected to WiFi.
+    // You will need to handle when to start and stop training. 
+    // Should train when the user isn't using their phone (screen off), while charging and connected to WiFi.
     mt.startTraining();
     mt.stopTraining();
    
