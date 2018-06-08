@@ -7,20 +7,30 @@ This is the home of the android client library. It's a combination of Tensorflow
 Download `bindable.aar` and `library-release.aar` from the [releases page](https://godoc.org/golang.org/x/mobile/cmd/gomobile) and include them in your android project.
 
 ```java
+package ai.luk.example;
+
+import ai.luk.ModelType;
+import ai.luk.Tensor;
+import ai.luk.DataType;
+
 class App {
   public void train() {
     ModelType mt = new ModelType("domain", "mnist", "./mnist-files/");
-
-    // Log some training examples
-    Map<String, Tensor> feeds = new HashMap<String, Tensor>();
-    feeds.put("Placeholder:0", Tensor.create(1.0f, DataType.FLOAT));
-    feeds.put("Placeholder_1:0", Tensor.create(1.0f, DataType.FLOAT));
-    mt.log(feeds, Arrays.asList("training_target"));
     
     // Run the production model.
     feeds = new HashMap<String, Tensor>();
     feeds.put("Placeholder:0", Tensor.create(1.0f, DataType.FLOAT));
     Map<String, Tensor> outputs = mt.run(feeds, Arrays.asList("Placeholder_1:0"), Arrays.asList("extra inference target (optional)"));
+    
+    
+    // Log some training examples.
+    // Typically you'll pair the inputs to mt.run above with the true value and then log them. 
+    // That way it creates a feedback loop to improve your model over time.
+    Map<String, Tensor> feeds = new HashMap<String, Tensor>();
+    feeds.put("Placeholder:0", Tensor.create(1.0f, DataType.FLOAT)); // Data type is optional
+    feeds.put("Placeholder_1:0", Tensor.create(1.0f, DataType.FLOAT));
+    mt.log(feeds, Arrays.asList("training_target"));
+
 
     // You will need to handle when to start and stop training. Should train when the user isn't using their phone (screen off), while charging and connected to WiFi.
     mt.startTraining();
