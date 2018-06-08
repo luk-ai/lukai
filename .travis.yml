@@ -5,12 +5,6 @@ matrix:
 
   include:
     - language: go
-      go: 1.7.x
-      install:
-        - make godeps
-      script:
-        - make gotest
-    - language: go
       go: 1.8.x
       install:
         - make godeps
@@ -29,7 +23,6 @@ matrix:
       script:
         - make gotest
 
-  allow_failures:
     - language: go
       go: tip
       install:
@@ -53,3 +46,7 @@ matrix:
         script:
           - make -C android bindable-latest test
 
+
+  allow_failures:
+    - go: tip
+    - language: android
