@@ -9,3 +9,12 @@ build:
 	cp $(GOPATH)/pkg/gomobile/lib/amd64/libtensorflow.so bindable-aar/jni/x86_64/
 	jar cvf bindable.aar -C bindable-aar/ .
 	cp bindable.aar bindable/
+
+.PHONY: test
+test:
+	gradle :library:test :library:connectedDebugAndroidTest --stacktrace --info
+
+.PHONY: bindable-latest
+bindable-latest:
+	curl -L https://github.com/luk-ai/lukai/releases/download/v0.2/bindable.aar -o bindable/bindable.aar
+
