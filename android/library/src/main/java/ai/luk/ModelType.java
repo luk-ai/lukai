@@ -24,39 +24,60 @@ public class ModelType {
     }
   }
 
-
+  // isTraining returns whether or not the model is training.
   public boolean isTraining() {
     return mt.isTraining();
   }
 
+  // startTraining launches an async process to wait for training jobs and
+  // process them.
   public void startTraining() throws Exception {
     mt.startTraining();
   }
 
+  // stopTraining stops the model from waiting for training jobs to finish and
+  // cancels any currently running jobs.
   public void stopTraining() throws Exception {
     mt.stopTraining();
   }
 
+  // close closes the model. This is to ensure early closure. There is a
+  // finalizer that will call this method if it isn't already.
   public void close() throws Exception {
     mt.close();
   }
 
+  // examplesError will throw an exception if there was an error during
+  // saving examples.
   public void examplesError() throws Exception {
     mt.examplesError();
   }
 
+  // trainingError will throw an exception if there was an error during
+  // training.
   public void trainingError() throws Exception {
     mt.trainingError();
   }
 
+  // totalExamples returns the total number of examples the model has.
   public long totalExamples() {
     return mt.totalExamples();
   }
 
+  // setMaxConcurrentTrainingJobs set the maximum number of concurrent training
+  // jobs that can be running. Defaults to 1.
+  public void setMaxConcurrentTrainingJobs(int n) {
+    mt.setMaxConcurrentTrainingJobs(n);
+  }
+
+  // log logs a training example to disk along with the target to run to train
+  // with it.
   public void log(Map<String, Tensor> feeds, List<String> targets) throws Exception {
     mt.log(serialize(feeds), serialize(targets));
   }
 
+  // run runs the production model with the specified targets and returns the
+  // fetches.
   public Map<String, Tensor> run(
       Map<String, Tensor> feeds, List<String> fetches, List<String> targets) throws Exception {
     return unserializeMap(mt.run(serialize(feeds), serialize(fetches), serialize(targets)));

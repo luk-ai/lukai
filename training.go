@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"runtime"
+	"sync"
 	"time"
 
 	"github.com/cenkalti/backoff"
@@ -20,6 +21,44 @@ import (
 	"github.com/luk-ai/lukai/tf"
 	"github.com/luk-ai/lukai/units"
 )
+
+// MaxConcurrentTrainingJobs is the maximum number of concurrent training jobs
+// that can be running.
+var MaxConcurrentTrainingJobs = 1
+
+var concurrentJobsMu struct {
+	sync.Mutex
+
+	jobs int
+}
+
+// SetMaxConcurrentTrainingJobs sets the maximum number of concurrent training
+// jobs that can be running.
+func SetMaxConcurrentTrainingJobs(n int) {
+	MaxConcurrentTrainingJobs = n
+}
+
+func reserveTrainingJob() error {
+	concurrentJobsMu.Lock()
+	defer concurrentJobsMu.Unlock()
+
+	if concurrentJobsMu.jobs >= MaxConcurrentTrainingJobs {
+		return errors.Errorf("too many concurrent training jobs (max = %d)", MaxConcurrentTrainingJobs)
+	}
+
+	concurrentJobsMu.jobs += 1
+	return nil
+}
+
+func freeTrainingJob() {
+	concurrentJobsMu.Lock()
+	defer concurrentJobsMu.Unlock()
+
+	concurrentJobsMu.jobs -= 1
+	if concurrentJobsMu.jobs < 0 {
+		log.Fatal("negative number of jobs running")
+	}
+}
 
 var (
 	MaxMsgSize = 100 * units.MB
@@ -193,6 +232,12 @@ func (mt *ModelType) doWork(ctx context.Context, edge aggregatorpb.EdgeClient, a
 		if err != nil {
 			return errors.Wrapf(err, "stream.Recv")
 		}
+
+		work := resp.GetWork()
+		if work == nil {
+			return errors.New("expected work")
+		}
+
 		weights := net.ReadModelWeights(func() (*aggregatorpb.ModelWeightChunk, error) {
 			resp, err := stream.Recv()
 			if err != nil {
@@ -200,10 +245,6 @@ func (mt *ModelType) doWork(ctx context.Context, edge aggregatorpb.EdgeClient, a
 			}
 			return resp.GetWeights(), nil
 		})
-		work := resp.GetWork()
-		if work == nil {
-			return errors.New("expected work")
-		}
 
 		// Update id for reporting errors.
 		*id = work.Id
@@ -227,6 +268,11 @@ func (mt *ModelType) processWork(
 	weightsReader io.ReadCloser,
 ) error {
 	defer weightsReader.Close()
+
+	if err := reserveTrainingJob(); err != nil {
+		return err
+	}
+	defer freeTrainingJob()
 
 	log.Printf("Training %+v", work.Id)
 	start := time.Now()
