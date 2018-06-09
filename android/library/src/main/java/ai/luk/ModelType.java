@@ -15,6 +15,16 @@ public class ModelType {
     mt = ai.luk.bindable.Bindable.makeModelType(domain, modelType, dataDir);
   }
 
+  @Override
+  public void finalize() throws Throwable {
+    super.finalize();
+
+    if (mt != null) {
+      mt.close();
+    }
+  }
+
+
   public boolean isTraining() {
     return mt.isTraining();
   }
