@@ -14,10 +14,15 @@ func (mt *ModelType) logError(id aggregatorpb.ModelID, typ aggregatorpb.ErrorTyp
 	mt.errors.Lock()
 	defer mt.errors.Unlock()
 
+	if err == nil {
+		return
+	}
+
 	pberr := aggregatorpb.Error{
-		Id:    id,
-		Type:  typ,
-		Error: fmt.Sprintf("%+v", err),
+		Id:         id,
+		Type:       typ,
+		Error:      err.Error(),
+		Stacktrace: fmt.Sprintf("%+v", err),
 	}
 
 	if len(mt.errors.errors) < MaxQueuedErrors {

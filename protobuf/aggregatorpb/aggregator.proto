@@ -139,6 +139,7 @@ message Error {
   ModelID id = 1 [(gogoproto.nullable) = false];
   ErrorType type = 2;
   string error = 3;
+  string stacktrace = 4;
 }
 
 message ReportErrorRequest {
