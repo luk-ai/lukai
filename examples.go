@@ -25,13 +25,13 @@ import (
 var (
 	// MaxFileSize is the target size an example file will be.
 	MaxFileSize = 1 * units.MB
-	// MaxFileRetention is the number of days worth of examples kept.
+	// MaxFileRetention is the duration worth of examples kept.
 	MaxFileRetention = 14 * units.Day
 	// MaxDiskUsage is the number of bytes that will used for examples.
 	MaxDiskUsage = 50 * units.MB
-	// MaxDaysInFile is the number of days worth of examples that will be stored
-	// in one day.
-	MaxDaysInFile = 1 * units.Day
+	// MaxFileDuration is the duration worth of examples that will be stored in
+	// one file.
+	MaxFileDuration = 1 * units.Day
 	// IndexFileName is the name of the examples index file.
 	IndexFileName = "index.pb"
 	// FilePerm is the file permission all the example files use.
@@ -185,7 +185,7 @@ func (mt *ModelType) ensureFilePresentLocked() {
 		lastFile := &mt.examplesMeta.index.Files[numFiles-1]
 
 		// Create a new file if the file is too old.
-		outdatedFile := lastFile.Created.Before(time.Now().Add(-MaxDaysInFile))
+		outdatedFile := lastFile.Created.Before(time.Now().Add(-MaxFileDuration))
 		// Create a new file if the last one is over the maximum file size.
 		largeFile := lastFile.TotalSize >= int64(MaxFileSize)
 		if !outdatedFile && !largeFile {
@@ -206,6 +206,10 @@ func (mt *ModelType) saveExamplesMeta() error {
 	mt.examplesMeta.RLock()
 	defer mt.examplesMeta.RUnlock()
 
+	return mt.saveExamplesMetaLocked()
+}
+
+func (mt *ModelType) saveExamplesMetaLocked() error {
 	bytes, err := proto.Marshal(&mt.examplesMeta.index)
 	if err != nil {
 		return err
@@ -366,4 +370,41 @@ func (c batcherCache) Close() error {
 		}
 	}
 	return nil
+}
+
+// GCExamples scans through the example files and deletes any that violate the
+// retention or max file size policies.
+func (mt *ModelType) GCExamples() error {
+	mt.examplesMeta.Lock()
+	defer mt.examplesMeta.Unlock()
+
+	var toDelete []clientpb.ExampleFile
+	var toKeep []clientpb.ExampleFile
+
+	for _, f := range mt.examplesMeta.index.Files {
+		if mt.examplesMeta.index.TotalSize > int64(MaxDiskUsage) || time.Now().Add(-MaxFileRetention).After(f.Created) {
+			toDelete = append(toDelete, f)
+			mt.examplesMeta.index.TotalExamples -= int64(len(f.Positions))
+			mt.examplesMeta.index.TotalSize -= f.TotalSize
+		} else {
+			toKeep = append(toKeep, f)
+		}
+	}
+
+	if len(toDelete) == 0 {
+		return nil
+	}
+
+	mt.examplesMeta.index.Files = toKeep
+	if err := mt.saveExamplesMetaLocked(); err != nil {
+		return err
+	}
+
+	var errFinal error
+	for _, f := range toDelete {
+		if err := os.Remove(mt.filePath(f.Name)); err != nil {
+			errFinal = errors.Wrapf(err, "GCing file")
+		}
+	}
+	return errFinal
 }
