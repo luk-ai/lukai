@@ -66,8 +66,8 @@ public class ModelType {
 
   // setMaxConcurrentTrainingJobs set the maximum number of concurrent training
   // jobs that can be running. Defaults to 1.
-  public void setMaxConcurrentTrainingJobs(int n) {
-    mt.setMaxConcurrentTrainingJobs(n);
+  public static void setMaxConcurrentTrainingJobs(int n) {
+    ai.luk.bindable.Bindable.setMaxConcurrentTrainingJobs(n);
   }
 
   // log logs a training example to disk along with the target to run to train

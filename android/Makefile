@@ -16,5 +16,5 @@ test:
 
 .PHONY: bindable-latest
 bindable-latest:
-	curl -L https://github.com/luk-ai/lukai/releases/download/v0.2/bindable.aar -o bindable/bindable.aar
+	curl -L https://github.com/luk-ai/lukai/releases/download/v0.3/bindable.aar -o bindable/bindable.aar
 

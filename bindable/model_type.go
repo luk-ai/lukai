@@ -16,6 +16,10 @@ import (
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 
+func SetMaxConcurrentTrainingJobs(n int) {
+	lukai.SetMaxConcurrentTrainingJobs(n)
+}
+
 type ModelType struct {
 	*lukai.ModelType
 }
