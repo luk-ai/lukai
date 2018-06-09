@@ -55,4 +55,3 @@ matrix:
 
   allow_failures:
     - go: tip
-    - language: android
