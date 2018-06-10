@@ -140,6 +140,15 @@ func (mt *ModelType) TotalExamples() int64 {
 	return mt.examplesMeta.index.TotalExamples
 }
 
+// TotalSize returns the file size of examples that are currently saved
+// locally.
+func (mt *ModelType) TotalSize() int64 {
+	mt.examplesMeta.Lock()
+	defer mt.examplesMeta.Unlock()
+
+	return mt.examplesMeta.index.TotalSize
+}
+
 // Log records model input->output pairs for later use in training. This data is
 // saved locally only.
 // - feeds key is the tensorflow output and should be in the form "name:output#".

@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/luk-ai/lukai/units"
 	tensorflow "github.com/tensorflow/tensorflow/tensorflow/go"
 	"go.uber.org/goleak"
 )
@@ -276,5 +277,38 @@ func TestLog(t *testing.T) {
 
 	if err := mt.TrainingError(); err != nil {
 		t.Error(err)
+	}
+}
+
+func TestGCExamples(t *testing.T) {
+	mt, cancel := newTestModelType(t)
+	defer cancel()
+
+	MaxFileSize = 1 * units.KB
+	MaxDiskUsage = 10 * units.KB
+
+	feeds := map[string]*tensorflow.Tensor{
+		"tensor": newTensor(int64(2)),
+	}
+	targets := []string{"target"}
+	for mt.TotalSize() <= int64(MaxDiskUsage) {
+		if err := mt.Log(feeds, targets); err != nil {
+			t.Fatalf("%+v", err)
+		}
+	}
+
+	if err := mt.GCExamples(); err != nil {
+		t.Fatal(err)
+	}
+	if mt.TotalSize() >= int64(MaxDiskUsage) {
+		t.Fatalf("expected total size to be below max disk usage")
+	}
+
+	MaxFileRetention = 0
+	if err := mt.GCExamples(); err != nil {
+		t.Fatal(err)
+	}
+	if mt.TotalSize() != 0 || mt.TotalExamples() != 0 {
+		t.Fatalf("expected all files to be deleted")
 	}
 }
