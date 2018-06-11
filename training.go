@@ -85,6 +85,9 @@ func (mt *ModelType) StartTraining(ctx context.Context) error {
 		return nil
 	}
 
+	if err := mt.GCExamples(); err != nil {
+		return err
+	}
 	if mt.TotalExamples() == 0 {
 		log.Printf("No training examples available for %s/%s", mt.Domain, mt.ModelType)
 		return nil
