@@ -284,6 +284,16 @@ func TestGCExamples(t *testing.T) {
 	mt, cancel := newTestModelType(t)
 	defer cancel()
 
+	oldMaxFileSize := MaxFileSize
+	oldMaxDiskUsage := MaxDiskUsage
+	oldMaxFileRetention := MaxFileRetention
+
+	defer func() {
+		MaxFileSize = oldMaxFileSize
+		MaxDiskUsage = oldMaxDiskUsage
+		MaxFileRetention = oldMaxFileRetention
+	}()
+
 	MaxFileSize = 1 * units.KB
 	MaxDiskUsage = 10 * units.KB
 
