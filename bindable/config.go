@@ -34,3 +34,8 @@ func SetMaxFileDuration(seconds int) {
 func SetMaxFileRetention(seconds int) {
 	lukai.MaxFileRetention = time.Duration(seconds) * time.Second
 }
+
+// SetGCEvery sets how often the examples garbage collector runs.
+func SetGCEvery(seconds int) {
+	lukai.GCEvery = time.Duration(seconds) * time.Second
+}

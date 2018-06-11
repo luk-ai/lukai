@@ -37,6 +37,9 @@ var (
 	// FilePerm is the file permission all the example files use.
 	FilePerm os.FileMode = tf.FilePerm
 	DirPerm  os.FileMode = 0700
+
+	// GCEvery controls how often the examples garbage collector runs.
+	GCEvery = 1 * time.Hour
 )
 
 type example struct {
@@ -381,11 +384,28 @@ func (c batcherCache) Close() error {
 	return nil
 }
 
+func (mt *ModelType) gcLoop() {
+	for {
+		if err := mt.GCExamples(); err != nil {
+			log.Printf("GC error: %+v", err)
+		}
+
+		select {
+		case <-mt.ctx.Done():
+			return
+		case <-time.After(GCEvery):
+		}
+	}
+}
+
 // GCExamples scans through the example files and deletes any that violate the
 // retention or max file size policies.
 func (mt *ModelType) GCExamples() error {
 	mt.examplesMeta.Lock()
 	defer mt.examplesMeta.Unlock()
+
+	examples := mt.examplesMeta.index.TotalExamples
+	size := mt.examplesMeta.index.TotalSize
 
 	var toDelete []clientpb.ExampleFile
 	var toKeep []clientpb.ExampleFile
@@ -399,6 +419,8 @@ func (mt *ModelType) GCExamples() error {
 			toKeep = append(toKeep, f)
 		}
 	}
+
+	log.Printf("GC: new %dB/%dB, %d/%d examples; removed %d files", mt.examplesMeta.index.TotalSize, size, mt.examplesMeta.index.TotalExamples, examples, len(toDelete))
 
 	if len(toDelete) == 0 {
 		return nil

@@ -75,16 +75,22 @@ type ModelType struct {
 
 		errors []aggregatorpb.Error
 	}
+
+	ctx    context.Context
+	cancel context.CancelFunc
 }
 
 // MakeModelType creates a new model type with a specified domain and model type
 // and stores all training data in dataDir.
 func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
+	ctx, cancel := context.WithCancel(context.Background())
 	mt := ModelType{
 		Domain:       domain,
 		ModelType:    modelType,
 		DataDir:      dataDir,
 		errorLimiter: rate.NewLimiter(rate.Every(ErrorRateLimit), 1),
+		ctx:          ctx,
+		cancel:       cancel,
 	}
 
 	if domain == "" {
@@ -128,6 +134,8 @@ func MakeModelType(domain, modelType, dataDir string) (*ModelType, error) {
 		return nil, err
 	}
 
+	go mt.gcLoop()
+
 	return &mt, nil
 }
 
@@ -136,5 +144,6 @@ func (mt *ModelType) Close() error {
 	if err := mt.saveExamplesMeta(); err != nil {
 		return err
 	}
+	mt.cancel()
 	return nil
 }
