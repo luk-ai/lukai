@@ -1,5 +1,7 @@
-PROTO_FILES = $(shell find protobuf/ -type f -name '*.proto')
+GO_SRC = ${GOPATH}/src
+PROTO_FILES = $(shell protobuf/ -type f -name '*.proto')
 PROTO_GO_FILES = $(patsubst protobuf/%.proto, protobuf/%.pb.go, $(PROTO_FILES))
+PY_PROTO_FILES = $(shell cd ${GO_SRC} && find github.com/luk-ai/lukai/protobuf/ github.com/gogo/protobuf/gogoproto/ -type f -name '*.proto')
 
 IMPORT_PREFIX := github.com/luk-ai/lukai/protobuf/
 
@@ -12,7 +14,7 @@ $(call make-lazy,SED_INPLACE)
 build: protobuf
 
 .PHONY: test
-test: gotest
+test: gotest jstest pytest
 
 .PHONY: gotest
 gotest:
@@ -21,6 +23,16 @@ gotest:
 .PHONY: godeps
 godeps: .tensorflow
 	go get -t -v ./...
+
+.PHONY: pytest
+pytest:
+	cd py && python setup.py pytest
+
+.PHONY: jstest
+jstest:
+	cd js && yarn test
+	cd js && yarn lint
+	cd js && yarn build
 
 .tensorflow:
 	curl -L "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-1.8.0.tar.gz" | sudo tar -C /usr/local -xz
@@ -31,7 +43,7 @@ godeps: .tensorflow
 	touch .tensorflow
 
 .PHONY: protobuf
-protobuf: protobuf/tensorflow $(PROTO_GO_FILES) fixuppyproto
+protobuf: protobuf/tensorflow $(PROTO_GO_FILES) py/lukai/proto fixuppyproto
 
 current_dir = $(shell pwd)
 tensorflow_dir = "$(current_dir)/../../tensorflow/tensorflow/"
@@ -45,20 +57,26 @@ protobuf/tensorflow:
 	cd $(tensorflow_dir) && cp -u tensorflow/core/framework/types.proto $(tensorflow_protobuf_dir)
 	#cd $(tensorflow_dir) && cp -u --parents `find -name \*.proto | sed '/tensorflow\/python/d' | sed '/_service.proto/d'` $(current_dir)/protobuf/
 
-proto_import_paths=-I ${GOPATH}/src -I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I protobuf/
+proto_import_paths=-I ${GOPATH}/src -I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis
 
 %.pb.go: %.proto
 	protoc --proto_path=${GOPATH}/src:. ${proto_import_paths} $< --gogoslick_out=plugins=grpc:. --grpc-gateway_out=logtostderr=true:.
-	python -m grpc_tools.protoc ${proto_import_paths} --python_out=${python_proto_dir} --grpc_python_out=${python_proto_dir} $<
+
+.PHONY: py/lukai/proto
+py/lukai/proto:
+	-rm -r ${python_proto_dir}
+	mkdir -p ${python_proto_dir}
+	python -m grpc_tools.protoc $(proto_import_paths) --python_out=${python_proto_dir} --grpc_python_out=${python_proto_dir} $(PY_PROTO_FILES)
+	cp -R py/lukai/proto/github.com/* py/lukai/proto/github/com/
 
 .PHONY: fixuppyproto
 fixuppyproto:
-	$(SED_INPLACE) '/import gogo_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
-	$(SED_INPLACE) 's/github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
-	$(SED_INPLACE) '/import annotations_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
-	$(SED_INPLACE) 's/google_dot_api_dot_annotations__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
-	$(SED_INPLACE) 's/github.com.luk_ai.lukai.protobuf/lukai.proto/g' $(shell find ${python_proto_dir} -type f -name '*.py')
-	$(SED_INPLACE) -E 's/^from (lukai.proto.)*/from lukai.proto./g' $(shell find ${python_proto_dir} -type f -name '*_pb2_grpc.py')
+	#$(SED_INPLACE) '/import gogo_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
+	#$(SED_INPLACE) 's/github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
+	#$(SED_INPLACE) '/import annotations_pb2/d' $(shell find ${python_proto_dir} -type f -name '*.py')
+	#$(SED_INPLACE) 's/google_dot_api_dot_annotations__pb2.DESCRIPTOR,//g' $(shell find ${python_proto_dir} -type f -name '*.py')
+	#$(SED_INPLACE) 's/github.com.luk_ai.lukai.protobuf/lukai.proto/g' $(shell find ${python_proto_dir} -type f -name '*.py')
+	#$(SED_INPLACE) -E 's/^from (lukai.proto.)*/from lukai.proto./g' $(shell find ${python_proto_dir} -type f -name '*_pb2_grpc.py')
 	find ${python_proto_dir} -type d -exec touch {}/__init__.py \;
 
 

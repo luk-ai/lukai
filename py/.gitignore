@@ -1,2 +1,4 @@
 dist/
 build/
+.eggs/
+.pytest_cache/

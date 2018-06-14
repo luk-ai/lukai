@@ -1,10 +1,14 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
-from .proto.aggregatorpb import aggregator_pb2
-from .proto.clientpb import client_pb2
-from .proto.managerpb import manager_pb2
-from .proto.managerpb import manager_pb2_grpc
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'proto'))
+
+from github.com.luk_ai.lukai.protobuf.aggregatorpb import aggregator_pb2
+from github.com.luk_ai.lukai.protobuf.clientpb import client_pb2
+from github.com.luk_ai.lukai.protobuf.managerpb import manager_pb2
+from github.com.luk_ai.lukai.protobuf.managerpb import manager_pb2_grpc
 from . import saver
 
 import tensorflow as tf

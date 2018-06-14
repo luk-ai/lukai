@@ -5,7 +5,7 @@ import tarfile
 import os
 from os import path
 
-from lukai.proto.clientpb import client_pb2
+from github.com.luk_ai.lukai.protobuf.clientpb import client_pb2
 
 # Constants used for files inside the model archive.
 SaverDefName   = "saver_def.pb"
