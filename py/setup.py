@@ -8,7 +8,7 @@ setup(
     packages=find_packages('.'),
     version='0.5',
     description='Luk.ai management library',
-    install_requires=['grpcio', 'six', 'srvlookup'],
+    install_requires=['grpcio', 'six', 'srvlookup', 'tensorflowjs'],
     author='Tristan Rice',
     author_email='rice@fn.lc',
     long_description=long_description,
