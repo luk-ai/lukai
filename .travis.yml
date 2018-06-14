@@ -56,6 +56,9 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - gcc-7
+            - g++-7
+            - libc-dev
+            - libc++-dev
       install:
         - cd js
         - yarn
