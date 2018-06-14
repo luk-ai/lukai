@@ -53,10 +53,14 @@ matrix:
         - make -C android bindable-latest test
 
     - language: node_js
+      node_js:
+        - node
       install:
-        - cd js && yarn
+        - cd js
+        - yarn
       script:
-        - cd js && yarn test
+        - yarn build
+        - yarn test
 
 
 
