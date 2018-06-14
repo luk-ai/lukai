@@ -26,7 +26,8 @@ godeps: .tensorflow
 
 .PHONY: pytest
 pytest:
-	cd py && python setup.py pytest
+	cd py && python2 setup.py pytest
+	cd py && python3 setup.py pytest
 
 .PHONY: jstest
 jstest:
