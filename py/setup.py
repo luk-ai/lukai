@@ -10,7 +10,7 @@ setup(
     description='Luk.ai management library',
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
-    install_requires=['grpcio', 'six', 'srvlookup', 'tensorflow', 'tensorflowjs'],
+    install_requires=['grpcio', 'six', 'srvlookup', 'tensorflow==1.8.0', 'tensorflowjs'],
     author='Tristan Rice',
     author_email='rice@fn.lc',
     long_description=long_description,

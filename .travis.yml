@@ -63,6 +63,7 @@ matrix:
       install:
         - cd js
         - yarn
+        - cd ..
       script:
         - make jstest
 
