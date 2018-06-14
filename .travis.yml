@@ -61,9 +61,11 @@ matrix:
             - libc++-dev
             - libc6-dev
       install:
+        - make .tensorflow
         - cd js
         - yarn
         - cd ..
+        - cp /usr/local/libtensorflow*.so js/node_modules/@tensorflow/tfjs-node/deps/tensorflow/lib/
       script:
         - make jstest
 
