@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"strings"
+	"sync"
 	"testing"
 
 	"go.uber.org/goleak"
@@ -38,11 +40,15 @@ func newTestEdgeServer(t *testing.T) *testEdgeServer {
 	}
 	aggregatorpb.RegisterEdgeServer(grpcServer, s)
 	aggregatorpb.RegisterAggregatorServer(grpcServer, s)
+	var wg sync.WaitGroup
+	wg.Add(1)
 	go func() {
+		wg.Done()
 		if err := grpcServer.Serve(lis); err != nil {
 			t.Log(err)
 		}
 	}()
+	wg.Wait()
 	return s
 }
 
@@ -125,11 +131,11 @@ func TestModelTraining(t *testing.T) {
 		return nil
 	})
 
-	if err := mt.ExamplesError(); err != nil {
+	if err := mt.ExamplesError(); err != nil && !strings.Contains(err.Error(), "context canceled") {
 		t.Error(err)
 	}
 
-	if err := mt.TrainingError(); err != nil {
+	if err := mt.TrainingError(); err != nil && !strings.Contains(err.Error(), "context canceled") {
 		t.Error(err)
 	}
 }
