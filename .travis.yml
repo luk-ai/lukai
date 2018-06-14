@@ -72,11 +72,17 @@ matrix:
 
     - language: python
       python:
-        - "2.7"
         - "3.6"
       install:
-        - pip2 install setuptools
-        - pip3 install setuptools
+        - pip install setuptools
+      script:
+        - make pytest
+
+    - language: python
+      python:
+        - "2.7"
+      install:
+        - pip install setuptools
       script:
         - make pytest
 
