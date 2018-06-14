@@ -50,6 +50,12 @@ matrix:
     - language: node_js
       node_js:
         - node
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - libstdc++-4.9-dev
       install:
         - cd js
         - yarn
