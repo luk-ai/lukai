@@ -73,7 +73,9 @@ matrix:
       python:
         - "2.7"
         - "3.6"
-      install: pip install setuptools
+      install:
+        - pip2 install setuptools
+        - pip3 install setuptools
       script:
         - make pytest
 
