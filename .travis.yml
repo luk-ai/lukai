@@ -63,9 +63,33 @@ matrix:
         - cd js
         - yarn
       script:
-        - yarn build
-        - yarn test
-        - yarn lint
+        - make jstest
+
+    - language: node_js
+      node_js:
+        - node
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-7
+            - g++-7
+            - libc-dev
+            - libc++-dev
+      install:
+        - cd js
+        - yarn
+      script:
+        - make jstest
+
+    - language: python
+      python:
+        - "2.7"
+        - "3.6"
+      install: pip install --user setuptools
+      script:
+        - make pytest
 
   allow_failures:
     - go: tip
