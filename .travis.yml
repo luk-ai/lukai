@@ -1,23 +1,17 @@
-sudo: required
-
 matrix:
   fast_finish: true
 
   include:
     - language: go
-      go: 1.8.x
-      install:
-        - make godeps
-      script:
-        - make gotest
-    - language: go
       go: 1.9.x
+      sudo: required
       install:
         - make godeps
       script:
         - make gotest
     - language: go
       go: 1.10.x
+      sudo: required
       install:
         - make godeps
       script:
@@ -25,6 +19,7 @@ matrix:
 
     - language: go
       go: tip
+      sudo: required
       install:
         - make godeps
       script:
