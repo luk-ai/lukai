@@ -56,9 +56,7 @@ matrix:
       script:
         - yarn build
         - yarn test
-
-
-
+        - yarn lint
 
   allow_failures:
     - go: tip

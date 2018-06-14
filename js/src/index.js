@@ -1,3 +1,5 @@
+import * as tf from '@tensorflow/tfjs'
+
 function stringify (obj) {
   return JSON.stringify(obj, (k, v) => {
     if (v instanceof tf.Tensor) {

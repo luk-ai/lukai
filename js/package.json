@@ -10,12 +10,16 @@
   "devDependencies": {
     "@tensorflow/tfjs-node": "^0.1.7",
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
-    "mocha": "^5.2.0"
+    "fs-extra": "^6.0.1",
+    "mocha": "^5.2.0",
+    "standard": "^11.0.1",
+    "tmp": "^0.0.33"
   },
   "dependencies": {
     "@tensorflow/tfjs": "^0.11.6"
@@ -23,6 +27,14 @@
   "scripts": {
     "build": "babel src -d dist --ignore '*.test.js'",
     "test": "mocha --require babel-polyfill --require babel-register 'src/*.test.js'",
-    "testwatch": "mocha --require babel-polyfill --require babel-register -w 'src/*.test.js'"
+    "testwatch": "mocha --require babel-polyfill --require babel-register -w 'src/*.test.js'",
+    "lint": "standard src/**/*.js"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "describe",
+      "it"
+    ]
   }
 }
