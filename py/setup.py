@@ -6,11 +6,11 @@ with open("README.md", "r") as fh:
 setup(
     name='lukai',
     packages=find_packages('.'),
-    version='0.5',
+    version='0.6',
     description='Luk.ai management library',
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
-    install_requires=['grpcio', 'six', 'srvlookup', 'tensorflow==1.8.0', 'tensorflowjs'],
+    install_requires=['grpcio', 'six', 'srvlookup', 'tensorflow==1.8.0', 'tensorflowjs', 'protobuf'],
     author='Tristan Rice',
     author_email='rice@fn.lc',
     long_description=long_description,
